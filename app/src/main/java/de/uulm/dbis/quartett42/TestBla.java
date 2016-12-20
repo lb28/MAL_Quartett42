@@ -9,6 +9,7 @@ public class TestBla {
     public TestBla() {
         System.out.print("asd");
         System.out.print("asd");
+        int a = 3;
     }
 
 
