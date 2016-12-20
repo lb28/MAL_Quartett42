@@ -6,4 +6,7 @@ package de.uulm.dbis.quartett42;
 public class TestBla {
     //hallo
     //hallo2
+    public TestBla() {
+        System.out.print("asd");
+    }
 }
