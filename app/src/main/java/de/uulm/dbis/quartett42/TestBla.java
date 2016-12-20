@@ -10,6 +10,9 @@ public class TestBla {
         System.out.print("asd");
         System.out.print("asd");
         int a = 3;
+
+        //test FAbi
+        System.out.print("test");
     }
 
 
