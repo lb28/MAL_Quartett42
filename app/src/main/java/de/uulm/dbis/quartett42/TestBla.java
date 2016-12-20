@@ -8,5 +8,9 @@ public class TestBla {
     //hallo2
     public TestBla() {
         System.out.print("asd");
+        System.out.print("asd");
     }
+
+
+
 }
