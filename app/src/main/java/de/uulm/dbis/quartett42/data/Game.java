@@ -150,6 +150,8 @@ public class Game {
                 cardsPlayer.add(i);
             }else if(cardsComputer.size() <= cardNumbers){
                 cardsComputer.add(i);
+            }else if(cardsPlayer.size() <= cardNumbers){
+                cardsPlayer.add(i);
             }
         }
 
