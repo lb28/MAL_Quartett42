@@ -3,6 +3,7 @@ package de.uulm.dbis.quartett42.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by Fischbach on 21.12.2016.
@@ -11,7 +12,7 @@ import java.util.Random;
 public class Game {
     private Deck deck;
 
-    /** Schwierigkeitsstufe
+    /** Schwierigkeitsstufe: 1 = leicht, 2 = mittel, 3 = Profi
      *
      */
     private int difficulty;
@@ -46,12 +47,14 @@ public class Game {
      */
     private boolean nextPlayer;
 
-    /** Speichert alle IDs in der Reihenfolge, wie sie der Player auf seinem Stapel hat
+    /** Speichert alle IDs in der Reihenfolge, wie sie der Player auf seinem Stapel hat,
+     * wobei an der Stelle 0 die "oberste Karte"/aktuelle Karte liegt
      *
      */
     private ArrayList<Integer> cardsPlayer;
 
     /** Speichert alle IDs in der Reihenfolge, wie sie der Computer auf seinem Stapel hat
+     * wobei an der Stelle 0 die "oberste Karte"/aktuelle Karte liegt
      *
      */
     private ArrayList<Integer> cardsComputer;
@@ -157,6 +160,127 @@ public class Game {
 
     }
 
+
+    /** Methode, die den Zug fuer den Computer, je nach Schwierigkeitsgrad ausfuehrt.
+     *
+     * @return choosen Property Name (Key) of Compputer
+     */
+    public String computerCardChoice(){
+        String chosenAttribute = "";
+        Double chosenValue = 0.0;
+        Card tmpCard = returnCardOfID(cardsComputer.get(0));
+        int numberOfProperties = averageValues.size();
+        Set<String> propertySet = averageValues.keySet();
+        String[] propertyArray = propertySet.toArray(new String[numberOfProperties]);
+        if(difficulty == 3){
+            //Profi: Alle Werte durchlaufen
+            for(int i = 0; i < numberOfProperties; i++){
+                if(averageValues.get(propertyArray[i])/tmpCard.getAttributeMap().get(propertyArray[i]) > chosenValue){
+                    chosenValue = tmpCard.getAttributeMap().get(propertyArray[i]);
+                    chosenAttribute = propertyArray[i];
+                }
+            }
+        }else if(difficulty == 2){
+            //Mittel: Aus der Haelfte aller Werte zufaellige welche auswaehlen und vergleichen
+            for(int i = 0; i < numberOfProperties+2; i++){
+                int randomProperty = r.nextInt(numberOfProperties);
+                if(averageValues.get(propertyArray[randomProperty])/tmpCard.getAttributeMap().get(propertyArray[randomProperty]) > chosenValue){
+                    chosenValue = tmpCard.getAttributeMap().get(propertyArray[i]);
+                    chosenAttribute = propertyArray[randomProperty];
+                }
+            }
+        }else{
+            //Leicht: Zufaelliger Wert auswaehlen:
+            int randomProperty = r.nextInt(numberOfProperties);
+            chosenAttribute = propertyArray[randomProperty];
+        }
+
+        return chosenAttribute;
+    }
+
+    /** Methode behandelt das Spielen zweier Karten: Sie bestimmt den Gewinner, zahelt die Punkte hoch
+     * und die verbleibenden runter, packt Karten auf den richtigen Stapel
+     * und bestimmt ggf. das Ende
+     *
+     * @param chosenAttribute
+     * @return int winner: //0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
+     */
+    public int playCards(String chosenAttribute){
+        int winner = -1; //0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
+        Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
+        Card cardComputer = returnCardOfID(cardsComputer.get(0));
+        //Gewinner bestimmen: TODO: fuer Insane-Modus umdrehen
+        if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
+            //Player gewinnt:
+            winner = 1;
+            nextPlayer = true;
+            //Punkte behandlen:
+            pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
+            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+            if(mode == 1 || mode == 3){
+                roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+            }
+            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsPlayer.add(cardComputer.getId());
+            cardsPlayer.add(cardPlayer.getId());
+        }else if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
+            //Computer gewinnt:
+            //Player gewinnt:
+            winner = 2;
+            nextPlayer = false;
+            //Punkte behandeln:
+            pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
+            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+            if(mode == 1 || mode == 3){
+                roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+            }
+            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsComputer.add(cardPlayer.getId());
+            cardsComputer.add(cardComputer.getId());
+        }else{
+            //unentschieden:
+            winner = 0;
+            //Jeder haengt seine Karte hinten an:
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsPlayer.add(cardPlayer.getId());
+            cardsComputer.add(cardComputer.getId());
+        }
+        //Ende?:
+        if(roundsLeft <= 0 && (mode == 1 || mode == 3)){
+            gameOver = true;
+        }
+
+        return winner;
+    }
+
+    /** Methode berechnet Punkte, die der Gewinner bekommt
+     *
+     * @param chosenAttribute
+     * @param winner
+     * @return int points
+     */
+    private int calculatePoints(String chosenAttribute, int winner){
+        if(mode == 1 || mode == 2){
+            //Falls Runden oder Zeitbasiert, einfach 1 zurueck geben:
+            return 1;
+        }else{
+            //Bei Punktebasiert irgendeinen fancy Algorithmus entwickeln, der Punkte aufsummiert
+            //bisher als Erastz: Differenz beider Punkte mal 10
+            Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
+            Card cardComputer = returnCardOfID(cardsComputer.get(0));
+            if(winner == 1){
+                return (int) Math.round((cardPlayer.getAttributeMap().get(chosenAttribute) / cardComputer.getAttributeMap().get(chosenAttribute))*10);
+            }else{
+                return (int) Math.round((cardComputer.getAttributeMap().get(chosenAttribute) / cardPlayer.getAttributeMap().get(chosenAttribute))*10);
+            }
+        }
+    }
+
     /** Gibt zu einer Karten ID die passende Karte zurueck
      *
      * @param cardID
@@ -172,10 +296,6 @@ public class Game {
         }
         return resCard;
     }
-
-    //TODO: Methode, die Vergleich von zwei gewaehlten Attributen der obersten Karte durchfuehrt, Gewinner bestimmt, abhaengige Attribute anpasst und ggf. Spielende ermittelt
-
-    //TODO: Methode, die Computer in Abhaengigkeit vom Schwierigkeitsgrad und gegebener Karte ein Attribut waehlen laesst
 
 
 
