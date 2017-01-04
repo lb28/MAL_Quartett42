@@ -1,0 +1,12 @@
+//Konventionen:
+//Unterordner mit Bildern heisst gleich wie Name des Decks
+//Keine zwei gleichnamigen Decks
+//keine zwei gleichnamigen Karten in einem Deck
+//keine zwei gleichnamigen Properties/Values in einem Deck
+//Property Namen des Decks heissen gleich wie Value Namen der Karten
+//einzelne Karten haben durchlaufende Id's, welche aber in allen Decks die gleichen sein koennen
+//restliche Elemente brauchen theoretisch keine Id's
+
+//bisherige  Beispieldecks:
+//Sesamstrasse
+//Bikes (halbes Deck)

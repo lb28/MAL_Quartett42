@@ -1,0 +1,466 @@
+{
+	"decks" : [ 
+	{
+		"name" : "Sesamstrasse",
+		"description" : "Viele Monster",
+		"image" : "sesamstrasse.jpg",
+		"properties" : [
+			{
+				"name" : "Groesse",
+				"unit" : "cm",
+			"maxwinner" : true
+			},
+			{
+				"name" : "Alter",
+				"unit" : "",
+			"maxwinner" : true
+			},
+			{
+				"name" : "Gewicht",
+				"unit" : "kg",
+			"maxwinner" : false
+			},
+						{
+				"name" : "Beliebtheit",
+				"unit" : "Prozent",
+			"maxwinner" : true
+			}
+		],
+		"cards" : [ 
+			{
+				"name" : "Kruemelmonster",
+				"id" : 0,
+				"images" : [ 
+				{
+					"URI" : "kruemelmonster.jpg",
+					"description" : "Bild Beschreibung 1"
+				},
+				{
+					"URI" : "kruemelmonster2.jpg",
+					"description" : "Bild Beschreibung 2"
+				}
+				],
+				"values" : {
+					"Groesse" : 125,
+					"Alter" : 40,
+					"Gewicht" : 111,
+					"Beliebtheit" : 100
+				}
+			},
+			{
+				"name" : "Monster2",
+				"id" : 1,
+				"images" : [ 
+				{
+					"URI" : "monster2.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 234,
+					"Alter" : 18,
+					"Gewicht" : 22,
+					"Beliebtheit" : 45
+				}
+			},
+			{
+				"name" : "Monster3",
+				"id" : 2,
+				"images" : [ 
+				{
+					"URI" : "monster3.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 54,
+					"Alter" : 145,
+					"Gewicht" : 33,
+					"Beliebtheit" : 89
+				}
+			},
+			{
+				"name" : "Monster4",
+				"id" : 3,
+				"images" : [ 
+				{
+					"URI" : "monster4.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 111,
+					"Alter" : 111,
+					"Gewicht" : 111,
+					"Beliebtheit" : 11
+				}
+			},
+			{
+				"name" : "Monster5",
+				"id" : 4,
+				"images" : [ 
+				{
+					"URI" : "monster5.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 11,
+					"Alter" : 66,
+					"Gewicht" : 67,
+					"Beliebtheit" : 89
+				}
+			},
+			{
+				"name" : "Monster6",
+				"id" : 5,
+				"images" : [ 
+				{
+					"URI" : "monster6.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 20,
+					"Alter" : 9,
+					"Gewicht" : 10,
+					"Beliebtheit" : 73
+				}
+			},
+			{
+				"name" : "Monster7",
+				"id" : 6,
+				"images" : [ 
+				{
+					"URI" : "monster7.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 186,
+					"Alter" : 44,
+					"Gewicht" : 89,
+					"Beliebtheit" : 72
+				}
+			},
+			{
+				"name" : "Monster8",
+				"id" : 7,
+				"images" : [ 
+				{
+					"URI" : "monster8.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 176,
+					"Alter" : 24,
+					"Gewicht" : 89,
+					"Beliebtheit" : 98
+				}
+			},
+			{
+				"name" : "Monster9",
+				"id" : 8,
+				"images" : [ 
+				{
+					"URI" : "monster9.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 134,
+					"Alter" : 29,
+					"Gewicht" : 48,
+					"Beliebtheit" : 14
+				}
+			},
+			{
+				"name" : "Monster10",
+				"id" : 9,
+				"images" : [ 
+				{
+					"URI" : "monster10.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 77,
+					"Alter" : 77,
+					"Gewicht" : 228,
+					"Beliebtheit" : 77
+				}
+			},
+			{
+				"name" : "Monster11",
+				"id" : 10,
+				"images" : [ 
+				{
+					"URI" : "monster11.jpg",
+					"description" : "blabla"
+				}
+				],
+				"values" : {
+					"Groesse" : 289,
+					"Alter" : 29,
+					"Gewicht" : 99,
+					"Beliebtheit" : 43
+				}
+			}
+		]
+	},
+	{
+		"name" : "Bikes",
+		"description" : "Viele Bikes",
+		"image" : "bikes1.jpg",
+		"properties" : [
+			{
+				"name" : "Geschwindigkeit",
+				"unit" : "km/h",
+			"maxwinner" : true
+			},
+			{
+				"name" : "Hubraum",
+				"unit" : "ccm",
+			"maxwinner" : true
+			},
+			{
+				"name" : "0 auf 100",
+				"unit" : "sec",
+			"maxwinner" : false
+			},
+						{
+				"name" : "Zylinder",
+				"unit" : "",
+			"maxwinner" : true
+			},
+			{
+				"name" : "Leistung",
+				"unit" : "PS",
+			"maxwinner" : true
+			},
+			{
+				"name" : "Umdrehungen",
+				"unit" : "1/min.",
+			"maxwinner" : true
+			}
+		],
+		"cards" : [ 
+			{
+				"name" : "Yamaha YZR M1 (10)",
+				"id" : 0,
+				"images" : [ 
+				{
+					"URI" : "bikes1.jpg",
+					"description" : "Bildbeschreibung"
+				},
+				{
+					"URI" : "bikes5.jpg",
+					"description" : "zweites (falsches) Bild nur zum Test"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 320,
+					"Hubraum" : 799,
+					"0 auf 100" : 2.2,
+					"Zylinder" : 4,
+					"Leistung" : 200,
+					"Umdrehungen" : 17200
+				}
+			},
+			{
+				"name" : "Ducati Desmosedici GP11",
+				"id" : 1,
+				"images" : [ 
+				{
+					"URI" : "bikes2.jpg",
+					"description" : "Bildbeschreibung"
+				},
+				{
+					"URI" : "bikes5.jpg",
+					"description" : "zweites (falsches) Bild nur zum Test"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 320,
+					"Hubraum" : 799,
+					"0 auf 100" : 2.2,
+					"Zylinder" : 4,
+					"Leistung" : 230,
+					"Umdrehungen" : 18000
+				}
+			},
+			{
+				"name" : "Aprilia 250 (08)",
+				"id" : 2,
+				"images" : [ 
+				{
+					"URI" : "bikes3.jpg",
+					"description" : "Bildbeschreibung"
+				},
+				{
+					"URI" : "bikes5.jpg",
+					"description" : "zweites (falsches) Bild nur zum Test"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 290,
+					"Hubraum" : 246,
+					"0 auf 100" : 2.5,
+					"Zylinder" : 2,
+					"Leistung" : 108,
+					"Umdrehungen" : 13800
+				}
+			},
+			{
+				"name" : "KTM 1190 RC8 R",
+				"id" : 3,
+				"images" : [ 
+				{
+					"URI" : "bikes4.jpg",
+					"description" : "Bildbeschreibung"
+				},
+				{
+					"URI" : "bikes5.jpg",
+					"description" : "zweites (falsches) Bild nur zum Test"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 298,
+					"Hubraum" : 1195,
+					"0 auf 100" : 2.5,
+					"Zylinder" : 2,
+					"Leistung" : 190,
+					"Umdrehungen" : 10500
+				}
+			},
+			{
+				"name" : "LCR Yamaha PSV wels",
+				"id" : 4,
+				"images" : [ 
+				{
+					"URI" : "bikes5.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 235,
+					"Hubraum" : 600,
+					"0 auf 100" : 3.3,
+					"Zylinder" : 4,
+					"Leistung" : 140,
+					"Umdrehungen" : 14500
+				}
+			},
+			{
+				"name" : "Ducati 1098R F09",
+				"id" : 5,
+				"images" : [ 
+				{
+					"URI" : "bikes6.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 310,
+					"Hubraum" : 1198,
+					"0 auf 100" : 2.3,
+					"Zylinder" : 2,
+					"Leistung" : 198,
+					"Umdrehungen" : 11000
+				}
+			},
+			{
+				"name" : "BMW S1000 RR (12)",
+				"id" : 6,
+				"images" : [ 
+				{
+					"URI" : "bikes7.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 334,
+					"Hubraum" : 999,
+					"0 auf 100" : 2.2,
+					"Zylinder" : 4,
+					"Leistung" : 218,
+					"Umdrehungen" : 14000
+				}
+			},
+			{
+				"name" : "LCR Suzuki HRT",
+				"id" : 7,
+				"images" : [ 
+				{
+					"URI" : "bikes8.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 280,
+					"Hubraum" : 999,
+					"0 auf 100" : 2.8,
+					"Zylinder" : 4,
+					"Leistung" : 200,
+					"Umdrehungen" : 13100
+				}
+			},
+			{
+				"name" : "Honda RC 212V (10)",
+				"id" : 8,
+				"images" : [ 
+				{
+					"URI" : "bikes9.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 310,
+					"Hubraum" : 800,
+					"0 auf 100" : 2.4,
+					"Zylinder" : 4,
+					"Leistung" : 200,
+					"Umdrehungen" : 17200
+				}
+			},
+			{
+				"name" : "Kawasaki Ninja ZX-10R (12)",
+				"id" : 9,
+				"images" : [ 
+				{
+					"URI" : "bikes10.jpg",
+					"description" : "Bildbeschreibung"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 320,
+					"Hubraum" : 799,
+					"0 auf 100" : 2.2,
+					"Zylinder" : 4,
+					"Leistung" : 210,
+					"Umdrehungen" : 17400
+				}
+			},
+			{
+				"name" : "Malaguti 125",
+				"id" : 10,
+				"images" : [ 
+				{
+					"URI" : "bikes11.jpg",
+					"description" : "nicht alle Bikes ins Deck gepackt"
+				}
+				],
+				"values" : {
+					"Geschwindigkeit" : 339,
+					"Hubraum" : 998,
+					"0 auf 100" : 2.1,
+					"Zylinder" : 4,
+					"Leistung" : 225,
+					"Umdrehungen" : 14200
+				}
+			}
+		]
+	}
+	]	
+}
