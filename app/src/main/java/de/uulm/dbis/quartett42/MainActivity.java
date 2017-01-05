@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
+    SharedPreferences sharedPref;
     ProgressBar spinner; //Spinner fuer Ladezeiten
 
     @Override
@@ -29,27 +31,57 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
 
-        //Testen der DefaultSharedPreferences:
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //Daten laden, runOnUiThread weil UI angepasst wird, keine Ahnung ob es was besseres gibt
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loadData();
+            }});
+    }
 
-        //Value schreiben:
-        Random random = new Random();
-        //SharedPreferences.Editor editor = sharedPref.edit();
-        //editor.putInt("testValue", random.nextInt(9));
-        //editor.commit();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        //Value lesen:
-        int testValue = sharedPref.getInt("testValue", -1);
-        //Toast.makeText(getApplicationContext(), "Shared Preference Value: "+testValue, Toast.LENGTH_SHORT).show();
+        //Gucken, ob ein laufendes Spiel vorhanden:
+        //runningGame Value lesen, 1 falls Spiel pausiert, 0 wenn nicht:
+        Button newGameButton = (Button) findViewById(R.id.newGameButton);
+        if(sharedPref.getInt("runningGame", 0) == 1){
+            newGameButton.setText("SPIEL FORTSETZEN");
+        }else{
+            newGameButton.setText("NEUES SPIEL");
+        }
 
+        spinner.setVisibility(View.GONE);
+    }
 
+    //Methoden fuer Button-Klicks:
 
-        //Start Assets laden:... kann spaeter in asynchrone Methode ausgelagert werden
+    //Galerie Button:
+    public void clickGalleryButtonFunction(View view){
+        //Toast.makeText(getApplicationContext(), "Galerie Button geklickt", Toast.LENGTH_SHORT).show();
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, GalleryActivity.class);
+        intent.putExtra("json_string", jsonString);
+        startActivity(intent);
+    }
 
-        //Text:
+    //Settings Button:
+    public void clickSettingsButtonFunction(View view){
+        Intent intent = new Intent(this, SettingActivity.class);
+        startActivity(intent);
+    }
+
+    //Methoden der Activity:
+
+    //Lade-Methode fuer Start-Daten und JSON-Datei:
+    public void loadData(){
+        //Test: Willkommen Text laden:
         TextView welcomeText = (TextView)findViewById(R.id.welcomeText);
         try {
             InputStream json = getAssets().open("welcometext.txt");
@@ -67,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        //Bild:
+        //Test: Startbild laden:
         AssetManager assetManager = getAssets();
         InputStream is = null;
         ImageView welcomeImage = (ImageView)findViewById(R.id.welcomeImage);
@@ -82,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //JSON-String lesesn, damit er nicht jedes mal neu gelesen werden muss:
-
         try {
             InputStream in = getAssets().open("jsonexample.json");
             int size = in.available();
@@ -96,21 +127,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        spinner.setVisibility(View.GONE);
-    }
-
-    //Methoden fuer Button-Klicks:
-    public void clickGalleryButtonFunction(View view){
-        //Toast.makeText(getApplicationContext(), "Galerie Button geklickt", Toast.LENGTH_SHORT).show();
-        spinner.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(this, GalleryActivity.class);
-        intent.putExtra("json_string", jsonString);
-        startActivity(intent);
     }
 
 }

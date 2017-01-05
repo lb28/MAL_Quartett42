@@ -32,18 +32,26 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        //Testen der DefaultSharedPreferences:
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        //Value lesen:
-        int testValue = sharedPref.getInt("testValue", -1);
-        Toast.makeText(getApplicationContext(), "Shared Preference Value: "+testValue, Toast.LENGTH_SHORT).show();
-
         //JSON-String auslesen:
         Intent intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
         //System.out.println(jsonString);
 
-        //ArrayList aller Decks aus JSON erstellen ... kann spaeter in asynchrone Methode ausgelagert werden
+        //Decks laden:
+        new Thread(new Runnable() {
+            public void run() {
+                loadData();
+            }
+        }).start();
+
+    }
+
+
+    //Methoden der Activity:
+
+    //Decks laden:
+    public void loadData(){
+        //ArrayList aller Decks aus JSON erstellen
         deckList = new ArrayList<Deck>();
         try {
             // Getting JSON Array node
@@ -75,12 +83,10 @@ public class GalleryActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-
 
         //On-Item-Click-Listener fuer einzelne Decks:
         //TODO: Einzelansicht des Decks
@@ -90,9 +96,7 @@ public class GalleryActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Deck "+item.getName()+": "+item.getImage().getDescription(), Toast.LENGTH_SHORT).show();
             }
 
-         });
-
-
+        });
     }
 
 }
