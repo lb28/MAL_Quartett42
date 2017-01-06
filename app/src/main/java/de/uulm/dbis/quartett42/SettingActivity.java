@@ -1,7 +1,10 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,9 +39,29 @@ public class SettingActivity extends AppCompatActivity {
 
         //Falls gerade ein Spiel am laufen ist, duerfen die Einstellungen nicht geaendert werden
         if(sharedPref.getInt("runningGame", 0) == 1){
-            Toast.makeText(getApplicationContext(), "Einstellungen aendern nicht moeglich waehrend eines laufenden 'Spiels!", Toast.LENGTH_LONG).show();
-            finish();
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder info = new AlertDialog.Builder(this);
+            info.setTitle("Hinweis");
+            info.setMessage("Einstellungen aendern nicht moeglich waehrend eines laufenden Spiels!")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    });
+            AlertDialog infoAlert =  info.create();
+            infoAlert.show();
+            //finish();
         }else{
+
+            //Schauen, von welcher Activity man kommt
+            //Linken Oberen Zurueck-Button deaktivieren:
+            //JSON-String auslesen:
+            Intent intent = getIntent();
+            if(intent.getStringExtra("setting_soucre").equals("new_game")){
+                //Falls von NewGameActivity kommt Linken Oberen Zurueck-Button entfernen:
+                getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            }
+
             //alle UI-Elemente suchen:
             buttonGroup = (RadioGroup)findViewById(R.id.varianteGroup);
             rundenButton = (RadioButton)findViewById(R.id.rundenRadioButton);
@@ -76,33 +99,36 @@ public class SettingActivity extends AppCompatActivity {
 
     //Neue Werte speichern bei Button-Klick:
     public void saveButtonFunction(View view){
-        SharedPreferences.Editor editor = sharedPref.edit();
-
-        if(rundenButton.isChecked()){
-            editor.putInt("mode", 1);
-        }else if(zeitButton.isChecked()){
-            editor.putInt("mode", 2);
-        }else{
-            editor.putInt("mode", 3);
-        }
-        try{
-            int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
-            if(tmpValue > 0 && tmpValue < 9999){
-                editor.putInt("roundsLeft", tmpValue);
-            }else{
+        if(sharedPref.getInt("runningGame", 0) == 0) {
+            SharedPreferences.Editor editor = sharedPref.edit();
+            if (rundenButton.isChecked()) {
+                editor.putInt("mode", 1);
+            } else if (zeitButton.isChecked()) {
+                editor.putInt("mode", 2);
+            } else {
+                editor.putInt("mode", 3);
+            }
+            try {
+                int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
+                if (tmpValue > 0 && tmpValue < 9999) {
+                    editor.putInt("roundsLeft", tmpValue);
+                } else {
+                    editor.putInt("roundsLeft", 10);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
                 editor.putInt("roundsLeft", 10);
             }
-        }catch(Exception e){
-            e.printStackTrace();
-            editor.putInt("roundsLeft", 10);
+            editor.putInt("difficulty", schwierigkeitsPicker.getProgress() + 1);
+            editor.putBoolean("insaneModus", insaneSwitch.isChecked());
+            editor.putBoolean("soundModus", soundSwitch.isChecked());
+
+            editor.commit();
+
+            Toast.makeText(getApplicationContext(), "Einstellungen gespeichert", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Aktion untersagt", Toast.LENGTH_SHORT).show();
         }
-        editor.putInt("difficulty", schwierigkeitsPicker.getProgress()+1);
-        editor.putBoolean("insaneModus", insaneSwitch.isChecked());
-        editor.putBoolean("soundModus", soundSwitch.isChecked());
-
-        editor.commit();
-
-        Toast.makeText(getApplicationContext(), "Einstellungen gespeichert", Toast.LENGTH_SHORT).show();
         finish();
     }
 

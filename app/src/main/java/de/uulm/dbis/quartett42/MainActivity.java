@@ -1,11 +1,13 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -36,6 +38,10 @@ public class MainActivity extends AppCompatActivity {
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
 
+        //SharedPreferences.Editor editor = sharedPref.edit();
+        //editor.putInt("runningGame", 1);
+        //editor.commit();
+
         //Daten laden, runOnUiThread weil UI angepasst wird, keine Ahnung ob es was besseres gibt
         runOnUiThread(new Runnable() {
             @Override
@@ -48,15 +54,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        //Gucken, ob ein laufendes Spiel vorhanden:
-        //runningGame Value lesen, 1 falls Spiel pausiert, 0 wenn nicht:
-        Button newGameButton = (Button) findViewById(R.id.newGameButton);
-        if(sharedPref.getInt("runningGame", 0) == 1){
-            newGameButton.setText("SPIEL FORTSETZEN");
-        }else{
-            newGameButton.setText("NEUES SPIEL");
-        }
-
         spinner.setVisibility(View.GONE);
     }
 
@@ -64,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Galerie Button:
     public void clickGalleryButtonFunction(View view){
-        //Toast.makeText(getApplicationContext(), "Galerie Button geklickt", Toast.LENGTH_SHORT).show();
         spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.putExtra("json_string", jsonString);
@@ -73,8 +69,47 @@ public class MainActivity extends AppCompatActivity {
 
     //Settings Button:
     public void clickSettingsButtonFunction(View view){
+        spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, SettingActivity.class);
+        intent.putExtra("setting_soucre", "main");
         startActivity(intent);
+    }
+
+    //NewGame Button:
+    public void clickNewGameButtonFunction(View view){
+        //Gucken, ob ein laufendes Spiel vorhanden:
+        //runningGame Value lesen, 1 falls Spiel pausiert, 0 wenn nicht:
+        if(sharedPref.getInt("runningGame", 0) == 1){
+            //Fragen, ob vorhandenes Spiel fortgesetzt werden soll oder neues begonnen werden soll
+            String[] aktionen = {"Spiel fortsetzen", "Neues Spiel"};
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Soll ein pausiertes Spiel fortgesetzt werden?")
+                    .setItems(aktionen, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // The 'which' argument contains the index position of the selected item
+                            if(which == 0){
+                                // vorhandenes Spiel laden:
+                                //TODO
+                                Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
+
+                            }else if(which == 1){
+                                //alte gespeichertes Spiel loeschen
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putInt("runningGame", 0);
+                                //TODO
+                                editor.commit();
+                                //Zu NewGameActivity weiter leiten
+                                startNewGame();
+                            }
+                        }
+                    });
+            AlertDialog alert =  builder.create();
+            alert.show();
+        }else{
+            //Zu NewGameActivity weiter leiten
+            startNewGame();
+        }
+
     }
 
     //Methoden der Activity:
@@ -127,6 +162,14 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    //Neues Spiel starten:
+    public void startNewGame(){
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, NewGameActivity.class);
+        intent.putExtra("json_string", jsonString);
+        startActivity(intent);
     }
 
 }

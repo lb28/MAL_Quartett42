@@ -13,29 +13,46 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
-            android:label="Quartett42">
+            android:label="Quartett42"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".NewGameActivity"
+            android:label="Quartett42 Neues Spiel"
+            android:screenOrientation="portrait">
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
+
         <activity
             android:name=".GalleryActivity"
-            android:label="Quartett42 Gallerie">
+            android:label="Quartett42 Gallerie"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.uulm.dbis.quartett42.GalleryActivity" />
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
+
         <activity
             android:name=".SettingActivity"
-            android:label="Quartett42 Einstellugen">>
+            android:label="Quartett42 Einstellugen"
+            android:screenOrientation="portrait">
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.uulm.dbis.quartett42.SettingActivity" />
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
+
     </application>
 
 </manifest>
