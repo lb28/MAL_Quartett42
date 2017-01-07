@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Set;
@@ -149,14 +150,16 @@ public class Game {
     private void shuffleCards(){
         int cardNumbers = deck.getCardList().size()/2;
         for(int i = 0; i < deck.getCardList().size(); i++){
-            if(r.nextBoolean() && cardsPlayer.size() <= cardNumbers){
+            if(r.nextBoolean() && (cardsPlayer.size() < cardNumbers)){
                 cardsPlayer.add(i);
-            }else if(cardsComputer.size() <= cardNumbers){
+            }else if(cardsComputer.size() < cardNumbers){
                 cardsComputer.add(i);
-            }else if(cardsPlayer.size() <= cardNumbers){
+            }else if(cardsPlayer.size() < cardNumbers){
                 cardsPlayer.add(i);
             }
         }
+        Collections.shuffle(cardsPlayer);
+        Collections.shuffle(cardsComputer);
 
     }
 
@@ -174,19 +177,47 @@ public class Game {
         String[] propertyArray = propertySet.toArray(new String[numberOfProperties]);
         if(difficulty == 3){
             //Profi: Alle Werte durchlaufen
+            //TODO umdrehen fuer Insane-Modus
             for(int i = 0; i < numberOfProperties; i++){
-                if(averageValues.get(propertyArray[i])/tmpCard.getAttributeMap().get(propertyArray[i]) > chosenValue){
-                    chosenValue = tmpCard.getAttributeMap().get(propertyArray[i]);
-                    chosenAttribute = propertyArray[i];
+                boolean tmpMaxwinner = true;
+                for(Property px : deck.getPropertyList()){
+                    if(px.getName().equals(propertyArray[i])){
+                        tmpMaxwinner = px.getMaxwinner();
+                    }
                 }
+                if(tmpMaxwinner){
+                    if((tmpCard.getAttributeMap().get(propertyArray[i]) / averageValues.get(propertyArray[i])) > chosenValue){
+                        chosenValue = tmpCard.getAttributeMap().get(propertyArray[i])/averageValues.get(propertyArray[i]);
+                        chosenAttribute = propertyArray[i];
+                    }
+                }else{
+                    if((averageValues.get(propertyArray[i]) / tmpCard.getAttributeMap().get(propertyArray[i])) > chosenValue){
+                        chosenValue = averageValues.get(propertyArray[i])/tmpCard.getAttributeMap().get(propertyArray[i]);
+                        chosenAttribute = propertyArray[i];
+                    }
+                }
+                System.out.println(chosenAttribute+": "+chosenValue);
             }
         }else if(difficulty == 2){
             //Mittel: Aus der Haelfte aller Werte zufaellige welche auswaehlen und vergleichen
             for(int i = 0; i < numberOfProperties+2; i++){
                 int randomProperty = r.nextInt(numberOfProperties);
-                if(averageValues.get(propertyArray[randomProperty])/tmpCard.getAttributeMap().get(propertyArray[randomProperty]) > chosenValue){
-                    chosenValue = tmpCard.getAttributeMap().get(propertyArray[i]);
-                    chosenAttribute = propertyArray[randomProperty];
+                boolean tmpMaxwinner = true;
+                for(Property px : deck.getPropertyList()){
+                    if(px.getName().equals(propertyArray[randomProperty])){
+                        tmpMaxwinner = px.getMaxwinner();
+                    }
+                }
+                if(tmpMaxwinner){
+                    if((tmpCard.getAttributeMap().get(propertyArray[randomProperty]) / averageValues.get(propertyArray[randomProperty])) > chosenValue){
+                        chosenValue = tmpCard.getAttributeMap().get(propertyArray[randomProperty])/averageValues.get(propertyArray[randomProperty]);
+                        chosenAttribute = propertyArray[randomProperty];
+                    }
+                }else{
+                    if((averageValues.get(propertyArray[randomProperty]) / tmpCard.getAttributeMap().get(propertyArray[randomProperty])) > chosenValue){
+                        chosenValue = averageValues.get(propertyArray[randomProperty])/tmpCard.getAttributeMap().get(propertyArray[randomProperty]);
+                        chosenAttribute = propertyArray[randomProperty];
+                    }
                 }
             }
         }else{
@@ -209,47 +240,97 @@ public class Game {
         int winner = -1; //0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
         Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
         Card cardComputer = returnCardOfID(cardsComputer.get(0));
-        //Gewinner bestimmen: TODO: fuer Insane-Modus umdrehen
-        if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
-            //Player gewinnt:
-            winner = 1;
-            nextPlayer = true;
-            //Punkte behandlen:
-            pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
-            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-            if(mode == 1 || mode == 3){
-                roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+        boolean tmpMaxwinner = true;
+        for(Property px : deck.getPropertyList()){
+            if(px.getName().equals(chosenAttribute)){
+                tmpMaxwinner = px.getMaxwinner();
             }
-            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
-            cardsPlayer.remove(0);
-            cardsComputer.remove(0);
-            cardsPlayer.add(cardComputer.getId());
-            cardsPlayer.add(cardPlayer.getId());
-        }else if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
-            //Computer gewinnt:
-            //Player gewinnt:
-            winner = 2;
-            nextPlayer = false;
-            //Punkte behandeln:
-            pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
-            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-            if(mode == 1 || mode == 3){
-                roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
-            }
-            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
-            cardsPlayer.remove(0);
-            cardsComputer.remove(0);
-            cardsComputer.add(cardPlayer.getId());
-            cardsComputer.add(cardComputer.getId());
-        }else{
-            //unentschieden:
-            winner = 0;
-            //Jeder haengt seine Karte hinten an:
-            cardsPlayer.remove(0);
-            cardsComputer.remove(0);
-            cardsPlayer.add(cardPlayer.getId());
-            cardsComputer.add(cardComputer.getId());
         }
+        //Gewinner bestimmen: TODO: umdrehen fuer Insane-Modus
+        if (tmpMaxwinner) {
+            if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
+                //Player gewinnt:
+                winner = 1;
+                nextPlayer = true;
+                //Punkte behandlen:
+                pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
+                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+                if(mode == 1 || mode == 3){
+                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+                }
+                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsPlayer.add(cardComputer.getId());
+                cardsPlayer.add(cardPlayer.getId());
+            }else if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
+                //Computer gewinnt:
+                //Player gewinnt:
+                winner = 2;
+                nextPlayer = false;
+                //Punkte behandeln:
+                pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
+                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+                if(mode == 1 || mode == 3){
+                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+                }
+                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsComputer.add(cardPlayer.getId());
+                cardsComputer.add(cardComputer.getId());
+            }else{
+                //unentschieden:
+                winner = 0;
+                //Jeder haengt seine Karte hinten an:
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsPlayer.add(cardPlayer.getId());
+                cardsComputer.add(cardComputer.getId());
+            }
+        }else{
+            if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
+                //Player gewinnt:
+                winner = 1;
+                nextPlayer = true;
+                //Punkte behandlen:
+                pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
+                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+                if(mode == 1 || mode == 3){
+                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+                }
+                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsPlayer.add(cardComputer.getId());
+                cardsPlayer.add(cardPlayer.getId());
+            }else if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
+                //Computer gewinnt:
+                //Player gewinnt:
+                winner = 2;
+                nextPlayer = false;
+                //Punkte behandeln:
+                pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
+                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+                if(mode == 1 || mode == 3){
+                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
+                }
+                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsComputer.add(cardPlayer.getId());
+                cardsComputer.add(cardComputer.getId());
+            }else{
+                //unentschieden:
+                winner = 0;
+                //Jeder haengt seine Karte hinten an:
+                cardsPlayer.remove(0);
+                cardsComputer.remove(0);
+                cardsPlayer.add(cardPlayer.getId());
+                cardsComputer.add(cardComputer.getId());
+            }
+        }
+
         //Ende?:
         if(roundsLeft <= 0 && (mode == 1 || mode == 3)){
             gameOver = true;
@@ -273,7 +354,7 @@ public class Game {
             //bisher als Erastz: Differenz beider Punkte mal 10
             Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
             Card cardComputer = returnCardOfID(cardsComputer.get(0));
-            if(winner == 1){
+            if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
                 return (int) Math.round((cardPlayer.getAttributeMap().get(chosenAttribute) / cardComputer.getAttributeMap().get(chosenAttribute))*10);
             }else{
                 return (int) Math.round((cardComputer.getAttributeMap().get(chosenAttribute) / cardPlayer.getAttributeMap().get(chosenAttribute))*10);
