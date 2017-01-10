@@ -1,9 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
@@ -26,11 +23,15 @@ public class GalleryActivity extends AppCompatActivity {
     ArrayList<Deck> deckList;
     GridView gridView;
     GridViewAdapter gridAdapter;
+    ProgressBar spinner; //Spinner fuer Ladezeiten
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.setVisibility(View.VISIBLE);
 
         //JSON-String auslesen:
         Intent intent = getIntent();
@@ -46,6 +47,11 @@ public class GalleryActivity extends AppCompatActivity {
 
     }
 
+    protected void onResume() {
+        super.onResume();
+
+        spinner.setVisibility(View.GONE);
+    }
 
     //Methoden der Activity:
 
@@ -89,11 +95,17 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
         //On-Item-Click-Listener fuer einzelne Decks:
-        //TODO: Einzelansicht des Decks
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Deck item = (Deck) parent.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Deck "+item.getName()+": "+item.getImage().getDescription(), Toast.LENGTH_SHORT).show();
+
+                // Einzelansicht des Decks aufrufen
+                spinner.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(GalleryActivity.this, ViewDeckActivity.class);
+                intent.putExtra("chosen_deck", item.getName());
+                intent.putExtra("json_string", jsonString);
+                startActivity(intent);
             }
 
         });
