@@ -33,7 +33,10 @@ public class NewGameActivity extends AppCompatActivity {
     TextView roundsLeftGameText;
     TextView difficultyGameText;
     TextView insaneGameText;
+    TextView expertGameText;
     TextView soundGameText;
+
+    Intent intent;
 
     SharedPreferences sharedPref;
     ProgressBar spinner; //Spinner fuer Ladezeiten
@@ -49,7 +52,7 @@ public class NewGameActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         //JSON-String auslesen:
-        Intent intent = getIntent();
+        intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
         //System.out.println(jsonString);
 
@@ -58,6 +61,7 @@ public class NewGameActivity extends AppCompatActivity {
         roundsLeftGameText = (TextView)findViewById(R.id.anzahlGameText);
         difficultyGameText = (TextView)findViewById(R.id.schwierigkeitGameText);
         insaneGameText = (TextView)findViewById(R.id.insaneGameTExt);
+        expertGameText = (TextView)findViewById(R.id.expertGameText);
         soundGameText = (TextView)findViewById(R.id.soundGameText);
 
         //Decks laden:
@@ -83,7 +87,7 @@ public class NewGameActivity extends AppCompatActivity {
             roundsLeftGameText.setText("Spielminuten: "+sharedPref.getInt("roundsLeft", 10));
         }else{
             modeGameText.setText("Spielmodus: punktebasiert");
-            roundsLeftGameText.setText("Punktelimit: "+sharedPref.getInt("roundsLeft", 10));
+            roundsLeftGameText.setText("Punktelimit: "+sharedPref.getInt("pointsLeft", 1000));
         }
 
         int difficulty = sharedPref.getInt("difficulty", 2);
@@ -99,6 +103,12 @@ public class NewGameActivity extends AppCompatActivity {
             insaneGameText.setText("Insane Modus: ein");
         }else{
             insaneGameText.setText("Insane Modus: aus");
+        }
+
+        if(sharedPref.getBoolean("expertModus", false)){
+            expertGameText.setText("Experten Modus: ein");
+        }else{
+            expertGameText.setText("Experten Modus: aus");
         }
 
         if(sharedPref.getBoolean("soundModus", true)){
@@ -141,51 +151,60 @@ public class NewGameActivity extends AppCompatActivity {
 
     //Decks laden:
     public void loadData(){
-        //ArrayList aller Decks aus JSON erstellen
-        deckList = new ArrayList<Deck>();
-        try {
-            // Getting JSON Array node
-            JSONObject jsonObj = new JSONObject(jsonString);
-            JSONArray decks = jsonObj.getJSONArray("decks");
-            for (int i = 0; i < decks.length(); i++) {
-                JSONObject tmpDeck = decks.getJSONObject(i);
-                String deckName = tmpDeck.getString("name");
-                String deckDescription = tmpDeck.getString("description");
-                String deckImageUri = tmpDeck.getString("image");
-                //Cards und Properties sind erst mal egal fuer die Deckuebersicht
+        if(intent.getStringExtra("new_game_soucre").equals("main_activity")) {
+            //Falls die Anfrage von der Main Activity aus gestartet wurde:
+            //ArrayList aller Decks aus JSON erstellen
+            deckList = new ArrayList<Deck>();
+            try {
+                // Getting JSON Array node
+                JSONObject jsonObj = new JSONObject(jsonString);
+                JSONArray decks = jsonObj.getJSONArray("decks");
+                for (int i = 0; i < decks.length(); i++) {
+                    JSONObject tmpDeck = decks.getJSONObject(i);
+                    String deckName = tmpDeck.getString("name");
+                    String deckDescription = tmpDeck.getString("description");
+                    String deckImageUri = tmpDeck.getString("image");
+                    //Cards und Properties sind erst mal egal fuer die Deckuebersicht
 
-                ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
-                Deck newDeck = new Deck(deckName, newImage, null, null);
-                deckList.add(newDeck);
-            }
+                    ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
+                    Deck newDeck = new Deck(deckName, newImage, null, null);
+                    deckList.add(newDeck);
+                }
 
-            //Test-Ausgabe der Daten:
-            for(int i = 0; i < deckList.size(); i++){
-                System.out.println("Deck "+deckList.get(i).getName()+": "+deckList.get(i).getImage().getDescription());
-            }
+                //Test-Ausgabe der Daten:
+                for (int i = 0; i < deckList.size(); i++) {
+                    System.out.println("Deck " + deckList.get(i).getName() + ": " + deckList.get(i).getImage().getDescription());
+                }
 
-            try{
-                //Als Grid-Layout setzen:
-                gridView = (GridView) findViewById(R.id.galleryGridView);
-                gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
-                gridView.setAdapter(gridAdapter);
-            }catch(Exception e){
+                try {
+                    //Als Grid-Layout setzen:
+                    gridView = (GridView) findViewById(R.id.galleryGridView);
+                    gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
+                    gridView.setAdapter(gridAdapter);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            //On-Item-Click-Listener fuer einzelne Decks:
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Deck item = (Deck) parent.getItemAtPosition(position);
+                    chosenDeck = item.getName();
+                    deckGameText.setText("Deck: " + chosenDeck);
+                }
+
+            });
+        }else {
+            //Falls von GaleryActivity kommt Linken Oberen Zurueck-Button entfernen:
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            //und Galerie nicht laden, dafuer gleich das uebergebene Deck setzen:
+            chosenDeck = intent.getStringExtra("chosen_deck");
+            //TODO Extra chosen_deck setzen wenn von Galerie aus gestartet wird, sowie JSON-String mit uebergeben
         }
-
-        //On-Item-Click-Listener fuer einzelne Decks:
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Deck item = (Deck) parent.getItemAtPosition(position);
-                chosenDeck = item.getName();
-                deckGameText.setText("Deck: "+ chosenDeck);
-            }
-
-        });
     }
 }

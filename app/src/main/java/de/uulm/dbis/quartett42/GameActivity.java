@@ -141,7 +141,13 @@ public class GameActivity extends AppCompatActivity {
         int difficulty = sharedPref.getInt("difficulty", 2);
         int mode = sharedPref.getInt("mode", 1);
         boolean insaneModus = sharedPref.getBoolean("insaneModus", false);
-        int roundsLeft = sharedPref.getInt("roundsLeft", 10);
+        int roundsLeft = 10;
+        if(mode == 1 || mode == 2){
+            roundsLeft = sharedPref.getInt("roundsLeft", 10);
+        }else{
+            roundsLeft = sharedPref.getInt("pointsLeft", 1000);
+        }
+
 
         //Andere Behandlung je nachdem ob ein neues Spiel gespielt wird oder ein altes geladen wird:
         if(sharedPref.getInt("runningGame", 0) == 0){

@@ -177,13 +177,15 @@ public class Game {
         String[] propertyArray = propertySet.toArray(new String[numberOfProperties]);
         if(difficulty == 3){
             //Profi: Alle Werte durchlaufen
-            //TODO umdrehen fuer Insane-Modus
             for(int i = 0; i < numberOfProperties; i++){
                 boolean tmpMaxwinner = true;
                 for(Property px : deck.getPropertyList()){
                     if(px.getName().equals(propertyArray[i])){
                         tmpMaxwinner = px.getMaxwinner();
                     }
+                }
+                if(insaneModus){
+                    tmpMaxwinner = !tmpMaxwinner;
                 }
                 if(tmpMaxwinner){
                     if((tmpCard.getAttributeMap().get(propertyArray[i]) / averageValues.get(propertyArray[i])) > chosenValue){
@@ -207,6 +209,9 @@ public class Game {
                     if(px.getName().equals(propertyArray[randomProperty])){
                         tmpMaxwinner = px.getMaxwinner();
                     }
+                }
+                if(insaneModus){
+                    tmpMaxwinner = !tmpMaxwinner;
                 }
                 if(tmpMaxwinner){
                     if((tmpCard.getAttributeMap().get(propertyArray[randomProperty]) / averageValues.get(propertyArray[randomProperty])) > chosenValue){
@@ -246,7 +251,9 @@ public class Game {
                 tmpMaxwinner = px.getMaxwinner();
             }
         }
-        //Gewinner bestimmen: TODO: umdrehen fuer Insane-Modus
+        if(insaneModus){
+            tmpMaxwinner = !tmpMaxwinner;
+        }
         if (tmpMaxwinner) {
             if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
                 //Player gewinnt:

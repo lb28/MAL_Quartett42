@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("json_string", jsonString);
+        intent.putExtra("new_game_soucre", "main_activity");
         startActivity(intent);
     }
 

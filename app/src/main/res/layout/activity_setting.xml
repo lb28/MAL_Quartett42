@@ -85,17 +85,6 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <Switch
-        android:text="Sound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/insaneSwitch"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="14dp"
-        android:id="@+id/soundSwitch"
-        android:checked="true" />
-
     <TextView
         android:text="leicht"
         android:layout_width="wrap_content"
@@ -154,5 +143,26 @@
         android:layout_alignStart="@+id/varianteGroup"
         android:id="@+id/saveButton"
         android:onClick="saveButtonFunction"/>
+
+    <Switch
+        android:text="Sound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/soundSwitch"
+        android:checked="true"
+        android:layout_below="@+id/expertSwitch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp" />
+
+    <Switch
+        android:text="Experten Modus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expertSwitch"
+        android:layout_below="@+id/insaneSwitch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
 
 </RelativeLayout>

@@ -28,6 +28,7 @@ public class SettingActivity extends AppCompatActivity {
     EditText anzahlEdit;
     SeekBar schwierigkeitsPicker;
     Switch insaneSwitch;
+    Switch expertSwitch;
     Switch soundSwitch;
 
     @Override
@@ -71,6 +72,7 @@ public class SettingActivity extends AppCompatActivity {
             anzahlEdit = (EditText)findViewById(R.id.anzahlEditText);
             schwierigkeitsPicker = (SeekBar)findViewById(R.id.schwierigkeitsgradPicker);
             insaneSwitch = (Switch)findViewById(R.id.insaneSwitch);
+            expertSwitch = (Switch)findViewById(R.id.expertSwitch);
             soundSwitch = (Switch)findViewById(R.id.soundSwitch);
 
             //Alle Werte aus DefaultSharedPreferences lesen und UI setzen:
@@ -78,17 +80,20 @@ public class SettingActivity extends AppCompatActivity {
             if(mode == 1){
                 rundenButton.setChecked(true);
                 anzahlTextView.setText("Anzahl Runden:");
+                anzahlEdit.setText(""+sharedPref.getInt("roundsLeft", 10));
             }else if(mode == 2){
                 zeitButton.setChecked(true);
                 anzahlTextView.setText("Spielminuten:");
+                anzahlEdit.setText(""+sharedPref.getInt("roundsLeft", 10));
             }else{
                 punkteButton.setChecked(true);
                 anzahlTextView.setText("Punktelimit:");
+                anzahlEdit.setText(""+sharedPref.getInt("pointsLeft", 1000));
             }
 
-            anzahlEdit.setText(""+sharedPref.getInt("roundsLeft", 10));
             schwierigkeitsPicker.setProgress(sharedPref.getInt("difficulty", 2)-1);
             insaneSwitch.setChecked(sharedPref.getBoolean("insaneModus", false));
+            expertSwitch.setChecked(sharedPref.getBoolean("expertModus", false));
             soundSwitch.setChecked(sharedPref.getBoolean("soundModus", true));
 
             buttonGroup.setOnCheckedChangeListener(new myCheckBoxChnageClicker());
@@ -103,24 +108,48 @@ public class SettingActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             if (rundenButton.isChecked()) {
                 editor.putInt("mode", 1);
-            } else if (zeitButton.isChecked()) {
-                editor.putInt("mode", 2);
-            } else {
-                editor.putInt("mode", 3);
-            }
-            try {
-                int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
-                if (tmpValue > 0 && tmpValue < 9999) {
-                    editor.putInt("roundsLeft", tmpValue);
-                } else {
+                try {
+                    int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
+                    if (tmpValue > 0 && tmpValue < 9999) {
+                        editor.putInt("roundsLeft", tmpValue);
+                    } else {
+                        editor.putInt("roundsLeft", 10);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                     editor.putInt("roundsLeft", 10);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                editor.putInt("roundsLeft", 10);
+            } else if (zeitButton.isChecked()) {
+                editor.putInt("mode", 2);
+                try {
+                    int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
+                    if (tmpValue > 0 && tmpValue < 9999) {
+                        editor.putInt("roundsLeft", tmpValue);
+                    } else {
+                        editor.putInt("roundsLeft", 10);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    editor.putInt("roundsLeft", 10);
+                }
+            } else {
+                editor.putInt("mode", 3);
+                try {
+                    int tmpValue = Integer.parseInt(anzahlEdit.getText().toString());
+                    if (tmpValue > 0 && tmpValue < 999999) {
+                        editor.putInt("pointsLeft", tmpValue);
+                    } else {
+                        editor.putInt("pointsLeft", 1000);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    editor.putInt("pointsLeft", 1000);
+                }
             }
+
             editor.putInt("difficulty", schwierigkeitsPicker.getProgress() + 1);
             editor.putBoolean("insaneModus", insaneSwitch.isChecked());
+            editor.putBoolean("expertModus", insaneSwitch.isChecked());
             editor.putBoolean("soundModus", soundSwitch.isChecked());
 
             editor.commit();
@@ -141,10 +170,13 @@ public class SettingActivity extends AppCompatActivity {
 
                 if(checkedId == R.id.rundenRadioButton) {
                     anzahlTextView.setText("Anzahl Runden:");
+                    anzahlEdit.setText(""+sharedPref.getInt("roundsLeft", 10));
                 }else if(checkedId == R.id.zeitRadioButton) {
                     anzahlTextView.setText("Spielminuten:");
+                    anzahlEdit.setText(""+sharedPref.getInt("roundsLeft", 10));
                 }else{
                     anzahlTextView.setText("Punktelimit:");
+                    anzahlEdit.setText(""+sharedPref.getInt("pointsLeft", 1000));
                 }
             }
     }

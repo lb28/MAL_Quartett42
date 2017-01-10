@@ -75,6 +75,12 @@
             android:id="@+id/insaneGameTExt" />
 
         <TextView
+            android:text="Experten Modus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/expertGameText" />
+
+        <TextView
             android:text="Sound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
