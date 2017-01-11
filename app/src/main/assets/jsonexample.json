@@ -48,7 +48,7 @@
 				}
 			},
 			{
-				"name" : "Monster2",
+				"name" : "Elmo",
 				"id" : 1,
 				"images" : [ 
 				{
@@ -64,7 +64,7 @@
 				}
 			},
 			{
-				"name" : "Monster3",
+				"name" : "Wolf vom Woertersee",
 				"id" : 2,
 				"images" : [ 
 				{
@@ -80,7 +80,7 @@
 				}
 			},
 			{
-				"name" : "Monster4",
+				"name" : "Samson",
 				"id" : 3,
 				"images" : [ 
 				{
@@ -96,7 +96,7 @@
 				}
 			},
 			{
-				"name" : "Monster5",
+				"name" : "Grobi",
 				"id" : 4,
 				"images" : [ 
 				{
@@ -112,7 +112,7 @@
 				}
 			},
 			{
-				"name" : "Monster6",
+				"name" : "Rumpel",
 				"id" : 5,
 				"images" : [ 
 				{
@@ -128,7 +128,7 @@
 				}
 			},
 			{
-				"name" : "Monster7",
+				"name" : "Bert",
 				"id" : 6,
 				"images" : [ 
 				{
@@ -144,7 +144,7 @@
 				}
 			},
 			{
-				"name" : "Monster8",
+				"name" : "Ernie",
 				"id" : 7,
 				"images" : [ 
 				{
@@ -160,7 +160,7 @@
 				}
 			},
 			{
-				"name" : "Monster9",
+				"name" : "Baby Lena",
 				"id" : 8,
 				"images" : [ 
 				{
@@ -176,7 +176,7 @@
 				}
 			},
 			{
-				"name" : "Monster10",
+				"name" : "Finchen",
 				"id" : 9,
 				"images" : [ 
 				{
@@ -192,7 +192,7 @@
 				}
 			},
 			{
-				"name" : "Monster11",
+				"name" : "Moni",
 				"id" : 10,
 				"images" : [ 
 				{
@@ -205,6 +205,38 @@
 					"Alter" : 29,
 					"Gewicht" : 99,
 					"Beliebtheit" : 43
+				}
+			},
+			{
+				"name" : "Pferd",
+				"id" : 11,
+				"images" : [ 
+				{
+					"URI" : "monster12.jpg",
+					"description" : "neu"
+				}
+				],
+				"values" : {
+					"Groesse" : 99,
+					"Alter" : 17,
+					"Gewicht" : 123,
+					"Beliebtheit" : 87
+				}
+			},
+			{
+				"name" : "Wolli",
+				"id" : 12,
+				"images" : [ 
+				{
+					"URI" : "monster13.jpg",
+					"description" : "neu"
+				}
+				],
+				"values" : {
+					"Groesse" : 56,
+					"Alter" : 17,
+					"Gewicht" : 45,
+					"Beliebtheit" : 89
 				}
 			}
 		]
