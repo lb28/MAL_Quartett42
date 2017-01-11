@@ -49,15 +49,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".GameActivity"
+        <activity
+            android:name=".GameActivity"
             android:label="Quartett42 Spiel"
             android:screenOrientation="portrait">
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
-
         </activity>
+        <activity android:name=".StatisticsActivity"></activity>
     </application>
 
 </manifest>
