@@ -10,6 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.uulm.dbis.quartett42.StatisticsActivity">
 
+    <!-- Spiele gesamt -->
     <TextView
         android:text="Spiele gesamt:"
         android:layout_width="wrap_content"
@@ -48,6 +49,94 @@
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
 
+    <!-- normale Spiele -->
+    <TextView
+        android:text="Normalmode:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelnormaleSpielegesamt"
+        android:layout_below="@+id/labelSpielegesamtgewonnen"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/normaleSpiele"
+        android:layout_toRightOf="@id/labelnormaleSpielegesamt"
+        android:layout_below="@+id/Spielegesamtgewonnen"
+        android:gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="gewonnen:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelnormaleSpielegewonnen"
+        android:layout_below="@+id/labelnormaleSpielegesamt"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="100 (100%)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/normaleSpielegewonnen"
+        android:layout_below="@id/normaleSpiele"
+        android:layout_toRightOf="@id/labelSpielegesamtgewonnen"
+        android:gravity="right"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <!-- insane Spiele -->
+    <TextView
+        android:text="Insanemode:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelinsaneSpielegesamt"
+        android:layout_below="@+id/labelnormaleSpielegewonnen"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="100"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/insaneSpiele"
+        android:layout_toRightOf="@id/labelinsaneSpielegesamt"
+        android:layout_below="@+id/normaleSpielegewonnen"
+        android:gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="gewonnen:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelinsaneSpielegewonnen"
+        android:layout_below="@+id/labelinsaneSpielegesamt"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="100 (100%)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/insaneSpielegewonnen"
+        android:layout_below="@id/insaneSpiele"
+        android:layout_toRightOf="@id/labelinsaneSpielegewonnen"
+        android:gravity="right"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+
+    <!-- Zurücksetzen Button -->
     <Button
         android:text="Statistiken zurücksetzen"
         android:layout_width="match_parent"
@@ -55,7 +144,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/varianteGroup"
         android:layout_alignStart="@+id/varianteGroup"
-        android:id="@+id/resetButton" />
+        android:id="@+id/resetButton"
+        android:onClick="resetStatistics"/>
 
 
 </RelativeLayout>
