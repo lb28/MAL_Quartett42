@@ -112,6 +112,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Statistics Button:
+    public void clickStatisticsButtonFunction(View view){
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, StatisticsActivity.class);
+        startActivity(intent);
+    }
+
+
+
     //Methoden der Activity:
 
     //Lade-Methode fuer Start-Daten und JSON-Datei:
