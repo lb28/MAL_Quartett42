@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="end"
+        android:textAlignment="textEnd"
+        android:id="@+id/textViewAttrName"
+        android:text="AttrName (↓/↑)"
+        android:textSize="18sp">
+    </TextView>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/textViewAttrValue"
+        android:text="AttrValue"
+        android:textSize="18sp">
+    </TextView>
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:id="@+id/textViewAttrUnit"
+        android:text="AttrUnit"
+        android:textSize="18sp">
+    </TextView>
+
+</LinearLayout>

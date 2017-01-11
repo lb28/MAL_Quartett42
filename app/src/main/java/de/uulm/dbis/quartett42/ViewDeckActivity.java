@@ -37,12 +37,6 @@ public class ViewDeckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_deck);
 
-
-        // TODO
-        // have list of all cards in the deck
-        // feed list into custom adapter (PagerAdapter?)
-        // the adapter uses cardViewFragment
-
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
 
@@ -51,7 +45,6 @@ public class ViewDeckActivity extends AppCompatActivity {
         Intent intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
         chosenDeck = intent.getStringExtra("chosen_deck");
-        //System.out.println(jsonString);
 
         //JSON String auslesen und Game erstellen
         new Thread(new Runnable() {
@@ -87,7 +80,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         // get the current card
         Card card = deck.getCardList().get(currentCard);
 
-        ArrayList<String> attrList = buildAttrList(card);
+        ArrayList<Property> attrList = buildAttrList(card);
 
         //  set image
         String imageUri = deck.getName()+"/"+card.getImageList().get(0).getUri();
@@ -105,17 +98,14 @@ public class ViewDeckActivity extends AppCompatActivity {
         cardTitleTextView.setText(card.getName());
 
         // feed attribute list to array adapter
-        ArrayAdapter<String> simpleAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<Property> attrListAdapter = new AttributeItemAdapter(
                 this,
-                R.layout.simple_list_item,
+                R.layout.attr_list_item,
                 attrList
                 );
 
-        cardAttributeListView.setAdapter(simpleAdapter);
+        cardAttributeListView.setAdapter(attrListAdapter);
 
-
-        //TextView cardContentText = (TextView)findViewById(R.id.cardContentText);
-        //cardContentText.setText(deck.getCardList().get(currentCard).toString());
     }
 
     /**
@@ -127,20 +117,16 @@ public class ViewDeckActivity extends AppCompatActivity {
      * @param card the currently selected card
      * @return the list of attributes formatted for display
      */
-    private ArrayList<String> buildAttrList(Card card) {
-        ArrayList<String> attrList = new ArrayList<String>();
+    private ArrayList<Property> buildAttrList(Card card) {
+        ArrayList<Property> attrList = new ArrayList<Property>();
 
         // loop through each property
         for (Property p: deck.getPropertyList()) {
-            // this is a simple formatted string,
-            // could be replaced e.g. by a LinearLayout (custom adapter needed)
-            String maxWinnerString = p.getMaxwinner() ? "^" : "v";
-            String attrString = String.format("%10s %-20s %-10s %s",
-                    p.getName(),
-                    maxWinnerString,
-                    card.getAttributeMap().get(p.getName()),
-                    p.getUnit());
-            attrList.add(attrString);
+            // get the cards value
+            double attrValue = card.getAttributeMap().get(p.getName());
+            // put it inside the property for the adapter
+            Property cardAttr = new Property(p.getName(), p.getUnit(), p.getMaxwinner(), attrValue);
+            attrList.add(cardAttr);
         }
 
         return attrList;

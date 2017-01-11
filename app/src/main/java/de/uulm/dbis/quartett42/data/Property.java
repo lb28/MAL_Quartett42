@@ -6,13 +6,20 @@ package de.uulm.dbis.quartett42.data;
 
 public class Property {
     private String name;
-
     private String unit;
 
     /**
      * True if maximum wins, false if minimum wins
      */
     private Boolean maxwinner;
+
+    /**
+     * optional value field so the value can be passed along with attribute name, unit, and maxwinner
+     * (convenient for the adapter handling the display)
+     * NOTE: The "actual" value (which is used during the game) is stored inside each card's attributeMap.
+     * This only serves display purposes.
+     */
+    private double value;
 
     //int id; //wird wahrscheinlich nicht gebraucht
 
@@ -26,6 +33,20 @@ public class Property {
         this.name = name;
         this.unit = unit;
         this.maxwinner = maxwinner;
+    }
+
+    /**
+     * DO NOT use this unless for display purposes (e.g. feeding adapters)!
+     * (the value field is not meant to hold the actual values,
+     * but is used when displaying the attributes)
+     * @param name
+     * @param unit
+     * @param maxwinner
+     * @param value
+     */
+    public Property(String name, String unit, Boolean maxwinner, double value) {
+        this(name, unit, maxwinner);
+        this.value = value;
     }
 
     public String getName() {
@@ -50,6 +71,20 @@ public class Property {
 
     public void setMaxwinner(Boolean maxwinner) {
         this.maxwinner = maxwinner;
+    }
+
+    /**
+     * DO NOT use this unless for display purposes (e.g. feeding adapters)
+     */
+    public double getValue() {
+        return value;
+    }
+
+    /**
+     * DO NOT use this unless for display purposes (e.g. feeding adapters)
+     */
+    public void setValue(double value) {
+        this.value = value;
     }
 
     @Override
