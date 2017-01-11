@@ -58,7 +58,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".StatisticsActivity"></activity>
+        <activity
+            android:name=".StatisticsActivity"
+            android:label="Quartett42 Statistiken"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
