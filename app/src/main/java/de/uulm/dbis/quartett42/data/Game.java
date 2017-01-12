@@ -86,7 +86,7 @@ public class Game {
         this.roundsLeft = roundsLeft;
         this.pointsPlayer = 0;
         this.pointsComputer = 0;
-        this.nextPlayer = r.nextBoolean();
+        this.nextPlayer = true;
         this.averageValues = returnAverage();
         this.cardsPlayer = new ArrayList<Integer>();
         this.cardsComputer = new ArrayList<Integer>();

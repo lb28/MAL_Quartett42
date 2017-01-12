@@ -33,7 +33,7 @@ public class StatisticsActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         //------------------test----------------------------
-/*
+
         final SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putInt("spieleGesamt", 100);
@@ -46,7 +46,7 @@ public class StatisticsActivity extends AppCompatActivity {
         editor.putInt("insaneSpieleGewonnen", 20);
 
         editor.commit();
-*/
+
         //--------------------------------------------------
 
         Spielegesamt = (TextView) findViewById(R.id.Spielegesamt);
@@ -63,12 +63,12 @@ public class StatisticsActivity extends AppCompatActivity {
         //Spiele gesamt
         int spieleGesamt = sharedPref.getInt("spieleGesamt", 0);
         int spieleGesamtGewonnen = sharedPref.getInt("spieleGesamtGewonnen", 0);
-        double spieleGesamtGewonnenProzent;
+        double spieleGesamtGewonnenProzent ;
 
         if (spieleGesamt <= 0){
             spieleGesamtGewonnenProzent = 0;
         } else {
-            spieleGesamtGewonnenProzent = spieleGesamtGewonnen/spieleGesamt * 100;
+            spieleGesamtGewonnenProzent = (double)(spieleGesamtGewonnen*100/spieleGesamt);
         }
 
         Spielegesamt.setText("" + spieleGesamt);
@@ -82,7 +82,7 @@ public class StatisticsActivity extends AppCompatActivity {
         if (normalespiele <= 0){
             normaleSpieleGewonnenProzent = 0;
         } else {
-            normaleSpieleGewonnenProzent = normalespielegewonnen/normalespiele * 100;
+            normaleSpieleGewonnenProzent = (double) (normalespielegewonnen*100/normalespiele);
         }
 
         normaleSpiele.setText("" + normalespiele);
@@ -95,7 +95,7 @@ public class StatisticsActivity extends AppCompatActivity {
         if (insanespiele <= 0){
             insaneSpieleGewonnenProzent = 0;
         } else {
-            insaneSpieleGewonnenProzent = insanespielegewonnen/insanespiele * 100;
+            insaneSpieleGewonnenProzent = (double) (insanespielegewonnen*100/insanespiele);
         }
 
         insaneSpiele.setText("" + insanespiele);

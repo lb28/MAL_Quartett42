@@ -137,13 +137,14 @@ public class NewGameActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Bitte zuerst ein Deck aussuchen!", Toast.LENGTH_SHORT).show();
         }else{
             //Spiel starten und ausgesuchtes Deck sowie JSON-String mitgeben
-            //TODO
             spinner.setVisibility(View.VISIBLE);
             Intent intent = new Intent(this, GameActivity.class);
             //intent.putExtra("setting_soucre", "new_game");
             intent.putExtra("chosen_deck", chosenDeck);
             intent.putExtra("json_string", jsonString);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         }
     }
 
