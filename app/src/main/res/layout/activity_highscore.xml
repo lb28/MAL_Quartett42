@@ -23,21 +23,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/roundsButton" />
+                android:id="@+id/roundsButton"
+                android:onClick="clickRoundsButtonHighscoreFunction"/>
 
             <Button
                 android:text="Punkte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/pointsButton" />
+                android:id="@+id/pointsButton"
+                android:onClick="clickPointsButtonHighscoreFunction"/>
 
             <Button
                 android:text="Zeit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/timeButton" />
+                android:id="@+id/timeButton"
+                android:onClick="clickTimeButtonHighscoreFunction"/>
 
         </LinearLayout>
 
