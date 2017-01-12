@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,13 +59,12 @@ public class GridViewAdapter extends ArrayAdapter {
             is.close();
         } catch (IOException e) {
             e.printStackTrace();
-            //Toast.makeText(context.getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         return row;
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
         TextView imageTitle;
         ImageView image;
     }

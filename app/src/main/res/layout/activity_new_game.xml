@@ -17,18 +17,13 @@
         android:baselineAligned="false"
         android:weightSum="1">
 
-        <TextView
-            android:text="Deck aussuchen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6" />
+
 
         <GridView
             android:id="@+id/galleryGridView"
             android:layout_width="match_parent"
             android:layout_height="111dp"
-            android:layout_marginTop="18dp"
-            android:layout_margin="5dp"
+            android:layout_marginBottom="10dp"
             android:columnWidth="100dp"
             android:drawSelectorOnTop="true"
             android:gravity="center"
@@ -37,7 +32,7 @@
             android:verticalSpacing="5dp"
             android:focusable="true"
             android:clickable="true"
-            android:layout_weight="0.37" />
+            android:layout_weight="0.5" />
 
         <TextView
             android:text="Deck"

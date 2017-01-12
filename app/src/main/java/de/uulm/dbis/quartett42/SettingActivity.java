@@ -3,10 +3,10 @@ package de.uulm.dbis.quartett42;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -58,7 +58,7 @@ public class SettingActivity extends AppCompatActivity {
             //Linken Oberen Zurueck-Button deaktivieren:
             //JSON-String auslesen:
             Intent intent = getIntent();
-            if(intent.getStringExtra("setting_soucre").equals("new_game")){
+            if(intent.getStringExtra("setting_source").equals("new_game")){
                 //Falls von NewGameActivity kommt Linken Oberen Zurueck-Button entfernen:
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
             }
@@ -96,7 +96,7 @@ public class SettingActivity extends AppCompatActivity {
             expertSwitch.setChecked(sharedPref.getBoolean("expertModus", false));
             soundSwitch.setChecked(sharedPref.getBoolean("soundModus", true));
 
-            buttonGroup.setOnCheckedChangeListener(new myCheckBoxChnageClicker());
+            buttonGroup.setOnCheckedChangeListener(new myCheckBoxChangeClicker());
         }
 
     }
@@ -162,7 +162,7 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     //Innere Klasse fuer Textfeldaenderung:
-    class myCheckBoxChnageClicker implements RadioGroup.OnCheckedChangeListener {
+    class myCheckBoxChangeClicker implements RadioGroup.OnCheckedChangeListener {
 
         @Override
         public void onCheckedChanged(RadioGroup buttonView,

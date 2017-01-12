@@ -1,10 +1,11 @@
 package de.uulm.dbis.quartett42;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -72,6 +73,7 @@ public class NewGameActivity extends AppCompatActivity {
         }).start();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
         super.onResume();
@@ -126,7 +128,7 @@ public class NewGameActivity extends AppCompatActivity {
     public void clickChangeSettingsButtonFunction(View view){
         spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, SettingActivity.class);
-        intent.putExtra("setting_soucre", "new_game");
+        intent.putExtra("setting_source", "new_game");
         startActivity(intent);
     }
 
@@ -139,7 +141,7 @@ public class NewGameActivity extends AppCompatActivity {
             //Spiel starten und ausgesuchtes Deck sowie JSON-String mitgeben
             spinner.setVisibility(View.VISIBLE);
             Intent intent = new Intent(this, GameActivity.class);
-            //intent.putExtra("setting_soucre", "new_game");
+            //intent.putExtra("setting_source", "new_game");
             intent.putExtra("chosen_deck", chosenDeck);
             intent.putExtra("json_string", jsonString);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -152,7 +154,7 @@ public class NewGameActivity extends AppCompatActivity {
 
     //Decks laden:
     public void loadData(){
-        if(intent.getStringExtra("new_game_soucre").equals("main_activity")) {
+        if(intent.getStringExtra("new_game_source").equals("main_activity")) {
             //Falls die Anfrage von der Main Activity aus gestartet wurde:
             //ArrayList aller Decks aus JSON erstellen
             deckList = new ArrayList<Deck>();
@@ -170,11 +172,6 @@ public class NewGameActivity extends AppCompatActivity {
                     ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
                     Deck newDeck = new Deck(deckName, newImage, null, null);
                     deckList.add(newDeck);
-                }
-
-                //Test-Ausgabe der Daten:
-                for (int i = 0; i < deckList.size(); i++) {
-                    System.out.println("Deck " + deckList.get(i).getName() + ": " + deckList.get(i).getImage().getDescription());
                 }
 
                 try {
@@ -200,12 +197,15 @@ public class NewGameActivity extends AppCompatActivity {
                 }
 
             });
-        }else {
-            //Falls von GaleryActivity kommt Linken Oberen Zurueck-Button entfernen:
+
+        } else if(intent.getStringExtra("new_game_source").equals("view_deck_activity")) {
+            //Falls von GalleryActivity kommt Linken Oberen Zurueck-Button entfernen:
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
             //und Galerie nicht laden, dafuer gleich das uebergebene Deck setzen:
             chosenDeck = intent.getStringExtra("chosen_deck");
-            //TODO Extra chosen_deck setzen wenn von Galerie aus gestartet wird, sowie JSON-String mit uebergeben
+            deckGameText.setText("Deck: " + chosenDeck);
         }
+
     }
 }

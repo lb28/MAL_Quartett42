@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -81,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickSettingsButtonFunction(View view){
         spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, SettingActivity.class);
-        intent.putExtra("setting_soucre", "main");
+        intent.putExtra("setting_source", "main");
         startActivity(intent);
     }
 
@@ -207,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.setVisibility(View.VISIBLE);
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("json_string", jsonString);
-        intent.putExtra("new_game_soucre", "main_activity");
+        intent.putExtra("new_game_source", "main_activity");
         startActivity(intent);
     }
 

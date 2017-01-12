@@ -71,6 +71,7 @@ public class Game {
     private Boolean gameOver = false;
 
     /** Konstruktor fuer Spielstart
+     * (nextPlayer wird zufaellig bestimmt)
      *
      * @param deck
      * @param difficulty
