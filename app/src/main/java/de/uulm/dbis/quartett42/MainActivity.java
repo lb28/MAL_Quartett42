@@ -6,24 +6,21 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
@@ -151,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream is = null;
         ImageView welcomeImage = (ImageView)findViewById(R.id.welcomeImage);
         try {
-            is = assetManager.open("startimage.gif");
+            is = assetManager.open("startimage2.gif");
             Bitmap bitmap = BitmapFactory.decodeStream(is);
             welcomeImage.setImageBitmap(bitmap);
             is.close();

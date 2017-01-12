@@ -68,15 +68,25 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
+    <!-- optional background for for menu + image (set color to transparent to disable) -->
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srcCompat="@color/colorPrimaryDark"
-        android:id="@+id/welcomeImage"
-        android:layout_below="@+id/welcomeText"
+        app:srcCompat="@android:color/transparent"
+        android:id="@+id/welcomeBackground"
+        android:scaleType="centerCrop"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="12dp" />
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/welcomeImage"
+
+        android:layout_below="@+id/welcomeText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp" />
 
     <ProgressBar
         android:id="@+id/progressBar1"

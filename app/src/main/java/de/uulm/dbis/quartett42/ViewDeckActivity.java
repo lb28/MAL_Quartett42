@@ -3,6 +3,7 @@ package de.uulm.dbis.quartett42;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,17 +13,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
-import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
 
 public class ViewDeckActivity extends AppCompatActivity {
@@ -46,18 +42,20 @@ public class ViewDeckActivity extends AppCompatActivity {
         jsonString = intent.getStringExtra("json_string");
         chosenDeck = intent.getStringExtra("chosen_deck");
 
-        //JSON String auslesen und Game erstellen
-        new Thread(new Runnable() {
-            public void run() {
-                loadData();
-            }
-        }).start();
+        // use AsyncTask to load Deck from JSON
+        new LoadDeckTask().execute();
     }
 
     protected void onResume() {
         super.onResume();
+    }
 
-        spinner.setVisibility(View.GONE);
+    @Override
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent(this, GalleryActivity.class);
+        intent.putExtra("json_string", jsonString);
+        startActivity(intent);
+        return true;
     }
 
     public void showNextCard(View view) {
@@ -132,74 +130,26 @@ public class ViewDeckActivity extends AppCompatActivity {
         return attrList;
     }
 
-    //JSON Daten laden und Game erstellen:
-    public void loadData(){
-        try {
-            // Getting JSON Array node
-            JSONObject jsonObj = new JSONObject(jsonString);
-            JSONArray decks = jsonObj.getJSONArray("decks");
-            //Nach passendem Deck im JSON-Array suchen:
-            for (int i = 0; i < decks.length(); i++) {
-                JSONObject tmpDeck = decks.getJSONObject(i);
-                String deckName = tmpDeck.getString("name");
-                if(deckName.equals(chosenDeck)){
-                    //Alle Daten fuer das Deck auslesen:
-                    String deckDescription = tmpDeck.getString("description");
-                    String deckImageUri = tmpDeck.getString("image");
-                    ImageCard deckImage = new ImageCard(deckImageUri, deckDescription);
-                    //Properties auslesen:
-                    ArrayList<Property> propertyList = new ArrayList<Property>();
-                    JSONArray properties = tmpDeck.getJSONArray("properties");
-                    for(int p = 0; p < properties.length(); p++){
-                        JSONObject tmpProperty = properties.getJSONObject(p);
-                        String pName = tmpProperty.getString("name");
-                        String pUnit = tmpProperty.getString("unit");
-                        boolean pMaxwinner = tmpProperty.getBoolean("maxwinner");
-                        Property property = new Property(pName, pUnit, pMaxwinner);
-                        propertyList.add(property);
-                    }
-                    //Alle Karten auslesen:
-                    ArrayList<Card> cardList = new ArrayList<Card>();
-                    JSONArray cards = tmpDeck.getJSONArray("cards");
-                    for(int c = 0; c < cards.length(); c++){
-                        JSONObject tmpCard = cards.getJSONObject(c);
-                        String cName = tmpCard.getString("name");
-                        int cId = tmpCard.getInt("id");
-                        //Bilder durchlaufen:
-                        ArrayList<ImageCard> imageList = new ArrayList<ImageCard>();
-                        JSONArray images = tmpCard.getJSONArray("images");
-                        for(int j = 0; j < images.length(); j++){
-                            JSONObject tmpImage = images.getJSONObject(j);
-                            String uri = tmpImage.getString("URI");
-                            String iDescription = tmpImage.getString("description");
-                            ImageCard cardImage = new ImageCard(uri, iDescription);
-                            imageList.add(cardImage);
-                        }
-                        //Values durchlaufen:
-                        HashMap<String, Double> attributeMap = new HashMap<String, Double>();
-                        JSONObject values = tmpCard.getJSONObject("values");
-                        for(Property px : propertyList){
-                            //System.out.println(px.getName()+": "+values.getDouble(px.getName()));
-                            attributeMap.put(px.getName(), values.getDouble(px.getName()));
-                        }
-                        //Karte erstellen
-                        Card newCard = new Card(cName, cId, imageList, attributeMap);
-                        cardList.add(newCard);
-                    }
-                    //Deck erstellen:
-                    deck = new Deck(chosenDeck, deckImage, propertyList, cardList);
+    private class LoadDeckTask extends AsyncTask<Void, Void, Deck> {
 
-                    break;
-                }
+        @Override
+        protected Deck doInBackground(Void... voids) {
+            JSONParser jsonParser = new JSONParser();
+            try { synchronized (this) {
+                this.wait(1000);
             }
-
-            updateView();
-
-        } catch (Exception e){
-            e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return jsonParser.getDeck(ViewDeckActivity.this, chosenDeck);
         }
 
-
+        @Override
+        protected void onPostExecute(Deck deck) {
+            ViewDeckActivity.this.deck = deck; // is this ok?
+            updateView();
+            spinner.setVisibility(View.GONE);
+        }
     }
 
 }

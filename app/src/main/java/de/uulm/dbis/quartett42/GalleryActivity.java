@@ -36,11 +36,11 @@ public class GalleryActivity extends AppCompatActivity {
         //JSON-String auslesen:
         Intent intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
-        //System.out.println(jsonString);
 
         //Decks laden:
         new Thread(new Runnable() {
             public void run() {
+                // TODO make AsynchTask calling JSONParser.getDecks()
                 loadData();
             }
         }).start();
@@ -98,7 +98,6 @@ public class GalleryActivity extends AppCompatActivity {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Deck item = (Deck) parent.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Deck "+item.getName()+": "+item.getImage().getDescription(), Toast.LENGTH_SHORT).show();
 
                 // Einzelansicht des Decks aufrufen
                 spinner.setVisibility(View.VISIBLE);
