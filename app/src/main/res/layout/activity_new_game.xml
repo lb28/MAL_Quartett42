@@ -27,11 +27,7 @@
             android:id="@+id/galleryGridView"
             android:layout_width="match_parent"
             android:layout_height="111dp"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_marginTop="18dp"
-            android:layout_alignParentBottom="true"
             android:layout_margin="5dp"
             android:columnWidth="100dp"
             android:drawSelectorOnTop="true"
@@ -91,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/changeSettingsButton"
-            android:onClick="clickChangeSettingsButtonFunction (NewGameActivity)"/>
+            android:onClick="clickChangeSettingsButtonFunction"/>
 
         <TextView
             android:layout_width="match_parent"
