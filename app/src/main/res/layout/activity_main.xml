@@ -48,7 +48,8 @@
         android:id="@+id/highscoreButton"
         android:layout_above="@+id/statisticButton"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="clickHighscoreButtonFunction"/>
 
     <Button
         android:text="EINSTELLUNGEN"
