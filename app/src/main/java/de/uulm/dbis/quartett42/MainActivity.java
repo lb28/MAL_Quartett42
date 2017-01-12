@@ -117,8 +117,14 @@ public class MainActivity extends AppCompatActivity {
     //Statistics Button:
     public void clickStatisticsButtonFunction(View view){
         spinner.setVisibility(View.VISIBLE);
-        Log.d("test", "in der clickstatisticsbuttonfunction");
         Intent intent = new Intent(this, StatisticsActivity.class);
+        startActivity(intent);
+    }
+
+    //Highscore Button:
+    public void clickHighscoreButtonFunction(View view){
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, HighscoreActivity.class);
         startActivity(intent);
     }
 
