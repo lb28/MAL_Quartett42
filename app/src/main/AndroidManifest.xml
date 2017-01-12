@@ -58,15 +58,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".ViewDeckActivity"
+        <activity
+            android:name=".ViewDeckActivity"
             android:label="Quartett42 Deckansicht"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".GalleryActivity" />
         </activity>
-
         <activity
             android:name=".StatisticsActivity"
             android:label="Quartett42 Statistiken"
@@ -75,12 +74,29 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".HighscoreActivity"
+        <activity
+            android:name=".HighscoreActivity"
             android:label="Quartett42 Highscores"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="de.uulm.dbis.quartett42.MainActivity"/>
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
+        <activity
+            android:name=".InfoActivity"
+            android:label="Quartett42 Info"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
+        <activity
+            android:name=".GuideActivity"
+            android:label="Quartett42 Anleitung"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
     </application>
 

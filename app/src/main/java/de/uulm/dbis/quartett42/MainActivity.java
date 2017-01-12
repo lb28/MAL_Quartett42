@@ -11,6 +11,9 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -47,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 loadData();
             }});
+    }
+
+    //add menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -126,6 +137,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Menue-Items:
+    public void clickGuideFunction(MenuItem item){
+        if(item.getTitle().equals("Anleitung")){
+            spinner.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, GuideActivity.class);
+            startActivity(intent);
+        }else if(item.getTitle().equals("Info")){
+            spinner.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, InfoActivity.class);
+            startActivity(intent);
+        }
+    }
 
     //Methoden der Activity:
 

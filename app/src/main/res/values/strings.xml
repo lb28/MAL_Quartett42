@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Quartett42</string>
     <string name="title_activity_highscore_activiy">HighscoreActiviy</string>
+    <string name="title_activity_info">InfoActivity</string>
 </resources>

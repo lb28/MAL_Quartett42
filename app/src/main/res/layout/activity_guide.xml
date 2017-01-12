@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_guide"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="de.uulm.dbis.quartett42.GuideActivity">
+
+    <TextView
+        android:text="
+Varianten: \n\n
+auf Runden: Wer nach festgelegter Anzahl an Runden mehr Karten hat gewinnt das Spiel. \n\n
+auf Zeit: Wer nach festgelegter Anzahl an Minuten mehr Karten hat gewinnt das Spiel. \n\n
+auf Punkte: Wer zuerst die festgelegte Anzahl an Punkten erreicht gewinnt das Spiel. \n\n
+Zudem gewinnt ein Spieler immer dann, wenn der Gegner keine Karten mehr hat. \n\n
+Insane-Modus: Alles ist vertauscht! Statt hohen Werten gewinnen nun niedrige Werte und umgekehrt. \n\n
+Experten Modus: Hier sind Kenner gefragt! Die Werte der einzelnen Karten werden nicht mehr angezeigt. \n\n "
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/textView4" />
+</RelativeLayout>
