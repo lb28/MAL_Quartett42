@@ -38,21 +38,15 @@
         android:id="@+id/buttonRight"
         android:onClick="showNextCard" />
 
-    <!--<TextView
-        android:id="@+id/cardContentText"
-        android:layout_width="match_parent"
-        android:text="Card Content"
-        android:layout_height="100dp"
-        android:layout_above="@+id/buttonLeft"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />-->
-
     <include
-        android:layout_width="wrap_content"
         layout="@layout/card_fragment"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
         android:layout_height="400dp"
         android:layout_above="@+id/buttonLeft" />
 
