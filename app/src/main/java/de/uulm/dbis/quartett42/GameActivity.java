@@ -98,15 +98,18 @@ public class GameActivity extends AppCompatActivity {
             if (game.getGameOver()) {
                 // the game is over
                 // TODO put stuff into intent and redirect to GameOverActivity
-
-                // just a test
-                Intent intent = new Intent(this, MainActivity.class);
-                int winner = 0; // draw
-                if (game.getPointsPlayer() > game.getPointsComputer()) winner = 1;
-                else if (game.getPointsPlayer() < game.getPointsComputer()) winner = 2;
+                Intent intent = new Intent(this, GameEndActivity.class);
+                int winner = Game.WINNER_DRAW;
+                if (game.getPointsPlayer() > game.getPointsComputer()) {
+                    winner = Game.WINNER_PLAYER;
+                }
+                else if (game.getPointsPlayer() < game.getPointsComputer()) {
+                    winner = Game.WINNER_COMPUTER;
+                }
                 intent.putExtra("winner", winner);
 
                 startActivity(intent);
+
             } else {
                 // the game is still going on
                 nextRound();
