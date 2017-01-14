@@ -52,17 +52,17 @@
         android:text="In Rangliste Eintragen"/>
 
     <Button
-        android:id="@+id/home"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/newGameSameSettings"
-        android:text="Startseite"/>
-
-    <Button
         android:id="@+id/newGameSameSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="Neues Spiel mit gleichen Einstellungen"/>
 
+    <Button
+        android:id="@+id/goToStartBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/newGameSameSettings"
+        android:text="Startseite"
+        android:onClick="goToMainMenu"/>
 </RelativeLayout>
