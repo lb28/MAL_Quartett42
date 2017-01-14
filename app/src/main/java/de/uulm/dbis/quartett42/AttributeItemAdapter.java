@@ -17,14 +17,14 @@ import de.uulm.dbis.quartett42.data.Property;
  */
 public class AttributeItemAdapter extends ArrayAdapter<Property> {
     private boolean isClickable;
+    private boolean expertMode;
+    private boolean insaneMode;
 
-    public AttributeItemAdapter(Context context, int resource, List<Property> attributes) {
-        this(true, context, resource, attributes); // default: clickable
-    }
-
-    public AttributeItemAdapter(boolean isClickable, Context context, int resource, List<Property> attributes) {
+    public AttributeItemAdapter(boolean isClickable, boolean expertMode, boolean insaneMode, Context context, int resource, List<Property> attributes) {
         super(context, resource, attributes);
         this.isClickable = isClickable;
+        this.expertMode = expertMode;
+        this.insaneMode = insaneMode;
     }
 
     @NonNull
@@ -37,6 +37,12 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.attr_list_item, parent, false);
         }
 
+        // negate the maxWinner if we are in insaneMode
+        boolean maxWinner = property.isMaxWinner();
+        if (insaneMode) {
+            maxWinner = !maxWinner;
+        }
+
         // Lookup view for data population
         TextView textViewAttrName = (TextView) convertView.findViewById(R.id.textViewAttrName);
         TextView textViewAttrValue = (TextView) convertView.findViewById(R.id.textViewAttrValue);
@@ -45,13 +51,18 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
         assert property != null;
         // Populate the data into the template view using the data object
         String nameAndMaxWinner = property.getName();
-        if (property.getMaxwinner()) {
+        if (maxWinner) {
             nameAndMaxWinner += " (\u2191)"; // upwards arrow
         } else {
             nameAndMaxWinner += " (\u2193)"; // downwards arrow
         }
         textViewAttrName.setText(nameAndMaxWinner);
-        textViewAttrValue.setText(String.valueOf(property.getValue()));
+
+        if (expertMode) {
+            textViewAttrValue.setText("[?]");
+        } else {
+            textViewAttrValue.setText(String.valueOf(property.getValue()));
+        }
         textViewAttrUnit.setText(property.getUnit());
 
         // Return the completed view to render on screen

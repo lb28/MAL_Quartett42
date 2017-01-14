@@ -11,10 +11,10 @@ public class Property {
     /**
      * True if maximum wins, false if minimum wins
      */
-    private Boolean maxwinner;
+    private boolean maxWinner;
 
     /**
-     * optional value field so the value can be passed along with attribute name, unit, and maxwinner
+     * optional value field so the value can be passed along with attribute name, unit, and maxWinner
      * (convenient for the adapter handling the display)
      * NOTE: The "actual" value (which is used during the game) is stored inside each card's attributeMap.
      * This only serves display purposes.
@@ -27,12 +27,12 @@ public class Property {
      *
      * @param name
      * @param unit
-     * @param maxwinner
+     * @param maxWinner
      */
-    public Property(String name, String unit, Boolean maxwinner) {
+    public Property(String name, String unit, boolean maxWinner) {
         this.name = name;
         this.unit = unit;
-        this.maxwinner = maxwinner;
+        this.maxWinner = maxWinner;
     }
 
     /**
@@ -41,11 +41,11 @@ public class Property {
      * but is used when displaying the attributes)
      * @param name
      * @param unit
-     * @param maxwinner
+     * @param maxWinner
      * @param value
      */
-    public Property(String name, String unit, Boolean maxwinner, double value) {
-        this(name, unit, maxwinner);
+    public Property(String name, String unit, boolean maxWinner, double value) {
+        this(name, unit, maxWinner);
         this.value = value;
     }
 
@@ -65,12 +65,12 @@ public class Property {
         this.unit = unit;
     }
 
-    public Boolean getMaxwinner() {
-        return maxwinner;
+    public boolean isMaxWinner() {
+        return maxWinner;
     }
 
-    public void setMaxwinner(Boolean maxwinner) {
-        this.maxwinner = maxwinner;
+    public void setMaxWinner(boolean maxWinner) {
+        this.maxWinner = maxWinner;
     }
 
     /**
@@ -96,7 +96,7 @@ public class Property {
         return "Property{" +
                 "name='" + name + '\'' +
                 ", unit='" + unit + '\'' +
-                ", maxwinner=" + maxwinner +
+                ", maxWinner=" + maxWinner +
                 '}';
     }
 }

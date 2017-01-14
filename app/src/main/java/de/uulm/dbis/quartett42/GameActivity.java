@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Game;
+import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
 
 public class GameActivity extends AppCompatActivity {
@@ -32,6 +33,12 @@ public class GameActivity extends AppCompatActivity {
      * The time (in milliseconds) the computer waits before selecting a card
      */
     public static final int COMPUTER_WAIT_MILLIS = 3000;
+
+    /**
+     * request code for calling the CompareCardsActivity
+     */
+    private static final int REQUEST_COMPARE_CARDS = 1;
+
     String chosenDeck = "";
     Game game;
 
@@ -87,12 +94,32 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO consider all cases to make this more robust --> if (requestCode == ....) etc...
-        Log.i(TAG, "onActivityResult");
-        nextRound();
+        if (requestCode == REQUEST_COMPARE_CARDS && resultCode == RESULT_OK) {
+            if (game.getGameOver()) {
+                // the game is over
+                // TODO put stuff into intent and redirect to GameOverActivity
+
+                // just a test
+                Intent intent = new Intent(this, MainActivity.class);
+                int winner = 0; // draw
+                if (game.getPointsPlayer() > game.getPointsComputer()) winner = 1;
+                else if (game.getPointsPlayer() < game.getPointsComputer()) winner = 2;
+                intent.putExtra("winner", winner);
+
+                startActivity(intent);
+            } else {
+                // the game is still going on
+                nextRound();
+            }
+        } else {
+            Log.e(TAG, "onActivityResult: wrong requestCode / resultCode");
+        }
     }
 
-    //Methoden der Activity:
+
+    ///////////////////////////
+    // Methoden der Activity://
+    ///////////////////////////
 
     private class LoadDeckTask extends AsyncTask<Void, Void, Deck> {
 
@@ -177,34 +204,37 @@ public class GameActivity extends AppCompatActivity {
         textViewGameScore.setText("(Du) " + game.getCardsPlayer().size() + " : " + game.getCardsComputer().size() + " (Gegner)");
 
         // Text Bsp: "7 Runden übrig"
-        String roundsRemaining = game.getRoundsLeft() + " ";
+        String roundsRemainingString = game.getRoundsLeft() + " ";
         switch (game.getMode()) {
             case 1:
-                roundsRemaining += "Runden";
+                roundsRemainingString += "Runden";
                 break;
             case 2:
-                roundsRemaining += "?Minuten?";
+                roundsRemainingString += "?Minuten?";
                 break;
             case 3:
-                roundsRemaining += "Punkte";
+                roundsRemainingString += "Punkte";
                 break;
         }
-        roundsRemaining += " übrig";
+        roundsRemainingString += " übrig";
+        textViewRoundsRemaining.setText(roundsRemainingString);
 
         // get the current (the topmost) card of the player
         Card card = game.getDeck().getCardList().get(game.getCardsPlayer().get(0));
 
-        ArrayList<Property> attributeList = Util.buildAttrList(game.getDeck(), card);
+        ArrayList<Property> attributeList = Util.buildAttrList(game.getDeck().getPropertyList(), card);
         // feed attribute list to array adapter
         ArrayAdapter<Property> attrListAdapter = new AttributeItemAdapter(
                 game.isNextPlayer(), // make list clickable only if it is player's turn
+                sharedPref.getBoolean("expertModus", false),
+                sharedPref.getBoolean("insaneModus", false),
                 this,
                 R.layout.attr_list_item,
                 attributeList
         );
         cardAttributeListView.setAdapter(attrListAdapter);
 
-        // TODO set a click listener for the ListView which plays the cards based on the choice
+        // set a click listener for the ListView which plays the cards based on the choice
         cardAttributeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int clickedPosition, long id) {
@@ -220,7 +250,8 @@ public class GameActivity extends AppCompatActivity {
 
         // update the image viewPager
         PagerAdapter pagerAdapter =
-                new ImageSlidePagerAdapter(getSupportFragmentManager(), game.getDeck(), card);
+                new ImageSlidePagerAdapter(
+                        getSupportFragmentManager(), card.getImageList(), game.getDeck().getName());
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -260,16 +291,57 @@ public class GameActivity extends AppCompatActivity {
      * @param chosenAttribute the name of the chosen property/attribute
      */
     private void playCardsGUI(String chosenAttribute) {
-        System.out.println("cards Played, Winner: " + game.playCards(chosenAttribute));
-
-        // TODO put stuff into intent for display on CompareCardsActivity
-        // maybe put the "game" in a json object and pass it along?
-
-        // for now
-        int requestCode = 1;
-
         Intent intent = new Intent(this, CompareCardsActivity.class);
-        startActivityForResult(intent, requestCode);
+
+        Property chosenProp = null;
+        // attribute name, maxwinner, unit and both values
+        for (Property p : game.getDeck().getPropertyList()) {
+            if (p.getName().equals(chosenAttribute)) {
+                chosenProp = p;
+                break;
+            }
+        }
+
+        // get both cards BEFORE they are played
+        Card cardPlayer = game.returnCardOfID(game.getCardsPlayer().get(0));
+        Card cardComputer = game.returnCardOfID(game.getCardsComputer().get(0));
+
+        // play the cards (i.e. update the model)
+        int roundWinner = game.playCards(chosenAttribute);
+
+        // get image URIs and descriptions of both cards and put them into the intent as lists
+        ArrayList<String> imgUriListPlayer = new ArrayList<String>();
+        ArrayList<String> imgDescListPlayer = new ArrayList<String>();
+        for (ImageCard imgCard : cardPlayer.getImageList()) {
+            imgUriListPlayer.add(imgCard.getUri());
+            imgDescListPlayer.add(imgCard.getDescription());
+        }
+
+        ArrayList<String> imgUriListComputer = new ArrayList<String>();
+        ArrayList<String> imgDescListComputer = new ArrayList<String>();
+        for (ImageCard imgCard : cardComputer.getImageList()) {
+            imgUriListComputer.add(imgCard.getUri());
+            imgDescListComputer.add(imgCard.getDescription());
+        }
+
+        // put all the stuff we need into the intent:
+        intent.putExtra("deckName", game.getDeck().getName());
+        intent.putExtra("cardNamePlayer", cardPlayer.getName());
+        intent.putExtra("cardNameComputer", cardComputer.getName());
+        intent.putStringArrayListExtra("imgUriListPlayer", imgUriListPlayer);
+        intent.putStringArrayListExtra("imgDescListPlayer", imgDescListPlayer);
+        intent.putStringArrayListExtra("imgUriListComputer", imgUriListComputer);
+        intent.putStringArrayListExtra("imgDescListComputer", imgDescListComputer);
+        intent.putExtra("maxWinner", chosenProp.isMaxWinner());
+        intent.putExtra("attrName", chosenProp.getName());
+        intent.putExtra("attrUnit", chosenProp.getUnit());
+        intent.putExtra("attrValuePlayer",
+                cardPlayer.getAttributeMap().get(chosenAttribute).doubleValue());
+        intent.putExtra("attrValueComputer",
+                cardComputer.getAttributeMap().get(chosenAttribute).doubleValue());
+        intent.putExtra("roundWinner", roundWinner);
+
+        startActivityForResult(intent, REQUEST_COMPARE_CARDS);
     }
 
 }

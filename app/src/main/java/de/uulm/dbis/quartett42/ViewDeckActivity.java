@@ -84,9 +84,12 @@ public class ViewDeckActivity extends AppCompatActivity {
         // get the current card
         Card card = deck.getCardList().get(currentCardIndex);
 
-        ArrayList<Property> attrList = Util.buildAttrList(deck, card);
+        ArrayList<Property> attrList = Util.buildAttrList(deck.getPropertyList(), card);
         // feed attribute list to array adapter
         ArrayAdapter<Property> attrListAdapter = new AttributeItemAdapter(
+                false,
+                false,
+                false, // TODO consider insaneMode in Gallery Deck View (when not playing)?
                 this,
                 R.layout.attr_list_item,
                 attrList
@@ -94,8 +97,8 @@ public class ViewDeckActivity extends AppCompatActivity {
         cardAttributeListView.setAdapter(attrListAdapter);
 
         // update the image viewPager
-        PagerAdapter pagerAdapter =
-                new ImageSlidePagerAdapter(getSupportFragmentManager(), deck, card);
+        PagerAdapter pagerAdapter = new ImageSlidePagerAdapter(
+                getSupportFragmentManager(), card.getImageList(), deck.getName());
 
         viewPager.setAdapter(pagerAdapter);
 

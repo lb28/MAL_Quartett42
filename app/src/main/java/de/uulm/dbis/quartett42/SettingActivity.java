@@ -149,10 +149,10 @@ public class SettingActivity extends AppCompatActivity {
 
             editor.putInt("difficulty", schwierigkeitsPicker.getProgress() + 1);
             editor.putBoolean("insaneModus", insaneSwitch.isChecked());
-            editor.putBoolean("expertModus", insaneSwitch.isChecked());
+            editor.putBoolean("expertModus", expertSwitch.isChecked());
             editor.putBoolean("soundModus", soundSwitch.isChecked());
 
-            editor.commit();
+            editor.apply();
 
             Toast.makeText(getApplicationContext(), "Einstellungen gespeichert", Toast.LENGTH_SHORT).show();
         }else{

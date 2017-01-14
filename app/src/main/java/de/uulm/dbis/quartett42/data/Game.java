@@ -11,9 +11,9 @@ import java.util.Set;
  */
 
 public class Game {
-    public static int WINNER_DRAW = 0;
-    public static int WINNER_PLAYER = 1;
-    public static int WINNER_COMPUTER = 2;
+    public static final int WINNER_DRAW = 0;
+    public static final int WINNER_PLAYER = 1;
+    public static final int WINNER_COMPUTER = 2;
 
     private Deck deck;
 
@@ -190,7 +190,7 @@ public class Game {
                 boolean tmpMaxwinner = true;
                 for(Property px : deck.getPropertyList()){
                     if(px.getName().equals(propertyArray[i])){
-                        tmpMaxwinner = px.getMaxwinner();
+                        tmpMaxwinner = px.isMaxWinner();
                     }
                 }
                 if(insaneModus){
@@ -216,7 +216,7 @@ public class Game {
                 boolean tmpMaxwinner = true;
                 for(Property px : deck.getPropertyList()){
                     if(px.getName().equals(propertyArray[randomProperty])){
-                        tmpMaxwinner = px.getMaxwinner();
+                        tmpMaxwinner = px.isMaxWinner();
                     }
                 }
                 if(insaneModus){
@@ -269,7 +269,7 @@ public class Game {
         boolean tmpMaxwinner = true;
         for(Property px : deck.getPropertyList()){
             if(px.getName().equals(chosenAttribute)){
-                tmpMaxwinner = px.getMaxwinner();
+                tmpMaxwinner = px.isMaxWinner();
             }
         }
         if(insaneModus){
@@ -368,8 +368,10 @@ public class Game {
             }
         }
 
-        //Ende?:
-        if(roundsLeft <= 0 && (mode == 1 || mode == 3)){
+        // check if the game is over
+        if((roundsLeft <= 0 && (mode == 1 || mode == 3))    // no rounds/points/time left
+                || cardsPlayer.isEmpty()                    // player has no cards left
+                || cardsComputer.isEmpty()){                // pc has no cards left
             gameOver = true;
         }
 
@@ -409,7 +411,7 @@ public class Game {
         for(int i = 0; i < deck.getCardList().size(); i++){
             if(deck.getCardList().get(i).getId() == cardID){
                 resCard = deck.getCardList().get(i);
-                i = deck.getCardList().size();
+                break;
             }
         }
         return resCard;
