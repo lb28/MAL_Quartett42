@@ -33,7 +33,7 @@ public class StatisticsActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         //------------------test----------------------------
-
+/*
         final SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putInt("spieleGesamt", 100);
@@ -46,7 +46,7 @@ public class StatisticsActivity extends AppCompatActivity {
         editor.putInt("insaneSpieleGewonnen", 20);
 
         editor.commit();
-
+*/
         //--------------------------------------------------
 
         Spielegesamt = (TextView) findViewById(R.id.Spielegesamt);
