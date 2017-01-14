@@ -97,17 +97,10 @@ public class GameActivity extends AppCompatActivity {
         if (requestCode == REQUEST_COMPARE_CARDS && resultCode == RESULT_OK) {
             if (game.getGameOver()) {
                 // the game is over
-                // TODO put stuff into intent and redirect to GameOverActivity
+                // TODO put stuff into intent and redirect to GameEndActivity
                 Intent intent = new Intent(this, GameEndActivity.class);
-                int winner = Game.WINNER_DRAW;
-                if (game.getPointsPlayer() > game.getPointsComputer()) {
-                    winner = Game.WINNER_PLAYER;
-                }
-                else if (game.getPointsPlayer() < game.getPointsComputer()) {
-                    winner = Game.WINNER_COMPUTER;
-                }
-                intent.putExtra("winner", winner);
-
+                intent.putExtra("pointsPlayer", game.getPointsPlayer());
+                intent.putExtra("pointsComputer", game.getPointsComputer());
                 startActivity(intent);
 
             } else {

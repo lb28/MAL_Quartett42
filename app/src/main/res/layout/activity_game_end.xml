@@ -59,9 +59,10 @@
         android:text="Neues Spiel mit gleichen Einstellungen"/>
 
     <Button
-        android:id="@+id/home"
+        android:id="@+id/goToStartBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/newGameSameSettings"
-        android:text="Startseite"/>
+        android:text="Startseite"
+        android:onClick="goToMainMenu"/>
 </RelativeLayout>
