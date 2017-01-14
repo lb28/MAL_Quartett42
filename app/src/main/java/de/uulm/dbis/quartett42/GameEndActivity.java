@@ -1,5 +1,6 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ public class GameEndActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
+    Intent intent;
 
     //Elemente:
 
