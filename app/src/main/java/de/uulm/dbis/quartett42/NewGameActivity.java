@@ -3,6 +3,7 @@ package de.uulm.dbis.quartett42;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class NewGameActivity extends AppCompatActivity {
     TextView deckGameText;
     TextView modeGameText;
     TextView roundsLeftGameText;
+    TextView roundsLeftLabel;
     TextView difficultyGameText;
     TextView insaneGameText;
     TextView expertGameText;
@@ -58,10 +60,11 @@ public class NewGameActivity extends AppCompatActivity {
         //System.out.println(jsonString);
 
         deckGameText = (TextView)findViewById(R.id.deckGameText);
-        modeGameText = (TextView)findViewById(R.id.varianteGameText);
+        modeGameText = (TextView)findViewById(R.id.modusGameText);
         roundsLeftGameText = (TextView)findViewById(R.id.anzahlGameText);
+        roundsLeftLabel = (TextView)findViewById(R.id.anzahlRundenLabel);
         difficultyGameText = (TextView)findViewById(R.id.schwierigkeitGameText);
-        insaneGameText = (TextView)findViewById(R.id.insaneGameTExt);
+        insaneGameText = (TextView)findViewById(R.id.insaneGameText);
         expertGameText = (TextView)findViewById(R.id.expertGameText);
         soundGameText = (TextView)findViewById(R.id.soundGameText);
 
@@ -78,45 +81,53 @@ public class NewGameActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //Einstellungen aus DefaultSharedPreferences laden:
-        deckGameText.setText("Deck: "+ chosenDeck);
+        deckGameText.setText(chosenDeck);
+        if (chosenDeck.equals("")) {
+            deckGameText.setText("bitte wählen");
+            deckGameText.setTextColor(Color.RED);
+        }
 
         int mode = sharedPref.getInt("mode", 1);
         if(mode == 1){
-            modeGameText.setText("Spielmodus: rundenbasiert");
-            roundsLeftGameText.setText("Anzahl Runden: "+sharedPref.getInt("roundsLeft", 10));
+            modeGameText.setText("Rundenbasiert");
+            roundsLeftLabel.setText("Rundenlimit:");
+            roundsLeftGameText.setText(""+sharedPref.getInt("roundsLeft", 10));
         }else if(mode == 2){
-            modeGameText.setText("Spielmodus: zeitbasiert");
-            roundsLeftGameText.setText("Spielminuten: "+sharedPref.getInt("roundsLeft", 10));
+            modeGameText.setText("Zeitbasiert");
+            roundsLeftLabel.setText("Spielminuten:");
+            //TODO
+            roundsLeftGameText.setText(""+sharedPref.getInt("roundsLeft", 10));
         }else{
-            modeGameText.setText("Spielmodus: punktebasiert");
-            roundsLeftGameText.setText("Punktelimit: "+sharedPref.getInt("pointsLeft", 1000));
+            modeGameText.setText("Punktebasiert");
+            roundsLeftLabel.setText("Punktelimit:");
+            roundsLeftGameText.setText(""+sharedPref.getInt("pointsLeft", 1000));
         }
 
         int difficulty = sharedPref.getInt("difficulty", 2);
         if(difficulty == 1){
-            difficultyGameText.setText("Schwierigkeit: leicht");
+            difficultyGameText.setText("leicht");
         }else if(difficulty == 2){
-            difficultyGameText.setText("Schwierigkeit: mittel");
+            difficultyGameText.setText("mittel");
         }else{
-            difficultyGameText.setText("Schwierigkeit: schwer");
+            difficultyGameText.setText("schwer");
         }
 
         if(sharedPref.getBoolean("insaneModus", false)){
-            insaneGameText.setText("Insane Modus: ein");
+            insaneGameText.setText("ein");
         }else{
-            insaneGameText.setText("Insane Modus: aus");
+            insaneGameText.setText("aus");
         }
 
         if(sharedPref.getBoolean("expertModus", false)){
-            expertGameText.setText("Experten Modus: ein");
+            expertGameText.setText("ein");
         }else{
-            expertGameText.setText("Experten Modus: aus");
+            expertGameText.setText("aus");
         }
 
         if(sharedPref.getBoolean("soundModus", true)){
-            soundGameText.setText("Sound: ein");
+            soundGameText.setText("ein");
         }else{
-            soundGameText.setText("Sound: aus");
+            soundGameText.setText("aus");
         }
 
         spinner.setVisibility(View.GONE);
@@ -193,7 +204,9 @@ public class NewGameActivity extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     Deck item = (Deck) parent.getItemAtPosition(position);
                     chosenDeck = item.getName();
-                    deckGameText.setText("Deck: " + chosenDeck);
+                    deckGameText.setText(chosenDeck);
+                    // reset color to default color
+                    deckGameText.setTextColor(Color.parseColor("#8a000000"));
                 }
 
             });
@@ -204,7 +217,7 @@ public class NewGameActivity extends AppCompatActivity {
 
             //und Galerie nicht laden, dafuer gleich das uebergebene Deck setzen:
             chosenDeck = intent.getStringExtra("chosen_deck");
-            deckGameText.setText("Deck: " + chosenDeck);
+            deckGameText.setText(chosenDeck);
         }
 
     }
