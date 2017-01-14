@@ -65,11 +65,11 @@ public class HighscoreActivity extends AppCompatActivity {
         vierterNameZeit = sharedPref.getString("vierterNameZeit", "Default Name3");
         fuenfterNameZeit = sharedPref.getString("fuenfterNameZeit", "Default Name3");
 
-        ersterPunkteRunden = sharedPref.getInt("erstePunkteRunden", -1);
-        zweiterPunkteRunden = sharedPref.getInt("zweitePunkteRunden", -1);
-        dritterPunkteRunden = sharedPref.getInt("drittePunkteRunden", -1);
-        vierterPunkteRunden = sharedPref.getInt("viertePunkteRunden", -1);
-        fuenfterPunkteRunden = sharedPref.getInt("fuenftePunkteRunden", -1);
+        ersterPunkteRunden = sharedPref.getInt("ersterPunkteRunden", -1);
+        zweiterPunkteRunden = sharedPref.getInt("zweiterPunkteRunden", -1);
+        dritterPunkteRunden = sharedPref.getInt("dritterPunkteRunden", -1);
+        vierterPunkteRunden = sharedPref.getInt("vierterPunkteRunden", -1);
+        fuenfterPunkteRunden = sharedPref.getInt("fuenfterPunkteRunden", -1);
         ersterPunktePunkte = sharedPref.getInt("ersterPunktePunkte", -2);
         zweiterPunktePunkte = sharedPref.getInt("zweiterPunktePunkte", -2);
         dritterPunktePunkte = sharedPref.getInt("dritterPunktePunkte", -2);

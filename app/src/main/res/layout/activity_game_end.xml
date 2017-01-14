@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_game_end"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="de.uulm.dbis.quartett42.GameEndActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Das Spiel ist zu Ende!"
+        android:id="@+id/SpielzuEnde"
+        android:gravity="center"
+        android:textSize="25dp"/>
+
+    <TextView
+        android:id="@+id/matchAusgang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SpielzuEnde"
+        android:paddingTop="40dp"
+        android:text="Gewonnen!"
+        android:gravity="center"
+        android:textSize="35dp"/>
+
+    <TextView
+        android:id="@+id/inDieTop5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/matchAusgang"
+        android:paddingTop="45dp"
+        android:text="Du hast es in die Top 5 geschafft."/>
+
+    <EditText
+        android:id="@+id/nameEintragen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/inDieTop5"
+        android:paddingTop="25dp"
+        android:hint="Hier deinen Namen eintragen"/>
+
+    <Button
+        android:id="@+id/inRangliste"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameEintragen"
+        android:text="In Rangliste Eintragen"/>
+
+    <Button
+        android:id="@+id/home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/newGameSameSettings"
+        android:text="Startseite"/>
+
+    <Button
+        android:id="@+id/newGameSameSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Neues Spiel mit gleichen Einstellungen"/>
+
+</RelativeLayout>

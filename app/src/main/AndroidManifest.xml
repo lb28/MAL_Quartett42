@@ -98,7 +98,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".CompareCardsActivity"></activity>
+        <activity android:name=".CompareCardsActivity" />
+        <activity android:name=".GameEndActivity"></activity>
     </application>
 
 </manifest>
