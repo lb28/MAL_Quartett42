@@ -30,7 +30,8 @@
             android:text="Spielstand"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:textColor="?android:attr/textColorSecondary" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -42,7 +43,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            />
+            android:textColor="?android:attr/textColorSecondary" />
 
     </RelativeLayout>
 
@@ -55,14 +56,26 @@
         android:layout_height="420dp" />
 
     <TextView
-        android:text="Wähle ein Attribut / Gegner ist dran"
-        android:layout_width="match_parent"
+        android:text="instructionText"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:id="@+id/instructionTextView"
         android:textSize="18sp"
-        android:textColor="@color/colorAccent"
-        android:gravity="center_horizontal"
+        android:textColor="?android:attr/textColorSecondary"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ProgressBar
+        android:id="@+id/progressBarWait"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/instructionTextView"
+        android:layout_toEndOf="@+id/instructionTextView"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
         />
 
 </RelativeLayout>

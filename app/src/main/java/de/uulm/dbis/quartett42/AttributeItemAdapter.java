@@ -16,8 +16,15 @@ import de.uulm.dbis.quartett42.data.Property;
  * Created by Luis on 11.01.2017.
  */
 public class AttributeItemAdapter extends ArrayAdapter<Property> {
+    private boolean isClickable;
+
     public AttributeItemAdapter(Context context, int resource, List<Property> attributes) {
+        this(true, context, resource, attributes); // default: clickable
+    }
+
+    public AttributeItemAdapter(boolean isClickable, Context context, int resource, List<Property> attributes) {
         super(context, resource, attributes);
+        this.isClickable = isClickable;
     }
 
     @NonNull
@@ -49,5 +56,11 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        // return false if isClickable is set to false, else call overridden method
+        return isClickable && super.isEnabled(position);
     }
 }

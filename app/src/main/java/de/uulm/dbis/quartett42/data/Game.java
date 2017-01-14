@@ -11,6 +11,10 @@ import java.util.Set;
  */
 
 public class Game {
+    public static int WINNER_DRAW = 0;
+    public static int WINNER_PLAYER = 1;
+    public static int WINNER_COMPUTER = 2;
+
     private Deck deck;
 
     /** Schwierigkeitsstufe: 1 = leicht, 2 = mittel, 3 = Profi
@@ -70,6 +74,9 @@ public class Game {
      */
     private Boolean gameOver = false;
 
+    private static Random r = new Random();
+
+
     /** Konstruktor fuer Spielstart
      * (nextPlayer wird zufaellig bestimmt)
      *
@@ -80,17 +87,19 @@ public class Game {
      * @param roundsLeft
      */
     public Game(Deck deck, int difficulty, int mode, boolean insaneModus, int roundsLeft) {
-        this.deck = deck;
-        this.difficulty = difficulty;
-        this.mode = mode;
-        this.insaneModus = insaneModus;
-        this.roundsLeft = roundsLeft;
-        this.pointsPlayer = 0;
-        this.pointsComputer = 0;
-        this.nextPlayer = true;
+        this(
+                deck,
+                difficulty,
+                mode,
+                insaneModus,
+                roundsLeft,
+                0,
+                0,
+                r.nextBoolean(),
+                new ArrayList<Integer>(),
+                new ArrayList<Integer>());
+
         this.averageValues = returnAverage();
-        this.cardsPlayer = new ArrayList<Integer>();
-        this.cardsComputer = new ArrayList<Integer>();
         shuffleCards();
     }
 
@@ -125,7 +134,6 @@ public class Game {
 
 
     //Alle Game-Methoden
-    private Random r = new Random();
 
     /** Methode ermittelt alle Durchschnittswerte und speichert sie ab
      *
@@ -239,11 +247,23 @@ public class Game {
      * und die verbleibenden runter, packt Karten auf den richtigen Stapel
      * und bestimmt ggf. das Ende
      *
-     * @param chosenAttribute
-     * @return int winner: //0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
+     * @param chosenAttribute das ausgewaehlte Attribut zum Vergleichen
+     * @return int winner: 0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
      */
     public int playCards(String chosenAttribute){
-        int winner = -1; //0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
+        int winner = -1; // 0 = unentschieden, 1 = Spieler gewinnt, 2 = Computer gewinnt
+
+        // check if either of them has no cards left
+        if (cardsPlayer.isEmpty()) {
+            // player has no cards left --> computer wins
+            gameOver = true;
+            return WINNER_COMPUTER;
+        } else if (cardsComputer.isEmpty()) {
+            // computer has no cards left --> player wins
+            gameOver = true;
+            return WINNER_PLAYER;
+        }
+
         Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
         Card cardComputer = returnCardOfID(cardsComputer.get(0));
         boolean tmpMaxwinner = true;
@@ -255,10 +275,20 @@ public class Game {
         if(insaneModus){
             tmpMaxwinner = !tmpMaxwinner;
         }
+
+        // TODO i think we could do it like this, and then omit the following "if (tmpMaxwinner)"
+//        Double valPlayer = cardPlayer.getAttributeMap().get(chosenAttribute);
+//        Double valComputer = cardComputer.getAttributeMap().get(chosenAttribute);
+//        if (!tmpMaxwinner) {
+//            // invert both values so in case they were equal they still are
+//            valPlayer = -valPlayer;
+//            valComputer = -valComputer;
+//        }
+
         if (tmpMaxwinner) {
             if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
                 //Player gewinnt:
-                winner = 1;
+                winner = WINNER_PLAYER;
                 nextPlayer = true;
                 //Punkte behandlen:
                 pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
@@ -273,8 +303,7 @@ public class Game {
                 cardsPlayer.add(cardPlayer.getId());
             }else if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
                 //Computer gewinnt:
-                //Player gewinnt:
-                winner = 2;
+                winner = WINNER_COMPUTER;
                 nextPlayer = false;
                 //Punkte behandeln:
                 pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
@@ -289,7 +318,7 @@ public class Game {
                 cardsComputer.add(cardComputer.getId());
             }else{
                 //unentschieden:
-                winner = 0;
+                winner = WINNER_DRAW;
                 //Jeder haengt seine Karte hinten an:
                 cardsPlayer.remove(0);
                 cardsComputer.remove(0);
@@ -299,7 +328,7 @@ public class Game {
         }else{
             if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
                 //Player gewinnt:
-                winner = 1;
+                winner = WINNER_PLAYER;
                 nextPlayer = true;
                 //Punkte behandlen:
                 pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
@@ -315,7 +344,7 @@ public class Game {
             }else if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
                 //Computer gewinnt:
                 //Player gewinnt:
-                winner = 2;
+                winner = WINNER_COMPUTER;
                 nextPlayer = false;
                 //Punkte behandeln:
                 pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
@@ -330,7 +359,7 @@ public class Game {
                 cardsComputer.add(cardComputer.getId());
             }else{
                 //unentschieden:
-                winner = 0;
+                winner = WINNER_DRAW;
                 //Jeder haengt seine Karte hinten an:
                 cardsPlayer.remove(0);
                 cardsComputer.remove(0);
