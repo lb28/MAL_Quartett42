@@ -229,9 +229,15 @@
 
         </LinearLayout>
 
-
-
+        <Button
+            android:id="@+id/resetHighscores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Highscores zurücksetzen"
+            android:onClick="resetHighscoresFunction"/>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

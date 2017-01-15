@@ -1,5 +1,6 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 public class HighscoreActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     TextView ersterName, ersterPunkte, zweiterName, zweiterPunkte, dritterName, dritterPunkte;
     TextView vierterName, vierterPunkte, fuenfterName, fuenfterPunkte;
@@ -32,6 +34,7 @@ public class HighscoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_highscore);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
 
         ersterName = (TextView) findViewById(R.id.NamePosEins);
         zweiterName = (TextView) findViewById(R.id.NamePosZwei);
@@ -156,6 +159,62 @@ public class HighscoreActivity extends AppCompatActivity {
         dritterPunkte.setText("" + dritterPunkteZeit);
         vierterPunkte.setText("" + vierterPunkteZeit);
         fuenfterPunkte.setText("" + fuenfterPunkteZeit);
+
+    }
+
+    public void resetHighscoresFunction(View view){
+
+        editor = sharedPref.edit();
+
+        editor.putInt("ersterPunktePunkte", -1);
+        editor.putInt("zweiterPunktePunkte", -1);
+        editor.putInt("dritterPunktePunkte", -1);
+        editor.putInt("vierterPunktePunkte", -1);
+        editor.putInt("fuenfterPunktePunkte", -1);
+
+        editor.putString("ersterNamePunkte", "Default");
+        editor.putString("zweiterNamePunkte", "Default");
+        editor.putString("dritterNamePunkte", "Default");
+        editor.putString("vierterNamePunkte", "Default");
+        editor.putString("fuenfterNamePunkte", "Default");
+
+        editor.putInt("ersterPunkteRunden", -1);
+        editor.putInt("zweiterPunkteRunden", -1);
+        editor.putInt("dritterPunkteRunden", -1);
+        editor.putInt("vierterPunkteRunden", -1);
+        editor.putInt("fuenfterPunkteRunden", -1);
+
+        editor.putString("ersterNameRunden", "Default");
+        editor.putString("zweiterNameRunden", "Default");
+        editor.putString("dritterNameRunden", "Default");
+        editor.putString("vierterNameRunden", "Default");
+        editor.putString("fuenfterNameRunden", "Default");
+
+        editor.putInt("ersterPunkteZeit", -1);
+        editor.putInt("zweiterPunkteZeit", -1);
+        editor.putInt("dritterPunkteZeit", -1);
+        editor.putInt("vierterPunkteZeit", -1);
+        editor.putInt("fuenfterPunkteZeit", -1);
+
+        editor.putString("ersterNameZeit", "Default");
+        editor.putString("zweiterNameZeit", "Default");
+        editor.putString("dritterNameZeit", "Default");
+        editor.putString("vierterNameZeit", "Default");
+        editor.putString("fuenfterNameZeit", "Default");
+
+        editor.apply();
+
+        ersterName.setText("Default");
+        zweiterName.setText("Default");
+        dritterName.setText("Default");
+        vierterName.setText("Default");
+        fuenfterName.setText("Default");
+
+        ersterPunkte.setText("" + -1);
+        zweiterPunkte.setText("" + -1);
+        dritterPunkte.setText("" + -1);
+        vierterPunkte.setText("" + -1);
+        fuenfterPunkte.setText("" + -1);
 
     }
 

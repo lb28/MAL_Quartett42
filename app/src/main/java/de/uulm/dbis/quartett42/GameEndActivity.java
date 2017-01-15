@@ -89,8 +89,11 @@ public class GameEndActivity extends AppCompatActivity {
         //Spielmodus holen
         int spielmodus = sharedPref.getInt("mode", 0);
 
+        boolean higherThanFifthPlace = false;
+        if(winner == Game.WINNER_PLAYER){
+            higherThanFifthPlace = newHighscore(pointsPlayer, spielmodus);
+        }
 
-        boolean higherThanFifthPlace = newHighscore(pointsPlayer, spielmodus);
 
         //falls der wert in den top5 ist
         if (higherThanFifthPlace == true){
@@ -102,6 +105,8 @@ public class GameEndActivity extends AppCompatActivity {
         }
     }
 
+
+    //update die statistiken
     public void updateStatistics(){
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -156,6 +161,10 @@ public class GameEndActivity extends AppCompatActivity {
         editor.apply();
     }
 
+
+    //sind die erspielten punkte in den top5?
+    //true -> ja
+    //false -> nein
     public boolean newHighscore(int pointsPlayer, int gamemode){
 
         int punktevergleich;
@@ -202,6 +211,8 @@ public class GameEndActivity extends AppCompatActivity {
         return true;
     }
 
+
+    //die erspielten punkte und den eingegebenen namen in die highscores einfügen
     public void clickInsertHighscoreFunction(View view){
 
         int spielmodus = sharedPref.getInt("mode", 0);
@@ -235,25 +246,25 @@ public class GameEndActivity extends AppCompatActivity {
             highscorepunkte.add(sharedPref.getInt("fuenfterPunkteRunden", -1));
 
             //name und punkte an der richtigen stelle einsortieren und 6. stelle löschen
-            if (pointsPlayer > highscorepunkte.get(0)){
+            if (erreichtePunkteSpieler > highscorepunkte.get(0)){
                 highscorepunkte.add(0, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(0, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
                 highscorepunkte.add(1, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(1, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
                 highscorepunkte.add(2, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(2, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
                 highscorepunkte.add(3, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(3, nameEintragen.getText().toString());
@@ -306,25 +317,25 @@ public class GameEndActivity extends AppCompatActivity {
             highscorepunkte.add(sharedPref.getInt("fuenfterPunkteZeit", -1));
 
             //name und punkte an der richtigen stelle einsortieren und 6. stelle löschen
-            if (pointsPlayer > highscorepunkte.get(0)){
+            if (erreichtePunkteSpieler > highscorepunkte.get(0)){
                 highscorepunkte.add(0, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(0, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
                 highscorepunkte.add(1, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(1, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
                 highscorepunkte.add(2, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(2, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
+            } else if (erreichtePunkteSpieler < highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
                 highscorepunkte.add(3, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(3, nameEintragen.getText().toString());
@@ -389,25 +400,25 @@ public class GameEndActivity extends AppCompatActivity {
             }
 
             //name und punkte an der richtigen stelle einsortieren und 6. stelle löschen
-            if (pointsPlayer > highscorepunkte.get(0)){
+            if (erreichtePunkteSpieler > highscorepunkte.get(0)){
                 highscorepunkte.add(0, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(0, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
+            } else if (erreichtePunkteSpieler <= highscorepunkte.get(0) && pointsPlayer > highscorepunkte.get(1)){
                 highscorepunkte.add(1, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(1, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
+            } else if (erreichtePunkteSpieler <= highscorepunkte.get(1) && pointsPlayer > highscorepunkte.get(2)){
                 highscorepunkte.add(2, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(2, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            } else if (pointsPlayer < highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
+            } else if (erreichtePunkteSpieler <= highscorepunkte.get(2) && pointsPlayer > highscorepunkte.get(3)){
                 highscorepunkte.add(3, erreichtePunkteSpieler);
                 highscorepunkte.remove(5);
                 highscorenamen.add(3, nameEintragen.getText().toString());
