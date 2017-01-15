@@ -49,20 +49,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameEintragen"
-        android:text="In Rangliste Eintragen"/>
+        android:text="In Rangliste Eintragen"
+        android:onClick="clickInsertHighscoreFunction"/>
 
     <Button
-        android:id="@+id/newGameSameSettings"
+        android:id="@+id/goToHighscores"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Neues Spiel mit gleichen Einstellungen"/>
+        android:text="Highscores"
+        android:onClick="goToHighscores"/>
 
     <Button
         android:id="@+id/goToStartBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/newGameSameSettings"
+        android:layout_above="@id/goToHighscores"
         android:text="Startseite"
         android:onClick="goToMainMenu"/>
 </RelativeLayout>
