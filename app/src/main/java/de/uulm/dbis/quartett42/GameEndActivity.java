@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.uulm.dbis.quartett42.data.Game;
@@ -55,6 +56,9 @@ public class GameEndActivity extends AppCompatActivity {
         inDieTop5 = (TextView) findViewById(R.id.inDieTop5);
         rangliste = (Button) findViewById(R.id.inRangliste);
         nameEintragen = (EditText) findViewById(R.id.nameEintragen);
+
+        highscorenamen = new ArrayList<>();
+        highscorepunkte = new ArrayList<>();
 
         // Intent holen
         Intent intent = getIntent();
@@ -214,11 +218,8 @@ public class GameEndActivity extends AppCompatActivity {
 
         if (spielmodus == 1){
 
-            Log.i("My App", "ICH BIN IM RUNDENMODUS");
-
             //punkte gesamt berechnen
             erreichtePunkteSpieler = sharedPref.getInt("roundsLeft", 1) * pointsPlayer * schwierigkeit * expert;
-            Log.i("My App","erreichtePunkteSpie= " + erreichtePunkteSpieler);
 
             //alle highscorewerte und -namen holen und in zwei listen schreiben
             highscorenamen.add(sharedPref.getString("ersterNameRunden", "Default Name"));
@@ -227,22 +228,11 @@ public class GameEndActivity extends AppCompatActivity {
             highscorenamen.add(sharedPref.getString("vierterNameRunden", "Default Name"));
             highscorenamen.add(sharedPref.getString("fuenfterNameRunden", "Default Name"));
 
-            Log.i("My App","highscorenamen vor einfügen");
-            for (int i = 0; i<highscorenamen.size(); i++){
-                Log.i("My App",highscorenamen.get(i));
-            }
-
             highscorepunkte.add(sharedPref.getInt("ersterPunkteRunden", -1));
             highscorepunkte.add(sharedPref.getInt("zweiterPunkteRunden", -1));
             highscorepunkte.add(sharedPref.getInt("dritterPunkteRunden", -1));
             highscorepunkte.add(sharedPref.getInt("vierterPunkteRunden", -1));
             highscorepunkte.add(sharedPref.getInt("fuenfterPunkteRunden", -1));
-
-            Log.i("My App","highscorepunkte vor einfügen");
-            for (int i = 0; i<highscorepunkte.size(); i++){
-                Log.i("My App", highscorepunkte.get(i).toString());
-            }
-
 
             //name und punkte an der richtigen stelle einsortieren und 6. stelle löschen
             if (pointsPlayer > highscorepunkte.get(0)){
@@ -275,16 +265,6 @@ public class GameEndActivity extends AppCompatActivity {
                 highscorenamen.add(4, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
-            }
-
-            Log.i("My App","highscorenamen nach einfügen");
-            for (int i = 0; i<highscorenamen.size(); i++){
-                Log.i("My App",highscorenamen.get(i));
-            }
-
-            Log.i("My App","highscorepunkte nach einfügen");
-            for (int i = 0; i<highscorepunkte.size(); i++){
-                Log.i("My App",highscorepunkte.get(i).toString());
             }
 
             //sharedpreferences updaten
@@ -379,21 +359,34 @@ public class GameEndActivity extends AppCompatActivity {
 
         } else{
 
+            Log.i("My App", "ICH BIN IM PUNKTEMODUS");
+
             //punkte gesamt berechnen
             erreichtePunkteSpieler = sharedPref.getInt("pointsLeft", 1) * pointsPlayer * schwierigkeit * expert;
+            Log.i("My App","erreichtePunkteSpie= " + erreichtePunkteSpieler);
 
             //alle highscorewerte und -namen holen und in zwei listen schreiben
-            highscorenamen.add(sharedPref.getString("ersterNamePunkte", "Default Name"));
-            highscorenamen.add(sharedPref.getString("zweiterNamePunkte", "Default Name"));
-            highscorenamen.add(sharedPref.getString("dritterNamePunkte", "Default Name"));
-            highscorenamen.add(sharedPref.getString("vierterNamePunkte", "Default Name"));
-            highscorenamen.add(sharedPref.getString("fuenfterNamePunkte", "Default Name"));
+            highscorenamen.add(0,sharedPref.getString("ersterNamePunkte", "Default Name"));
+            highscorenamen.add(1,sharedPref.getString("zweiterNamePunkte", "Default Name"));
+            highscorenamen.add(2,sharedPref.getString("dritterNamePunkte", "Default Name"));
+            highscorenamen.add(3,sharedPref.getString("vierterNamePunkte", "Default Name"));
+            highscorenamen.add(4,sharedPref.getString("fuenfterNamePunkte", "Default Name"));
 
-            highscorepunkte.add(sharedPref.getInt("ersterPunktePunkte", -1));
-            highscorepunkte.add(sharedPref.getInt("zweiterPunktePunkte", -1));
-            highscorepunkte.add(sharedPref.getInt("dritterPunktePunkte", -1));
-            highscorepunkte.add(sharedPref.getInt("vierterPunktePunkte", -1));
-            highscorepunkte.add(sharedPref.getInt("fuenfterPunktePunkte", -1));
+            Log.i("My App","highscorenamen vor einfügen");
+            for (int i = 0; i<highscorenamen.size(); i++){
+                Log.i("My App",highscorenamen.get(i));
+            }
+
+            highscorepunkte.add(0,sharedPref.getInt("ersterPunktePunkte", -1));
+            highscorepunkte.add(1,sharedPref.getInt("zweiterPunktePunkte", -1));
+            highscorepunkte.add(2,sharedPref.getInt("dritterPunktePunkte", -1));
+            highscorepunkte.add(3,sharedPref.getInt("vierterPunktePunkte", -1));
+            highscorepunkte.add(4,sharedPref.getInt("fuenfterPunktePunkte", -1));
+
+            Log.i("My App","highscorepunkte vor einfügen");
+            for (int i = 0; i<highscorepunkte.size(); i++){
+                Log.i("My App", highscorepunkte.get(i).toString());
+            }
 
             //name und punkte an der richtigen stelle einsortieren und 6. stelle löschen
             if (pointsPlayer > highscorepunkte.get(0)){
@@ -426,6 +419,16 @@ public class GameEndActivity extends AppCompatActivity {
                 highscorenamen.add(4, nameEintragen.getText().toString());
                 highscorenamen.remove(5);
 
+            }
+
+            Log.i("My App","highscorenamen nach einfügen");
+            for (int i = 0; i<highscorenamen.size(); i++){
+                Log.i("My App",highscorenamen.get(i));
+            }
+
+            Log.i("My App","highscorepunkte nach einfügen");
+            for (int i = 0; i<highscorepunkte.size(); i++){
+                Log.i("My App",highscorepunkte.get(i).toString());
             }
 
             //sharedpreferences updaten
