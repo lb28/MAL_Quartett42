@@ -50,6 +50,7 @@ public class NewGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_game);
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.bringToFront();
         spinner.setVisibility(View.VISIBLE);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);

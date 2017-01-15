@@ -33,11 +33,8 @@ public class MainActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner.bringToFront();
         spinner.setVisibility(View.VISIBLE);
-
-        //SharedPreferences.Editor editor = sharedPref.edit();
-        //editor.putInt("runningGame", 1);
-        //editor.commit();
 
         //Daten laden, runOnUiThread weil UI angepasst wird, keine Ahnung ob es was besseres gibt
         runOnUiThread(new Runnable() {
@@ -84,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
     public void clickNewGameButtonFunction(View view){
         //Gucken, ob ein laufendes Spiel vorhanden:
         //runningGame Value lesen, 1 falls Spiel pausiert, 0 wenn nicht:
+        System.out.println("laufendes Spiel --------- "+sharedPref.getInt("runningGame", 500));
         if(sharedPref.getInt("runningGame", 0) == 1){
             //Fragen, ob vorhandenes Spiel fortgesetzt werden soll oder neues begonnen werden soll
-            String[] aktionen = {"Spiel fortsetzen", "Neues Spiel"};
+            String[] aktionen = {"Ja, Spiel fortsetzen", "Nein, Neues Spiel starten"};
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Soll ein pausiertes Spiel fortgesetzt werden?")
                     .setItems(aktionen, new DialogInterface.OnClickListener() {
@@ -94,14 +92,16 @@ public class MainActivity extends AppCompatActivity {
                             // The 'which' argument contains the index position of the selected item
                             if(which == 0){
                                 // vorhandenes Spiel laden:
-                                //TODO
-                                Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
-
+                                loadGame();
                             }else if(which == 1){
                                 //alte gespeichertes Spiel loeschen
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putInt("runningGame", 0);
-                                //TODO
+                                editor.putInt("currentRoundsLeft", 0);
+                                editor.putInt("currentPointsPlayer", 0);
+                                editor.putInt("currentPointsComputer", 0);
+                                editor.putString("currentCardsPlayer", "");
+                                editor.putString("currentCardsComputer", "");
                                 editor.commit();
                                 //Zu NewGameActivity weiter leiten
                                 startNewGame();
@@ -205,6 +205,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("json_string", jsonString);
         intent.putExtra("new_game_source", "main_activity");
+        startActivity(intent);
+    }
+
+    public void loadGame(){
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
+        intent.putExtra("json_string", jsonString);
         startActivity(intent);
     }
 

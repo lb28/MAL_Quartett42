@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -46,6 +47,9 @@ public class GameActivity extends AppCompatActivity {
 
     ProgressBar spinner; //Spinner fuer Ladezeiten
 
+    TextView textViewRoundsRemaining;
+    CountDownTimer countDownTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,10 +66,40 @@ public class GameActivity extends AppCompatActivity {
         chosenDeck = intent.getStringExtra("chosen_deck");
         //System.out.println(jsonString);
 
+        textViewRoundsRemaining = (TextView) findViewById(R.id.textViewRoundsRemaining);
+
         // use AsyncTask to load Deck from JSON
         new LoadDeckTask().execute();
 
     }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        if(game.getMode() == 2){
+            countDownTimer.cancel();
+        }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("currentChosenDeck", chosenDeck);
+        editor.putInt("currentRoundsLeft", game.getRoundsLeft());
+        editor.putInt("currentPointsPlayer", game.getPointsPlayer());
+        editor.putInt("currentPointsComputer", game.getPointsComputer());
+        editor.putBoolean("currentNextPlayer", game.isNextPlayer());
+        StringBuilder sb1 = new StringBuilder();
+        for (int i = 0; i < game.getCardsPlayer().size(); i++) {
+            sb1.append(game.getCardsPlayer().get(i)).append(";");
+        }
+        editor.putString("currentCardsPlayer", sb1.toString());
+        StringBuilder sb2 = new StringBuilder();
+        for (int i = 0; i < game.getCardsComputer().size(); i++) {
+            sb2.append(game.getCardsComputer().get(i)).append(";");
+        }
+        editor.putString("currentCardsComputer", sb2.toString());
+        editor.commit();
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -73,11 +107,20 @@ public class GameActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Spiel beenden")
-                .setMessage("Wollen Sie das Spiel wirklich beenden?")
+                .setMessage("Spiel beenden und Spielstand speichern?")
                 .setPositiveButton("Ja", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        //Alle aktuellen Daten fuer ein Spiel in SharedPreferences schreiben:
+                        //in on Destroy-Methode, diese fängt auch das Schliessen der App durch
+                        //Activity Manager von Android auf.
+
+                        System.out.println("------------ SPEICHERE SPIEL AUF 1");
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt("runningGame", 1);
+                        editor.apply();
+
                         GameActivity.super.onSupportNavigateUp();
                     }
 
@@ -97,17 +140,16 @@ public class GameActivity extends AppCompatActivity {
         if (requestCode == REQUEST_COMPARE_CARDS && resultCode == RESULT_OK) {
             if (game.getGameOver()) {
                 // the game is over
-                // TODO put stuff into intent and redirect to GameEndActivity
-                Intent intent = new Intent(this, GameEndActivity.class);
-                intent.putExtra("pointsPlayer", game.getPointsPlayer());
-                intent.putExtra("pointsComputer", game.getPointsComputer());
-                startActivity(intent);
+                endGame();
 
             } else {
                 // the game is still going on
                 nextRound();
             }
-        } else {
+        } else if(requestCode == REQUEST_COMPARE_CARDS && resultCode == RESULT_CANCELED){
+            //Save Game Data and finish
+            GameActivity.super.onSupportNavigateUp();
+        }else {
             Log.e(TAG, "onActivityResult: wrong requestCode / resultCode");
         }
     }
@@ -129,7 +171,30 @@ public class GameActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Deck deck) {
             // create a game
-            makeGame(deck); // maybe also asynchronous?
+            makeGame(deck); // maybe also asynchronous
+
+            //Falls im Zeitmodus, dann CountdownTimer mit der Zeit starten:
+            if(game.getMode() == 2){
+                countDownTimer = new CountDownTimer(game.getRoundsLeft(), 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        //Zeit runter rechnen jede Sekunde:
+                        game.setRoundsLeft(game.getRoundsLeft()-1000);
+                        int seconds = (int) (game.getRoundsLeft() / 1000) % 60 ;
+                        int minutes = (int) ((game.getRoundsLeft() / (1000*60)) % 60);
+                        String timeLeft = minutes+":"+seconds+" übrig";
+                        textViewRoundsRemaining.setText(timeLeft);
+                    }
+
+                    public void onFinish() {
+                        //Spiel beenden:
+                        endGame();
+                    }
+                };
+
+                countDownTimer.start();
+            }
+
            
             spinner.setVisibility(View.GONE);
             
@@ -150,13 +215,34 @@ public class GameActivity extends AppCompatActivity {
         }else{
             roundsLeft = sharedPref.getInt("pointsLeft", 1000);
         }
+        if(mode == 2){
+            roundsLeft = roundsLeft*60000;
+        }
 
 
         //Andere Behandlung je nachdem ob ein neues Spiel gespielt wird oder ein altes geladen wird:
         if(sharedPref.getInt("runningGame", 0) == 0){
             game = new Game(newDeck, difficulty, mode, insaneModus, roundsLeft);
+
         }else{
-            //TODO neues Game erstellen auf Basis der alten Daten
+            int currentRoundsLeft = sharedPref.getInt("currentRoundsLeft", 10);
+            int currentPointsPlayer = sharedPref.getInt("currentPointsPlayer", 0);
+            int currentPointsComputer = sharedPref.getInt("currentPointsComputer", 0);
+            boolean currentNextPlayer = sharedPref.getBoolean("currentNextPlayer", true);
+            String[] playerCardsString = sharedPref.getString("currentCardsPlayer", "").split(";");
+            ArrayList<Integer> currentCardsPlayer = new ArrayList<Integer>();
+            for(int s = 0; s < playerCardsString.length; s++){
+                currentCardsPlayer.add(Integer.parseInt(playerCardsString[s]));
+            }
+            String[] computerCardsString = sharedPref.getString("currentCardsComputer", "").split(";");
+            ArrayList<Integer> currentCardsComputer = new ArrayList<Integer>();
+            for(int s = 0; s < computerCardsString.length; s++){
+                currentCardsComputer.add(Integer.parseInt(computerCardsString[s]));
+            }
+
+            game = new Game(newDeck, difficulty, mode, insaneModus, currentRoundsLeft,
+                    currentPointsPlayer, currentPointsComputer, currentNextPlayer,
+                    currentCardsPlayer, currentCardsComputer);
         }
     }
 
@@ -191,28 +277,30 @@ public class GameActivity extends AppCompatActivity {
     public void updateView() {
         // get all the view elements
         TextView textViewGameScore = (TextView) findViewById(R.id.textViewGameScore);
-        TextView textViewRoundsRemaining = (TextView) findViewById(R.id.textViewRoundsRemaining);
         ViewPager viewPager = (ViewPager) findViewById(R.id.cardImageViewPager);
         TextView cardTitleTextView = (TextView) findViewById(R.id.cardTitleTextView);
         ListView cardAttributeListView = (ListView) findViewById(R.id.cardAttributeListView);
 
         // Text Bsp: "(Du) 23 : 41 (Gegner)"
-        textViewGameScore.setText("(Du) " + game.getCardsPlayer().size() + " : " + game.getCardsComputer().size() + " (Gegner)");
+        if(game.getMode() == 3){
+            textViewGameScore.setText("(Du) " + game.getPointsPlayer() + " : " + game.getPointsComputer() + " (Gegner)");
+        }else{
+            textViewGameScore.setText("(Du) " + game.getCardsPlayer().size() + " : " + game.getCardsComputer().size() + " (Gegner)");
+        }
 
         // Text Bsp: "7 Runden übrig"
-        String roundsRemainingString = game.getRoundsLeft() + " ";
+        String roundsRemainingString = "";
         switch (game.getMode()) {
             case 1:
-                roundsRemainingString += "Runden";
+                roundsRemainingString += game.getRoundsLeft() + " Runden übrig";
                 break;
             case 2:
-                roundsRemainingString += "?Minuten?";
+                //roundsRemainingString += "?Minuten?";
                 break;
             case 3:
-                roundsRemainingString += "Punkte";
+                roundsRemainingString += game.getRoundsLeft() + " Punkte übrig";
                 break;
         }
-        roundsRemainingString += " übrig";
         textViewRoundsRemaining.setText(roundsRemainingString);
 
         // get the current (the topmost) card of the player
@@ -338,6 +426,30 @@ public class GameActivity extends AppCompatActivity {
         intent.putExtra("roundWinner", roundWinner);
 
         startActivityForResult(intent, REQUEST_COMPARE_CARDS);
+    }
+
+    public void endGame(){
+        try{
+            if(game.getMode() == 2){
+                countDownTimer.cancel();
+            }
+        }catch(Exception e){
+            //Countdown schon abgelaufen
+        }
+
+        //alte gespeichertes Spiel loeschen
+        System.out.println("------------ SPEICHERE SPIEL AUF 0");
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("runningGame", 0);
+        editor.apply();
+
+
+        Intent intent = new Intent(this, GameEndActivity.class);
+        intent.putExtra("pointsPlayer", game.getPointsPlayer());
+        intent.putExtra("pointsComputer", game.getPointsComputer());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
 }

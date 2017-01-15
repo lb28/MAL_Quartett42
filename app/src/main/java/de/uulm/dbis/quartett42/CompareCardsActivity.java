@@ -40,12 +40,19 @@ public class CompareCardsActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Spiel beenden")
-                .setMessage("Wollen Sie das Spiel wirklich beenden?")
+                .setMessage("Spiel beenden und Spielstand speichern?")
                 .setPositiveButton("Ja", new DialogInterface.OnClickListener()
                 {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                     public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("------------ SPEICHERE SPIEL AUF 1");
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt("runningGame", 1);
+                        editor.apply();
+
                         CompareCardsActivity.super.onSupportNavigateUp();
+                        setResult(RESULT_CANCELED);
+                        finish();
                     }
 
                 })

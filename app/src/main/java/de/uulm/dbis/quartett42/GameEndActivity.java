@@ -23,7 +23,7 @@ public class GameEndActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
-    TextView winnerText, inDieTop5;
+    TextView winnerText, inDieTop5, endstand;
     Button rangliste;
     EditText nameEintragen;
 
@@ -56,6 +56,7 @@ public class GameEndActivity extends AppCompatActivity {
         inDieTop5 = (TextView) findViewById(R.id.inDieTop5);
         rangliste = (Button) findViewById(R.id.inRangliste);
         nameEintragen = (EditText) findViewById(R.id.nameEintragen);
+        endstand = (TextView) findViewById(R.id.endPunkteStand);
 
         highscorenamen = new ArrayList<>();
         highscorepunkte = new ArrayList<>();
@@ -66,6 +67,8 @@ public class GameEndActivity extends AppCompatActivity {
         //Gewonnen/Verloren anzeigen
         pointsPlayer = intent.getIntExtra("pointsPlayer", -1);
         pointsComputer = intent.getIntExtra("pointsComputer", -1);
+
+        endstand.setText("Endstand: "+pointsPlayer+" : "+pointsComputer);
 
         winner = Game.WINNER_DRAW;
         if (pointsPlayer > pointsComputer) {
@@ -103,6 +106,7 @@ public class GameEndActivity extends AppCompatActivity {
             nameEintragen.setVisibility(View.VISIBLE);
 
         }
+
     }
 
 
@@ -472,7 +476,8 @@ public class GameEndActivity extends AppCompatActivity {
 
 
     public void goToMainMenu(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
+
+
 }
