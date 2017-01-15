@@ -3,9 +3,6 @@ package de.uulm.dbis.quartett42;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -171,12 +167,13 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+/*
         //Test: Startbild laden:
         AssetManager assetManager = getAssets();
         InputStream is = null;
         ImageView welcomeImage = (ImageView)findViewById(R.id.welcomeImage);
         try {
-            is = assetManager.open("startimage2.gif");
+            is = assetManager.open("menu_image_cut.gif");
             Bitmap bitmap = BitmapFactory.decodeStream(is);
             welcomeImage.setImageBitmap(bitmap);
             is.close();
@@ -184,13 +181,14 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+*/
 
         //JSON-String lesesn, damit er nicht jedes mal neu gelesen werden muss:
         try {
             InputStream in = getAssets().open("jsonexample.json");
             int size = in.available();
             byte[] buffer = new byte[size];
-            in.read(buffer);
+            System.out.println(in.read(buffer));
             in.close();
             jsonString = new String(buffer, "UTF-8");
             //System.out.println(jsonString);
