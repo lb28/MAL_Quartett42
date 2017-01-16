@@ -55,6 +55,9 @@ public class GameActivity extends AppCompatActivity {
     CountDownTimer roundTimer;
     MediaPlayer mp;
 
+    // task as field so we can cancel it
+    private AsyncTask<Void, Void, Void> computerChoiceTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,13 +94,18 @@ public class GameActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
 
-        if(game.getMode() == 2){
-            countDownTimer.cancel();
+        // end the computerChoiceTask if it is running
+        if (computerChoiceTask != null) {
+            computerChoiceTask.cancel(true);
+        }
 
+        if(game.getMode() == 2){
             try{
+                countDownTimer.cancel();
                 roundTimer.cancel();
             }catch(Exception e){
                 //Falls Computer an der Reihe...
+                e.printStackTrace();
             }
         }
 
@@ -123,11 +131,16 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
+        // end the computerChoiceTask if it is running
+        if (computerChoiceTask != null) {
+            computerChoiceTask.cancel(true);
+        }
+
         // Dialog "wollen Sie das Spiel beenden?"
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Spiel beenden")
-                .setMessage("Spiel beenden und Spielstand speichern?")
+                .setMessage("Spielstand speichern?")
                 .setPositiveButton("Ja", new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -144,7 +157,23 @@ public class GameActivity extends AppCompatActivity {
                     }
 
                 })
-                .setNegativeButton("Nein", null)
+                .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // leave without saving
+                        GameActivity.super.onSupportNavigateUp();
+                    }
+                })
+                .setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // return to the game: start the computer choice countdown again
+                        if (!game.isNextPlayer()) {
+                            computerChoiceTask = new ComputerChoiceTask();
+                            computerChoiceTask.execute();
+                        }
+                    }
+                })
                 .show();
         return false;
     }
@@ -285,7 +314,6 @@ public class GameActivity extends AppCompatActivity {
         updateView();
 
         TextView instructionTextView = (TextView) findViewById(R.id.instructionTextView);
-        ListView cardAttributeListView = (ListView) findViewById(R.id.cardAttributeListView);
         if (game.isNextPlayer()) {
             // let the user select an attribute for comparison
             instructionTextView.setText("Wähle ein Attribut");
@@ -340,7 +368,8 @@ public class GameActivity extends AppCompatActivity {
 
             // wait COMPUTER_WAIT_MILLIS milliseconds (async)
             // and then let the computer select an attribute
-            new ComputerChoiceTask().execute();
+            computerChoiceTask = new ComputerChoiceTask();
+            computerChoiceTask.execute();
 
         }
 
@@ -432,6 +461,8 @@ public class GameActivity extends AppCompatActivity {
                 playCardsGUI(chosenAttribute);
 
             } catch (InterruptedException e) {
+                // task was killed, but everything ok
+                System.err.println("computer countdown interrupted");
                 e.printStackTrace();
             }
             return null;
@@ -512,12 +543,17 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void endGame(){
-        try{
-            if(game.getMode() == 2){
+        if (game.getMode() == 2) {
+            try{
                 countDownTimer.cancel();
+            }catch(Exception e){
+                e.printStackTrace();
             }
-        }catch(Exception e){
-            //Countdown schon abgelaufen
+            try{
+                roundTimer.cancel();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
 
         //alte gespeichertes Spiel loeschen

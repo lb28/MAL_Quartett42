@@ -99,8 +99,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".CompareCardsActivity" />
-        <activity android:name=".GameEndActivity"></activity>
+        <activity android:name=".CompareCardsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
+        <activity android:name=".GameEndActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

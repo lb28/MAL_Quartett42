@@ -42,8 +42,8 @@ public class CompareCardsActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Spiel beenden")
-                .setMessage("Spiel beenden und Spielstand speichern?")
-                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                .setMessage("Spielstand speichern?")
+                .setPositiveButton("Speichern", new DialogInterface.OnClickListener()
                 {
                     @Override
                      public void onClick(DialogInterface dialog, int which) {
@@ -51,13 +51,23 @@ public class CompareCardsActivity extends AppCompatActivity {
                         editor.putInt("runningGame", 1);
                         editor.apply();
 
-                        CompareCardsActivity.super.onSupportNavigateUp();
                         setResult(RESULT_CANCELED);
-                        finish();
+
+                        // call super method that executes the "up navigation"
+                        CompareCardsActivity.super.onSupportNavigateUp();
                     }
 
                 })
-                .setNegativeButton("Nein", null)
+                .setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        setResult(RESULT_CANCELED);
+
+                        // call super method that executes the "up navigation"
+                        CompareCardsActivity.super.onSupportNavigateUp();
+                    }
+                })
+                .setNeutralButton("Abbrechen", null)
                 .show();
         return false;
     }
@@ -202,6 +212,13 @@ public class CompareCardsActivity extends AppCompatActivity {
                 }
                 break;
         }
+        if (mp != null) {
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                };
+            });
+        }
 
 
         // debug
@@ -214,6 +231,7 @@ public class CompareCardsActivity extends AppCompatActivity {
      */
     public void continueGame(View view) {
         setResult(RESULT_OK);
+        mp.release();
         finish();
     }
 }

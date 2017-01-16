@@ -15,6 +15,10 @@ public class Game {
     public static final int WINNER_PLAYER = 1;
     public static final int WINNER_COMPUTER = 2;
 
+    public static final int MODE_ROUNDS = 1;
+    public static final int MODE_TIME = 2;
+    public static final int MODE_POINTS = 3;
+
     private Deck deck;
 
     /** Schwierigkeitsstufe: 1 = leicht, 2 = mittel, 3 = Profi
@@ -298,7 +302,7 @@ public class Game {
                 //Punkte behandlen:
                 pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
                 //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == 1 || mode == 3){
+                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
                     roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
                 }
                 //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
@@ -313,7 +317,7 @@ public class Game {
                 //Punkte behandeln:
                 pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
                 //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == 1 || mode == 3){
+                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
                     roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
                 }
                 //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
@@ -338,7 +342,7 @@ public class Game {
                 //Punkte behandlen:
                 pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
                 //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == 1 || mode == 3){
+                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
                     roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
                 }
                 //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
@@ -354,7 +358,7 @@ public class Game {
                 //Punkte behandeln:
                 pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
                 //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == 1 || mode == 3){
+                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
                     roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
                 }
                 //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
@@ -374,7 +378,8 @@ public class Game {
         }
 
         // check if the game is over
-        if((roundsLeft <= 0 && (mode == 1 || mode == 3))    // no rounds/points/time left
+        if(     (roundsLeft <= 0 &&
+                (mode == MODE_ROUNDS || mode == MODE_POINTS))// no rounds/points/time left
                 || cardsPlayer.isEmpty()                    // player has no cards left
                 || cardsComputer.isEmpty()){                // pc has no cards left
             gameOver = true;
@@ -390,7 +395,7 @@ public class Game {
      * @return int points
      */
     private int calculatePoints(String chosenAttribute, int winner){
-        if(mode == 1 || mode == 2){
+        if(mode == MODE_ROUNDS || mode == MODE_TIME){
             //Falls Runden oder Zeitbasiert, einfach 1 zurueck geben:
             return 1;
         }else{
