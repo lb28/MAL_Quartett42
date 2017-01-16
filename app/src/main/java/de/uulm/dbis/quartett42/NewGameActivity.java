@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
+import de.uulm.dbis.quartett42.data.Game;
 import de.uulm.dbis.quartett42.data.ImageCard;
 
 public class NewGameActivity extends AppCompatActivity {
@@ -89,14 +90,14 @@ public class NewGameActivity extends AppCompatActivity {
         }
 
         int mode = sharedPref.getInt("mode", 1);
-        if(mode == 1){
+        if(mode == Game.MODE_ROUNDS){
             modeGameText.setText("Rundenbasiert");
             roundsLeftLabel.setText("Rundenlimit:");
             roundsLeftGameText.setText(""+sharedPref.getInt("roundsLeft", 10));
-        }else if(mode == 2){
+        }else if(mode == Game.MODE_TIME){
             modeGameText.setText("Zeitbasiert");
             roundsLeftLabel.setText("Spielminuten:");
-            //TODO
+            //TODO is it correct to use "roundsLeft"?
             roundsLeftGameText.setText(""+sharedPref.getInt("roundsLeft", 10));
         }else{
             modeGameText.setText("Punktebasiert");
@@ -219,6 +220,7 @@ public class NewGameActivity extends AppCompatActivity {
             //und Galerie nicht laden, dafuer gleich das uebergebene Deck setzen:
             chosenDeck = intent.getStringExtra("chosen_deck");
             deckGameText.setText(chosenDeck);
+            deckGameText.setTextColor(Color.parseColor("#8a000000"));
         }
 
     }
