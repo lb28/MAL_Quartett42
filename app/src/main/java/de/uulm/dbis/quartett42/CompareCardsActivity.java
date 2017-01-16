@@ -82,7 +82,7 @@ public class CompareCardsActivity extends AppCompatActivity {
                 (ListView) computerParent.findViewById(R.id.cardAttributeListView);
 
         ViewPager viewPagerPlayer =
-                (ViewPager) playerParent.findViewById(R.id.cardImageViewPager);
+                (ViewPager) playerParent.findViewById(R.id.cardImageViewPager2);
         TextView cardNameTextViewPlayer =
                 (TextView) playerParent.findViewById(R.id.cardTitleTextView);
         ListView listViewPlayer =
