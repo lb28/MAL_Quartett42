@@ -224,7 +224,7 @@
 				}
 			},
 			{
-				"name" : "Wolli",
+				"name" : "Wolle",
 				"id" : 12,
 				"images" : [ 
 				{
@@ -237,6 +237,150 @@
 					"Alter" : 17,
 					"Gewicht" : 45,
 					"Beliebtheit" : 89
+				}
+			},
+			{
+				"name" : "Herr Van Boedefe",
+				"id" : 13,
+				"images" : [
+					{
+						"URI" : "monster14.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 77,
+					"Alter" : 78,
+					"Gewicht" : 99,
+					"Beliebtheit" : 30
+				}
+			},
+			{
+				"name" : "Oscar",
+				"id" : 14,
+				"images" : [
+					{
+						"URI" : "monster15.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 80,
+					"Alter" : 80,
+					"Gewicht" : 85,
+					"Beliebtheit" : 85
+				}
+			},
+			{
+				"name" : "Abby",
+				"id" : 15,
+				"images" : [
+					{
+						"URI" : "monster16.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 86,
+					"Alter" : 22,
+					"Gewicht" : 51,
+					"Beliebtheit" : 8
+				}
+			},
+			{
+				"name" : "Telly",
+				"id" : 16,
+				"images" : [
+					{
+						"URI" : "monster17.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 69,
+					"Alter" : 33,
+					"Gewicht" : 23,
+					"Beliebtheit" : 68
+				}
+			},
+			{
+				"name" : "Zoey",
+				"id" : 17,
+				"images" : [
+					{
+						"URI" : "monster18.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 56,
+					"Alter" : 17,
+					"Gewicht" : 59,
+					"Beliebtheit" : 17
+				}
+			},
+			{
+				"name" : "Rosita",
+				"id" : 18,
+				"images" : [
+					{
+						"URI" : "monster19.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 56,
+					"Alter" : 16,
+					"Gewicht" : 31,
+					"Beliebtheit" : 22
+				}
+			},
+			{
+				"name" : "Mr Snuffleupagus",
+				"id" : 19,
+				"images" : [
+					{
+						"URI" : "monster20.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 210,
+					"Alter" : 13,
+					"Gewicht" : 87,
+					"Beliebtheit" : 34
+				}
+			},
+			{
+				"name" : "Graf Zahl",
+				"id" : 20,
+				"images" : [
+					{
+						"URI" : "monster21.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 120,
+					"Alter" : 999,
+					"Gewicht" : 73,
+					"Beliebtheit" : 95
+				}
+			},
+			{
+				"name" : "Bibo",
+				"id" : 21,
+				"images" : [
+					{
+						"URI" : "monster22.jpg",
+						"description" : "neu"
+					}
+				],
+				"values" : {
+					"Groesse" : 256,
+					"Alter" : 50,
+					"Gewicht" : 168,
+					"Beliebtheit" : 74
 				}
 			}
 		]
