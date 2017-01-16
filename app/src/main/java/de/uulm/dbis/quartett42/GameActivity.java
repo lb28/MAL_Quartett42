@@ -3,6 +3,7 @@ package de.uulm.dbis.quartett42;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -34,6 +35,7 @@ public class GameActivity extends AppCompatActivity {
      * The time (in milliseconds) the computer waits before selecting a card
      */
     public static final int COMPUTER_WAIT_MILLIS = 3000;
+    public static final int ROUND_WAIT_MILLIS = 30000; //30 Sekunden pro Runde??
 
     /**
      * request code for calling the CompareCardsActivity
@@ -48,7 +50,10 @@ public class GameActivity extends AppCompatActivity {
     ProgressBar spinner; //Spinner fuer Ladezeiten
 
     TextView textViewRoundsRemaining;
+    TextView textViewRoundTime;
     CountDownTimer countDownTimer;
+    CountDownTimer roundTimer;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +72,19 @@ public class GameActivity extends AppCompatActivity {
         //System.out.println(jsonString);
 
         textViewRoundsRemaining = (TextView) findViewById(R.id.textViewRoundsRemaining);
+        textViewRoundTime = (TextView) findViewById(R.id.textViewRoundTimeLeft);
+
+        mp = MediaPlayer.create(this, R.raw.timeout);
 
         // use AsyncTask to load Deck from JSON
         new LoadDeckTask().execute();
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        textViewRoundTime.setText("");
     }
 
     @Override
@@ -79,6 +93,12 @@ public class GameActivity extends AppCompatActivity {
 
         if(game.getMode() == 2){
             countDownTimer.cancel();
+
+            try{
+                roundTimer.cancel();
+            }catch(Exception e){
+                //Falls Computer an der Reihe...
+            }
         }
 
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -116,7 +136,6 @@ public class GameActivity extends AppCompatActivity {
                         //in on Destroy-Methode, diese fängt auch das Schliessen der App durch
                         //Activity Manager von Android auf.
 
-                        System.out.println("------------ SPEICHERE SPIEL AUF 1");
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putInt("runningGame", 1);
                         editor.apply();
@@ -182,7 +201,19 @@ public class GameActivity extends AppCompatActivity {
                         game.setRoundsLeft(game.getRoundsLeft()-1000);
                         int seconds = (int) (game.getRoundsLeft() / 1000) % 60 ;
                         int minutes = (int) ((game.getRoundsLeft() / (1000*60)) % 60);
-                        String timeLeft = minutes+":"+seconds+" übrig";
+                        String sSeconds ="";
+                        if(seconds < 10){
+                            sSeconds = "0"+seconds;
+                        }else{
+                            sSeconds = ""+seconds;
+                        }
+                        String sMinutes ="";
+                        if(minutes < 10){
+                            sMinutes = "0"+minutes;
+                        }else{
+                            sMinutes = ""+minutes;
+                        }
+                        String timeLeft = sMinutes+":"+sSeconds+" übrig";
                         textViewRoundsRemaining.setText(timeLeft);
                     }
 
@@ -258,6 +289,50 @@ public class GameActivity extends AppCompatActivity {
         if (game.isNextPlayer()) {
             // let the user select an attribute for comparison
             instructionTextView.setText("Wähle ein Attribut");
+
+            //start Extra Round Timer if time mode:
+            if(game.getMode() == 2){
+                roundTimer = new CountDownTimer(ROUND_WAIT_MILLIS, 1000) {
+
+                    int roundLeftTime = ROUND_WAIT_MILLIS;
+
+                    public void onTick(long millisUntilFinished) {
+                        //Zeit runter rechnen jede Sekunde:
+                        roundLeftTime = roundLeftTime -1000;
+                        int seconds = (int) (roundLeftTime / 1000) % 60 ;
+                        int minutes = (int) (roundLeftTime / (1000*60) % 60);
+                        String sSeconds ="";
+                        if(seconds < 10){
+                            sSeconds = "0"+seconds;
+                        }else{
+                            sSeconds = ""+seconds;
+                        }
+                        String sMinutes ="";
+                        if(minutes < 10){
+                            sMinutes = "0"+minutes;
+                        }else{
+                            sMinutes = ""+minutes;
+                        }
+                        String timeLeft = "Rundenlimit: "+sMinutes+":"+sSeconds;
+                        textViewRoundTime.setText(timeLeft);
+
+                        //Last 10 Seconds get an extra Sound
+                        if(seconds <= 10){
+                            mp.start();
+                        }
+                    }
+
+                    public void onFinish() {
+                        //If time finished, let the computer choose an anntibute
+                        // then let the computer choose a card
+                        String chosenAttribute = game.computerCardChoice();
+                        playCardsGUI(chosenAttribute);
+                    }
+                };
+
+                roundTimer.start();
+            }
+
         } else {
             // update the view to show the computer is "thinking"
             instructionTextView.setText("Warte auf den Zug des Gegners...");
@@ -375,6 +450,14 @@ public class GameActivity extends AppCompatActivity {
      * @param chosenAttribute the name of the chosen property/attribute
      */
     private void playCardsGUI(String chosenAttribute) {
+        if(game.getMode() == 2){
+            try{
+                roundTimer.cancel();
+            }catch(Exception e){
+                //Falls Computer an der Reihe...
+            }
+        }
+
         Intent intent = new Intent(this, CompareCardsActivity.class);
 
         Property chosenProp = null;
@@ -438,7 +521,6 @@ public class GameActivity extends AppCompatActivity {
         }
 
         //alte gespeichertes Spiel loeschen
-        System.out.println("------------ SPEICHERE SPIEL AUF 0");
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("runningGame", 0);
         editor.apply();

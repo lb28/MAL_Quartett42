@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
@@ -23,6 +24,7 @@ import de.uulm.dbis.quartett42.data.Property;
 
 public class CompareCardsActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,6 @@ public class CompareCardsActivity extends AppCompatActivity {
                 {
                     @Override
                      public void onClick(DialogInterface dialog, int which) {
-                        System.out.println("------------ SPEICHERE SPIEL AUF 1");
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putInt("runningGame", 1);
                         editor.apply();
@@ -177,13 +178,28 @@ public class CompareCardsActivity extends AppCompatActivity {
             case Game.WINNER_PLAYER:
                 roundWinnerTextView.setText("Du gewinnst!");
                 roundWinnerTextView.setTextColor(Color.GREEN);
+
+                if(sharedPref.getBoolean("soundModus", true)){
+                    mp = MediaPlayer.create(this, R.raw.winround);
+                    mp.start();
+                }
                 break;
             case Game.WINNER_COMPUTER:
                 roundWinnerTextView.setText("Gegner gewinnt...");
                 roundWinnerTextView.setTextColor(Color.RED);
+
+                if(sharedPref.getBoolean("soundModus", true)){
+                    mp = MediaPlayer.create(this, R.raw.loseround);
+                    mp.start();
+                }
                 break;
             case Game.WINNER_DRAW:
                 roundWinnerTextView.setText("unentschieden");
+
+                if(sharedPref.getBoolean("soundModus", true)){
+                    mp = MediaPlayer.create(this, R.raw.equalround);
+                    mp.start();
+                }
                 break;
         }
 

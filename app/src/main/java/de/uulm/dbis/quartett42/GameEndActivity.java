@@ -1,9 +1,12 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +40,8 @@ public class GameEndActivity extends AppCompatActivity {
     List<String> highscorenamen;
     List<Integer> highscorepunkte;
 
+    MediaPlayer mp;
+
     /*
         METRIK FÜR HIGHSCORES:
         Rundenmodus: Runden * Punkte * Schwierigkeit * (2 für Expertmodus)
@@ -61,6 +66,10 @@ public class GameEndActivity extends AppCompatActivity {
         highscorenamen = new ArrayList<>();
         highscorepunkte = new ArrayList<>();
 
+        //Vibrating
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        v.vibrate(500);
+
         // Intent holen
         Intent intent = getIntent();
 
@@ -75,6 +84,11 @@ public class GameEndActivity extends AppCompatActivity {
             winner = Game.WINNER_PLAYER;
             winnerText.setText("Gewonnen!");
             winnerText.setTextColor(Color.GREEN);
+
+            if(sharedPref.getBoolean("soundModus", true)){
+                mp = MediaPlayer.create(this, R.raw.wingame);
+                mp.start();
+            }
         }
         else if (pointsPlayer < pointsComputer) {
             winner = Game.WINNER_COMPUTER;
@@ -84,6 +98,11 @@ public class GameEndActivity extends AppCompatActivity {
             inDieTop5.setVisibility(View.INVISIBLE);
             rangliste.setVisibility(View.INVISIBLE);
             nameEintragen.setVisibility(View.INVISIBLE);
+
+            if(sharedPref.getBoolean("soundModus", true)){
+                mp = MediaPlayer.create(this, R.raw.losegame);
+                mp.start();
+            }
         } else {
             winner = Game.WINNER_DRAW;
             winnerText.setText("Unentschieden");
@@ -91,6 +110,11 @@ public class GameEndActivity extends AppCompatActivity {
             inDieTop5.setVisibility(View.INVISIBLE);
             rangliste.setVisibility(View.INVISIBLE);
             nameEintragen.setVisibility(View.INVISIBLE);
+
+            if(sharedPref.getBoolean("soundModus", true)){
+                mp = MediaPlayer.create(this, R.raw.equalround);
+                mp.start();
+            }
         }
 
         //statistik updaten
@@ -113,6 +137,7 @@ public class GameEndActivity extends AppCompatActivity {
             nameEintragen.setVisibility(View.VISIBLE);
 
         }
+
 
     }
 

@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     public void clickNewGameButtonFunction(View view){
         //Gucken, ob ein laufendes Spiel vorhanden:
         //runningGame Value lesen, 1 falls Spiel pausiert, 0 wenn nicht:
-        System.out.println("laufendes Spiel --------- "+sharedPref.getInt("runningGame", 500));
         if(sharedPref.getInt("runningGame", 0) == 1){
             //Fragen, ob vorhandenes Spiel fortgesetzt werden soll oder neues begonnen werden soll
             String[] aktionen = {"Ja, Spiel fortsetzen", "Nein, Neues Spiel starten"};
