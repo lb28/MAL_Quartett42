@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,9 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
             textViewAttrValue.setText(String.valueOf(property.getValue()));
         }
         textViewAttrUnit.setText(property.getUnit());
+
+        //Set two different background colors:
+        convertView.setBackgroundColor(position % 2 == 0 ? Color.argb(50, 150, 200, 210) : Color.argb(50, 60, 160, 190));
 
         // Return the completed view to render on screen
         return convertView;
