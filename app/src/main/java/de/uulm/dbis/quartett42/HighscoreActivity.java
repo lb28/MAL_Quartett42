@@ -204,17 +204,7 @@ public class HighscoreActivity extends AppCompatActivity {
 
         editor.apply();
 
-        ersterName.setText("Default");
-        zweiterName.setText("Default");
-        dritterName.setText("Default");
-        vierterName.setText("Default");
-        fuenfterName.setText("Default");
-
-        ersterPunkte.setText("" + -1);
-        zweiterPunkte.setText("" + -1);
-        dritterPunkte.setText("" + -1);
-        vierterPunkte.setText("" + -1);
-        fuenfterPunkte.setText("" + -1);
+        finish();
 
     }
 
