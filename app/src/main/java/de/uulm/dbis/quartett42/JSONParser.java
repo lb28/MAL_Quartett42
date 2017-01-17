@@ -3,8 +3,10 @@ package de.uulm.dbis.quartett42;
 import android.content.Context;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +33,37 @@ public class JSONParser {
     }
 
     // TODO implement getAllDecks, getCard, getGame, etc... (like a DB handler)
+
+    public ArrayList<Deck> getAllDecks(Context context) {
+        ArrayList<Deck> deckList = new ArrayList<Deck>();
+        try {
+            InputStream in = context.getAssets().open(jsonFileName);
+            int size = in.available();
+            byte[] buffer = new byte[size];
+            in.read(buffer);
+            in.close();
+            String jsonString = new String(buffer, "UTF-8");
+            // Getting JSON Array node
+            JSONObject jsonObj = new JSONObject(jsonString);
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject tmpDeck = decks.getJSONObject(i);
+                String deckName = tmpDeck.getString("name");
+                String deckDescription = tmpDeck.getString("description");
+                String deckImageUri = tmpDeck.getString("image");
+                //Cards und Properties sind erst mal egal fuer die Deckuebersicht
+
+                ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
+                Deck newDeck = new Deck(deckName, newImage, null, null);
+                deckList.add(newDeck);
+            }
+
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return deckList;
+    }
 
     /**
      * Loads a single deck

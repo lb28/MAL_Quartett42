@@ -1,16 +1,21 @@
 package de.uulm.dbis.quartett42;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class HighscoreActivity extends AppCompatActivity {
+
+    // the default string to display when there is no entry (both for name and points)
+    private static final String DEFAULT_NAME_STRING = "";
+
+    // the default points stored in sharedPreferences
+    private static final int DEFAULT_POINTS_INT = -1;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
@@ -33,6 +38,135 @@ public class HighscoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_highscore);
 
+        updateGUI();
+
+        // show rounds highscore first
+        clickRoundsButtonHighscoreFunction(null);
+    }
+
+    //Button Methoden
+    public void clickPointsButtonHighscoreFunction(View view){
+
+        punkteButton.setBackgroundColor(Color.GRAY);
+        rundenButton.setBackgroundColor(Color.WHITE);
+        zeitButton.setBackgroundColor(Color.WHITE);
+
+        ersterName.setText(ersterNamePunkte);
+        zweiterName.setText(zweiterNamePunkte);
+        dritterName.setText(dritterNamePunkte);
+        vierterName.setText(vierterNamePunkte);
+        fuenfterName.setText(fuenfterNamePunkte);
+
+        ersterPunkte.setText(ersterPunktePunkte == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + ersterPunktePunkte);
+        zweiterPunkte.setText(zweiterPunktePunkte == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + zweiterPunktePunkte);
+        dritterPunkte.setText(dritterPunktePunkte == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + dritterPunktePunkte);
+        vierterPunkte.setText(vierterPunktePunkte == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + vierterPunktePunkte);
+        fuenfterPunkte.setText(fuenfterPunktePunkte == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + fuenfterPunktePunkte);
+
+    }
+
+    public void clickRoundsButtonHighscoreFunction(View view){
+
+        punkteButton.setBackgroundColor(Color.WHITE);
+        rundenButton.setBackgroundColor(Color.GRAY);
+        zeitButton.setBackgroundColor(Color.WHITE);
+
+        ersterName.setText(ersterNameRunden);
+        zweiterName.setText(zweiterNameRunden);
+        dritterName.setText(dritterNameRunden);
+        vierterName.setText(vierterNameRunden);
+        fuenfterName.setText(fuenfterNameRunden);
+
+        ersterPunkte.setText(ersterPunkteRunden == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + ersterPunkteRunden);
+        zweiterPunkte.setText(zweiterPunkteRunden == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + zweiterPunkteRunden);
+        dritterPunkte.setText(dritterPunkteRunden == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + dritterPunkteRunden);
+        vierterPunkte.setText(vierterPunkteRunden == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + vierterPunkteRunden);
+        fuenfterPunkte.setText(fuenfterPunkteRunden == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + fuenfterPunkteRunden);
+
+    }
+
+    public void clickTimeButtonHighscoreFunction(View view){
+
+        punkteButton.setBackgroundColor(Color.WHITE);
+        rundenButton.setBackgroundColor(Color.WHITE);
+        zeitButton.setBackgroundColor(Color.GRAY);
+
+        ersterName.setText(ersterNameZeit);
+        zweiterName.setText(zweiterNameZeit);
+        dritterName.setText(dritterNameZeit);
+        vierterName.setText(vierterNameZeit);
+        fuenfterName.setText(fuenfterNameZeit);
+
+        ersterPunkte.setText(ersterPunkteZeit == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + ersterPunkteZeit);
+        zweiterPunkte.setText(zweiterPunkteZeit == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + zweiterPunkteZeit);
+        dritterPunkte.setText(dritterPunkteZeit == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + dritterPunkteZeit);
+        vierterPunkte.setText(vierterPunkteZeit == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + vierterPunkteZeit);
+        fuenfterPunkte.setText(fuenfterPunkteZeit == DEFAULT_POINTS_INT ?
+                DEFAULT_NAME_STRING : "" + fuenfterPunkteZeit);
+
+    }
+
+    public void resetHighscoresFunction(View view){
+
+        editor = sharedPref.edit();
+
+        editor.putInt("ersterPunktePunkte", DEFAULT_POINTS_INT);
+        editor.putInt("zweiterPunktePunkte", DEFAULT_POINTS_INT);
+        editor.putInt("dritterPunktePunkte", DEFAULT_POINTS_INT);
+        editor.putInt("vierterPunktePunkte", DEFAULT_POINTS_INT);
+        editor.putInt("fuenfterPunktePunkte", DEFAULT_POINTS_INT);
+
+        editor.putString("ersterNamePunkte", DEFAULT_NAME_STRING);
+        editor.putString("zweiterNamePunkte", DEFAULT_NAME_STRING);
+        editor.putString("dritterNamePunkte", DEFAULT_NAME_STRING);
+        editor.putString("vierterNamePunkte", DEFAULT_NAME_STRING);
+        editor.putString("fuenfterNamePunkte", DEFAULT_NAME_STRING);
+
+        editor.putInt("ersterPunkteRunden", DEFAULT_POINTS_INT);
+        editor.putInt("zweiterPunkteRunden", DEFAULT_POINTS_INT);
+        editor.putInt("dritterPunkteRunden", DEFAULT_POINTS_INT);
+        editor.putInt("vierterPunkteRunden", DEFAULT_POINTS_INT);
+        editor.putInt("fuenfterPunkteRunden", DEFAULT_POINTS_INT);
+
+        editor.putString("ersterNameRunden", DEFAULT_NAME_STRING);
+        editor.putString("zweiterNameRunden", DEFAULT_NAME_STRING);
+        editor.putString("dritterNameRunden", DEFAULT_NAME_STRING);
+        editor.putString("vierterNameRunden", DEFAULT_NAME_STRING);
+        editor.putString("fuenfterNameRunden", DEFAULT_NAME_STRING);
+
+        editor.putInt("ersterPunkteZeit", DEFAULT_POINTS_INT);
+        editor.putInt("zweiterPunkteZeit", DEFAULT_POINTS_INT);
+        editor.putInt("dritterPunkteZeit", DEFAULT_POINTS_INT);
+        editor.putInt("vierterPunkteZeit", DEFAULT_POINTS_INT);
+        editor.putInt("fuenfterPunkteZeit", DEFAULT_POINTS_INT);
+
+        editor.putString("ersterNameZeit", DEFAULT_NAME_STRING);
+        editor.putString("zweiterNameZeit", DEFAULT_NAME_STRING);
+        editor.putString("dritterNameZeit", DEFAULT_NAME_STRING);
+        editor.putString("vierterNameZeit", DEFAULT_NAME_STRING);
+        editor.putString("fuenfterNameZeit", DEFAULT_NAME_STRING);
+
+        editor.apply();
+
+        // restart the activity
+        updateGUI();
+    }
+
+    private void updateGUI() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
 
@@ -52,162 +186,38 @@ public class HighscoreActivity extends AppCompatActivity {
         punkteButton = (Button) findViewById(R.id.pointsButton);
         zeitButton = (Button) findViewById(R.id.timeButton);
 
-        ersterNameRunden = sharedPref.getString("ersterNameRunden", "Default Name");
-        zweiterNameRunden = sharedPref.getString("zweiterNameRunden", "Default Name");
-        dritterNameRunden = sharedPref.getString("dritterNameRunden", "Default Name");
-        vierterNameRunden = sharedPref.getString("vierterNameRunden", "Default Name");
-        fuenfterNameRunden = sharedPref.getString("fuenfterNameRunden", "Default Name");
-        ersterNamePunkte = sharedPref.getString("ersterNamePunkte", "Default Name2");
-        zweiterNamePunkte = sharedPref.getString("zweiterNamePunkte", "Default Name2");
-        dritterNamePunkte = sharedPref.getString("dritterNamePunkte", "Default Name2");
-        vierterNamePunkte = sharedPref.getString("vierterNamePunkte", "Default Name2");
-        fuenfterNamePunkte = sharedPref.getString("fuenfterNamePunkte", "Default Name2");
-        ersterNameZeit = sharedPref.getString("ersterNameZeit", "Default Name3");
-        zweiterNameZeit = sharedPref.getString("zweiterNameZeit", "Default Name3");
-        dritterNameZeit = sharedPref.getString("dritterNameZeit", "Default Name3");
-        vierterNameZeit = sharedPref.getString("vierterNameZeit", "Default Name3");
-        fuenfterNameZeit = sharedPref.getString("fuenfterNameZeit", "Default Name3");
+        ersterNameRunden = sharedPref.getString("ersterNameRunden", DEFAULT_NAME_STRING);
+        zweiterNameRunden = sharedPref.getString("zweiterNameRunden", DEFAULT_NAME_STRING);
+        dritterNameRunden = sharedPref.getString("dritterNameRunden", DEFAULT_NAME_STRING);
+        vierterNameRunden = sharedPref.getString("vierterNameRunden", DEFAULT_NAME_STRING);
+        fuenfterNameRunden = sharedPref.getString("fuenfterNameRunden", DEFAULT_NAME_STRING);
+        ersterNamePunkte = sharedPref.getString("ersterNamePunkte", DEFAULT_NAME_STRING);
+        zweiterNamePunkte = sharedPref.getString("zweiterNamePunkte", DEFAULT_NAME_STRING);
+        dritterNamePunkte = sharedPref.getString("dritterNamePunkte", DEFAULT_NAME_STRING);
+        vierterNamePunkte = sharedPref.getString("vierterNamePunkte", DEFAULT_NAME_STRING);
+        fuenfterNamePunkte = sharedPref.getString("fuenfterNamePunkte", DEFAULT_NAME_STRING);
+        ersterNameZeit = sharedPref.getString("ersterNameZeit", DEFAULT_NAME_STRING);
+        zweiterNameZeit = sharedPref.getString("zweiterNameZeit", DEFAULT_NAME_STRING);
+        dritterNameZeit = sharedPref.getString("dritterNameZeit", DEFAULT_NAME_STRING);
+        vierterNameZeit = sharedPref.getString("vierterNameZeit", DEFAULT_NAME_STRING);
+        fuenfterNameZeit = sharedPref.getString("fuenfterNameZeit", DEFAULT_NAME_STRING);
 
-        ersterPunkteRunden = sharedPref.getInt("ersterPunkteRunden", -1);
-        zweiterPunkteRunden = sharedPref.getInt("zweiterPunkteRunden", -1);
-        dritterPunkteRunden = sharedPref.getInt("dritterPunkteRunden", -1);
-        vierterPunkteRunden = sharedPref.getInt("vierterPunkteRunden", -1);
-        fuenfterPunkteRunden = sharedPref.getInt("fuenfterPunkteRunden", -1);
-        ersterPunktePunkte = sharedPref.getInt("ersterPunktePunkte", -2);
-        zweiterPunktePunkte = sharedPref.getInt("zweiterPunktePunkte", -2);
-        dritterPunktePunkte = sharedPref.getInt("dritterPunktePunkte", -2);
-        vierterPunktePunkte = sharedPref.getInt("vierterPunktePunkte", -2);
-        fuenfterPunktePunkte = sharedPref.getInt("fuenfterPunktePunkte", -2);
-        ersterPunkteZeit = sharedPref.getInt("ersterPunkteZeit", -3);
-        zweiterPunkteZeit = sharedPref.getInt("zweiterPunkteZeit", -3);
-        dritterPunkteZeit = sharedPref.getInt("dritterPunkteZeit", -3);
-        vierterPunkteZeit = sharedPref.getInt("vierterPunkteZeit", -3);
-        fuenfterPunkteZeit = sharedPref.getInt("fuenfterPunkteZeit", -3);
-
-        rundenButton.setBackgroundColor(Color.GRAY);
-        punkteButton.setBackgroundColor(Color.WHITE);
-        zeitButton.setBackgroundColor(Color.WHITE);
-
-        ersterName.setText(ersterNameRunden);
-        zweiterName.setText(zweiterNameRunden);
-        dritterName.setText(dritterNameRunden);
-        vierterName.setText(vierterNameRunden);
-        fuenfterName.setText(fuenfterNameRunden);
-
-        ersterPunkte.setText("" + ersterPunkteRunden);
-        zweiterPunkte.setText("" + zweiterPunkteRunden);
-        dritterPunkte.setText("" + dritterPunkteRunden);
-        vierterPunkte.setText("" + vierterPunkteRunden);
-        fuenfterPunkte.setText("" + fuenfterPunkteRunden);
+        ersterPunkteRunden = sharedPref.getInt("ersterPunkteRunden", DEFAULT_POINTS_INT);
+        zweiterPunkteRunden = sharedPref.getInt("zweiterPunkteRunden", DEFAULT_POINTS_INT);
+        dritterPunkteRunden = sharedPref.getInt("dritterPunkteRunden", DEFAULT_POINTS_INT);
+        vierterPunkteRunden = sharedPref.getInt("vierterPunkteRunden", DEFAULT_POINTS_INT);
+        fuenfterPunkteRunden = sharedPref.getInt("fuenfterPunkteRunden", DEFAULT_POINTS_INT);
+        ersterPunktePunkte = sharedPref.getInt("ersterPunktePunkte", DEFAULT_POINTS_INT);
+        zweiterPunktePunkte = sharedPref.getInt("zweiterPunktePunkte", DEFAULT_POINTS_INT);
+        dritterPunktePunkte = sharedPref.getInt("dritterPunktePunkte", DEFAULT_POINTS_INT);
+        vierterPunktePunkte = sharedPref.getInt("vierterPunktePunkte", DEFAULT_POINTS_INT);
+        fuenfterPunktePunkte = sharedPref.getInt("fuenfterPunktePunkte", DEFAULT_POINTS_INT);
+        ersterPunkteZeit = sharedPref.getInt("ersterPunkteZeit", DEFAULT_POINTS_INT);
+        zweiterPunkteZeit = sharedPref.getInt("zweiterPunkteZeit", DEFAULT_POINTS_INT);
+        dritterPunkteZeit = sharedPref.getInt("dritterPunkteZeit", DEFAULT_POINTS_INT);
+        vierterPunkteZeit = sharedPref.getInt("vierterPunkteZeit", DEFAULT_POINTS_INT);
+        fuenfterPunkteZeit = sharedPref.getInt("fuenfterPunkteZeit", DEFAULT_POINTS_INT);
     }
-
-    //Button Methoden
-    public void clickPointsButtonHighscoreFunction(View view){
-
-        punkteButton.setBackgroundColor(Color.GRAY);
-        rundenButton.setBackgroundColor(Color.WHITE);
-        zeitButton.setBackgroundColor(Color.WHITE);
-
-        ersterName.setText(ersterNamePunkte);
-        zweiterName.setText(zweiterNamePunkte);
-        dritterName.setText(dritterNamePunkte);
-        vierterName.setText(vierterNamePunkte);
-        fuenfterName.setText(fuenfterNamePunkte);
-
-        ersterPunkte.setText("" + ersterPunktePunkte);
-        zweiterPunkte.setText("" + zweiterPunktePunkte);
-        dritterPunkte.setText("" + dritterPunktePunkte);
-        vierterPunkte.setText("" + vierterPunktePunkte);
-        fuenfterPunkte.setText("" + fuenfterPunktePunkte);
-
-    }
-
-    public void clickRoundsButtonHighscoreFunction(View view){
-
-        punkteButton.setBackgroundColor(Color.WHITE);
-        rundenButton.setBackgroundColor(Color.GRAY);
-        zeitButton.setBackgroundColor(Color.WHITE);
-
-        ersterName.setText(ersterNameRunden);
-        zweiterName.setText(zweiterNameRunden);
-        dritterName.setText(dritterNameRunden);
-        vierterName.setText(vierterNameRunden);
-        fuenfterName.setText(fuenfterNameRunden);
-
-        ersterPunkte.setText("" + ersterPunkteRunden);
-        zweiterPunkte.setText("" + zweiterPunkteRunden);
-        dritterPunkte.setText("" + dritterPunkteRunden);
-        vierterPunkte.setText("" + vierterPunkteRunden);
-        fuenfterPunkte.setText("" + fuenfterPunkteRunden);
-
-    }
-
-    public void clickTimeButtonHighscoreFunction(View view){
-
-        punkteButton.setBackgroundColor(Color.WHITE);
-        rundenButton.setBackgroundColor(Color.WHITE);
-        zeitButton.setBackgroundColor(Color.GRAY);
-
-        ersterName.setText(ersterNameZeit);
-        zweiterName.setText(zweiterNameZeit);
-        dritterName.setText(dritterNameZeit);
-        vierterName.setText(vierterNameZeit);
-        fuenfterName.setText(fuenfterNameZeit);
-
-        ersterPunkte.setText("" + ersterPunkteZeit);
-        zweiterPunkte.setText("" + zweiterPunkteZeit);
-        dritterPunkte.setText("" + dritterPunkteZeit);
-        vierterPunkte.setText("" + vierterPunkteZeit);
-        fuenfterPunkte.setText("" + fuenfterPunkteZeit);
-
-    }
-
-    public void resetHighscoresFunction(View view){
-
-        editor = sharedPref.edit();
-
-        editor.putInt("ersterPunktePunkte", -1);
-        editor.putInt("zweiterPunktePunkte", -1);
-        editor.putInt("dritterPunktePunkte", -1);
-        editor.putInt("vierterPunktePunkte", -1);
-        editor.putInt("fuenfterPunktePunkte", -1);
-
-        editor.putString("ersterNamePunkte", "Default");
-        editor.putString("zweiterNamePunkte", "Default");
-        editor.putString("dritterNamePunkte", "Default");
-        editor.putString("vierterNamePunkte", "Default");
-        editor.putString("fuenfterNamePunkte", "Default");
-
-        editor.putInt("ersterPunkteRunden", -1);
-        editor.putInt("zweiterPunkteRunden", -1);
-        editor.putInt("dritterPunkteRunden", -1);
-        editor.putInt("vierterPunkteRunden", -1);
-        editor.putInt("fuenfterPunkteRunden", -1);
-
-        editor.putString("ersterNameRunden", "Default");
-        editor.putString("zweiterNameRunden", "Default");
-        editor.putString("dritterNameRunden", "Default");
-        editor.putString("vierterNameRunden", "Default");
-        editor.putString("fuenfterNameRunden", "Default");
-
-        editor.putInt("ersterPunkteZeit", -1);
-        editor.putInt("zweiterPunkteZeit", -1);
-        editor.putInt("dritterPunkteZeit", -1);
-        editor.putInt("vierterPunkteZeit", -1);
-        editor.putInt("fuenfterPunkteZeit", -1);
-
-        editor.putString("ersterNameZeit", "Default");
-        editor.putString("zweiterNameZeit", "Default");
-        editor.putString("dritterNameZeit", "Default");
-        editor.putString("vierterNameZeit", "Default");
-        editor.putString("fuenfterNameZeit", "Default");
-
-        editor.apply();
-
-        finish();
-
-    }
-
 
 
 }

@@ -114,8 +114,8 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned"
-        android:ems="10"
+        android:inputType="number"
+        android:ems="25"
         android:id="@+id/anzahlEditText"
         android:layout_alignTop="@+id/varianteGroup"
         android:layout_alignParentRight="true"
@@ -125,14 +125,17 @@
         android:layout_alignStart="@+id/textView8" />
 
     <TextView
-        android:text="Anzahl Runden/Minuten/Punkte"
+        android:text="Anzahl:"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/anzahlTextView"
         android:layout_alignBaseline="@+id/anzahlEditText"
         android:layout_alignBottom="@+id/anzahlEditText"
-        android:layout_toRightOf="@+id/varianteGroup"
-        android:layout_toEndOf="@+id/varianteGroup" />
+        android:layout_toLeftOf="@+id/anzahlEditText"
+        android:layout_toStartOf="@+id/anzahlEditText"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        />
 
     <Button
         android:text="SPEICHERN"

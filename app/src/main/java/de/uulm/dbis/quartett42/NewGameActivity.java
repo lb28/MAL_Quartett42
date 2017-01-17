@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,15 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Game;
-import de.uulm.dbis.quartett42.data.ImageCard;
 
 public class NewGameActivity extends AppCompatActivity {
     String jsonString = "";
@@ -59,7 +55,6 @@ public class NewGameActivity extends AppCompatActivity {
         //JSON-String auslesen:
         intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
-        //System.out.println(jsonString);
 
         deckGameText = (TextView)findViewById(R.id.deckGameText);
         modeGameText = (TextView)findViewById(R.id.modusGameText);
@@ -70,12 +65,8 @@ public class NewGameActivity extends AppCompatActivity {
         expertGameText = (TextView)findViewById(R.id.expertGameText);
         soundGameText = (TextView)findViewById(R.id.soundGameText);
 
-        //Decks laden:
-        new Thread(new Runnable() {
-            public void run() {
-                loadData();
-            }
-        }).start();
+        //Decks laden (asynchron):
+        loadData();
     }
 
     @SuppressLint("SetTextI18n")
@@ -156,7 +147,7 @@ public class NewGameActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GameActivity.class);
             //intent.putExtra("setting_source", "new_game");
             intent.putExtra("chosen_deck", chosenDeck);
-            intent.putExtra("json_string", jsonString);
+            //intent.putExtra("json_string", jsonString);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
@@ -170,48 +161,8 @@ public class NewGameActivity extends AppCompatActivity {
         if(intent.getStringExtra("new_game_source").equals("main_activity")) {
             //Falls die Anfrage von der Main Activity aus gestartet wurde:
             //ArrayList aller Decks aus JSON erstellen
-            deckList = new ArrayList<Deck>();
-            try {
-                // Getting JSON Array node
-                JSONObject jsonObj = new JSONObject(jsonString);
-                JSONArray decks = jsonObj.getJSONArray("decks");
-                for (int i = 0; i < decks.length(); i++) {
-                    JSONObject tmpDeck = decks.getJSONObject(i);
-                    String deckName = tmpDeck.getString("name");
-                    String deckDescription = tmpDeck.getString("description");
-                    String deckImageUri = tmpDeck.getString("image");
-                    //Cards und Properties sind erst mal egal fuer die Deckuebersicht
 
-                    ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
-                    Deck newDeck = new Deck(deckName, newImage, null, null);
-                    deckList.add(newDeck);
-                }
-
-                try {
-                    //Als Grid-Layout setzen:
-                    gridView = (GridView) findViewById(R.id.galleryGridView);
-                    gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
-                    gridView.setAdapter(gridAdapter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-
-            //On-Item-Click-Listener fuer einzelne Decks:
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Deck item = (Deck) parent.getItemAtPosition(position);
-                    chosenDeck = item.getName();
-                    deckGameText.setText(chosenDeck);
-                    // reset color to default color
-                    deckGameText.setTextColor(Color.parseColor("#8a000000"));
-                }
-
-            });
+            new LoadDecksGridTask().execute();
 
         } else if(intent.getStringExtra("new_game_source").equals("view_deck_activity")) {
             //Falls von GalleryActivity kommt Linken Oberen Zurueck-Button entfernen:
@@ -223,5 +174,46 @@ public class NewGameActivity extends AppCompatActivity {
             deckGameText.setTextColor(Color.parseColor("#8a000000"));
         }
 
+    }
+
+    private class LoadDecksGridTask extends AsyncTask<Void, Void, ArrayList<Deck>> {
+
+        @Override
+        protected ArrayList<Deck> doInBackground(Void... voids) {
+            JSONParser jsonParser = new JSONParser();
+            return jsonParser.getAllDecks(NewGameActivity.this);
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Deck> deckList) {
+            try {
+                //Als Grid-Layout setzen:
+                gridView = (GridView) findViewById(R.id.galleryGridView);
+                gridAdapter = new GridViewAdapter(
+                        NewGameActivity.this,
+                        R.layout.grid_item_layout,
+                        deckList);
+                gridView.setAdapter(gridAdapter);
+
+                //On-Item-Click-Listener fuer einzelne Decks:
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                        Deck item = (Deck) parent.getItemAtPosition(position);
+                        chosenDeck = item.getName();
+                        deckGameText.setText(chosenDeck);
+
+                        // reset color to default color
+                        deckGameText.setTextColor(Color.parseColor("#8a000000"));
+                    }
+
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (spinner != null) {
+                spinner.setVisibility(View.GONE);
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@
         android:text="Das Spiel ist zu Ende!"
         android:id="@+id/SpielzuEnde"
         android:gravity="center"
-        android:textSize="25dp"/>
+        android:textSize="25sp"/>
 
     <TextView
         android:id="@+id/matchAusgang"
@@ -26,14 +26,25 @@
         android:paddingTop="40dp"
         android:text="Gewonnen!"
         android:gravity="center"
-        android:textSize="35dp"/>
+        android:textSize="35sp"/>
+
+    <TextView
+        android:text="Endstand:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/matchAusgang"
+        android:layout_marginTop="12dp"
+        android:id="@+id/endPunkteStand"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/inDieTop5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/matchAusgang"
-        android:paddingTop="45dp"
+        android:layout_below="@+id/endPunkteStand"
+        android:paddingTop="50dp"
         android:text="Du hast es in die Top 5 geschafft."/>
 
     <EditText
@@ -41,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/inDieTop5"
-        android:paddingTop="25dp"
+        android:paddingTop="15dp"
         android:hint="Hier deinen Namen eintragen"/>
 
     <Button
@@ -53,28 +64,27 @@
         android:onClick="clickInsertHighscoreFunction"/>
 
     <Button
-        android:id="@+id/goToHighscores"
+        android:id="@+id/goToStartBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:text="Startseite"
+        android:onClick="goToMainMenu"/>
+
+    <Button
+        android:id="@+id/goToHighscores"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/goToStartBtn"
         android:text="Highscores"
         android:onClick="goToHighscores"/>
 
     <Button
-        android:id="@+id/goToStartBtn"
+        android:id="@+id/goToRevanche"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/goToHighscores"
-        android:text="Startseite"
-        android:onClick="goToMainMenu"/>
+        android:text="Revanche!"
+        android:onClick="startRevanche"/>
 
-    <TextView
-        android:text="Endstand:"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/matchAusgang"
-        android:layout_marginTop="12dp"
-        android:id="@+id/endPunkteStand"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 </RelativeLayout>

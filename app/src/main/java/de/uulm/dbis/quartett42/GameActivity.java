@@ -72,7 +72,6 @@ public class GameActivity extends AppCompatActivity {
         //JSON-String auslesen:
         Intent intent = getIntent();
         chosenDeck = intent.getStringExtra("chosen_deck");
-        //System.out.println(jsonString);
 
         textViewRoundsRemaining = (TextView) findViewById(R.id.textViewRoundsRemaining);
         textViewRoundTime = (TextView) findViewById(R.id.textViewRoundTimeLeft);
@@ -565,6 +564,7 @@ public class GameActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GameEndActivity.class);
         intent.putExtra("pointsPlayer", game.getPointsPlayer());
         intent.putExtra("pointsComputer", game.getPointsComputer());
+        intent.putExtra("chosenDeck", chosenDeck);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

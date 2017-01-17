@@ -5,10 +5,12 @@
     android:background="@drawable/card_border"
     android:orientation="vertical">
 
+    <!-- WARNING: IF YOU EDIT SOMETHING HERE, ENSURE CONSISTENCY with card_fragment_compare -->
+
     <android.support.v4.view.ViewPager
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:id="@+id/cardImageViewPager2"
         />
 

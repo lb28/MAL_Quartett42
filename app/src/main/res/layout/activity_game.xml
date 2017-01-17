@@ -17,72 +17,89 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scoreBarLayout"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textViewGameScore"
-            android:text="Spielstand"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="?android:attr/textColorSecondary" />
+            android:id="@+id/scoreBarLayout"
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewRoundsRemaining"
-            android:text="Übrig"
-            android:layout_gravity="end"
-            android:gravity="end"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="?android:attr/textColorSecondary" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewGameScore"
+                android:text="Spielstand"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="?android:attr/textColorSecondary"
+                />
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewRoundsRemaining"
+                android:text="Übrig"
+                android:layout_gravity="end"
+                android:gravity="end"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColor="?android:attr/textColorSecondary" />
 
-    <include
-        layout="@layout/card_fragment"
-        android:layout_width="match_parent"
-        android:id="@+id/include"
-        android:layout_below="@+id/scoreBarLayout"
-        android:layout_marginTop="10dp"
-        android:layout_height="350dp" />
+        </RelativeLayout>
 
-    <ProgressBar
-        android:id="@+id/progressBarWait"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/instructionTextView"
-        android:layout_toEndOf="@+id/instructionTextView"
-        android:layout_marginLeft="13dp"
-        android:layout_marginStart="13dp"
-        />
+        <include
+            layout="@layout/card_fragment"
+            android:layout_width="match_parent"
+            android:id="@+id/include"
+            android:layout_marginTop="10dp"
+            android:layout_height="0dp"
+            android:layout_weight="10"/>
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewRoundTimeLeft"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-    <TextView
-        android:text="instructionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/instructionTextView"
-        android:textSize="18sp"
-        android:textColor="?android:attr/textColorSecondary"
-        android:layout_above="@+id/textViewRoundTimeLeft"
-        android:layout_centerHorizontal="true" />
+            <ProgressBar
+                android:id="@+id/progressBarWait"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/instructionTextView"
+                android:layout_toEndOf="@+id/instructionTextView"
+                android:layout_marginLeft="13dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginBottom="10dp"
+                />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewRoundTimeLeft"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:text="instructionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/instructionTextView"
+                android:textSize="18sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_above="@+id/textViewRoundTimeLeft"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

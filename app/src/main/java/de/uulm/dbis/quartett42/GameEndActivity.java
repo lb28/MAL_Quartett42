@@ -33,6 +33,7 @@ public class GameEndActivity extends AppCompatActivity {
     private int schwierigkeit;
     private int erreichtePunkteSpieler;
     private int pointsPlayer, pointsComputer;
+    private String chosenDeck;
 
     private String nameFürRangliste = "";
 
@@ -72,9 +73,10 @@ public class GameEndActivity extends AppCompatActivity {
         // Intent holen
         Intent intent = getIntent();
 
-        //Gewonnen/Verloren anzeigen
+        // Daten aus Intent holen
         pointsPlayer = intent.getIntExtra("pointsPlayer", -1);
         pointsComputer = intent.getIntExtra("pointsComputer", -1);
+        chosenDeck = intent.getStringExtra("chosenDeck");
 
         endstand.setText("Endstand: "+pointsPlayer+" : "+pointsComputer);
 
@@ -479,6 +481,17 @@ public class GameEndActivity extends AppCompatActivity {
     public void goToHighscores(View view){
         Intent intent = new Intent(this, HighscoreActivity.class);
         startActivity(intent);
+    }
+
+    public void startRevanche(View view) {
+        //intent.putExtra("setting_source", "new_game");
+        if (chosenDeck != null && !chosenDeck.equals("")) {
+            //Spiel starten und ausgesuchtes Deck sowie JSON-String mitgeben
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("chosen_deck", chosenDeck);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     public void goToMainMenu(View view) {
