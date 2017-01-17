@@ -61,6 +61,11 @@ public class CompareCardsActivity extends AppCompatActivity {
                 .setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt("runningGame", 0);
+                        editor.apply();
+
+
                         setResult(RESULT_CANCELED);
 
                         // call super method that executes the "up navigation"

@@ -140,7 +140,7 @@ public class GameActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Spiel beenden")
                 .setMessage("Spielstand speichern?")
-                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                .setPositiveButton("Speichern", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -156,10 +156,14 @@ public class GameActivity extends AppCompatActivity {
                     }
 
                 })
-                .setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // leave without saving
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt("runningGame", 0);
+                        editor.apply();
+
                         GameActivity.super.onSupportNavigateUp();
                     }
                 })
