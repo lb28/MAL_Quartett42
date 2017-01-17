@@ -231,7 +231,9 @@ public class CompareCardsActivity extends AppCompatActivity {
      */
     public void continueGame(View view) {
         setResult(RESULT_OK);
-        mp.release();
+        try{
+            mp.release();
+        } catch(NullPointerException npe) {/* mp was null, nevermind */}
         finish();
     }
 }
