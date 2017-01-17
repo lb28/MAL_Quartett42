@@ -164,6 +164,7 @@ public class HighscoreActivity extends AppCompatActivity {
 
         // restart the activity
         updateGUI();
+        finish();
     }
 
     private void updateGUI() {
