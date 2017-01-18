@@ -55,6 +55,7 @@ public class GameActivity extends AppCompatActivity {
     CountDownTimer roundTimer;
     MediaPlayer mp;
 
+
     // task as field so we can cancel it
     private AsyncTask<Void, Void, Void> computerChoiceTask;
 
@@ -91,6 +92,7 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy(){
+        Log.i(TAG, "onDestroy: ");
         super.onDestroy();
 
         // end the computerChoiceTask if it is running
@@ -98,14 +100,12 @@ public class GameActivity extends AppCompatActivity {
             computerChoiceTask.cancel(true);
         }
 
+        // end any timer that is running
         if(game.getMode() == 2){
             try{
                 countDownTimer.cancel();
                 roundTimer.cancel();
-            }catch(Exception e){
-                //Falls Computer an der Reihe...
-                e.printStackTrace();
-            }
+            }catch(Exception e){/* Falls Computer an der Reihe */}
         }
 
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -137,7 +137,7 @@ public class GameActivity extends AppCompatActivity {
 
         // Dialog "wollen Sie das Spiel beenden?"
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_black_24dp)
                 .setTitle("Spiel beenden")
                 .setMessage("Spielstand speichern?")
                 .setPositiveButton("Speichern", new DialogInterface.OnClickListener()
@@ -205,6 +205,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+        // TODO quit the computerchoiceTask and pause both timers
+    }
+
 
     ///////////////////////////
     // Methoden der Activity://
@@ -215,8 +222,8 @@ public class GameActivity extends AppCompatActivity {
         @Override
         protected Deck doInBackground(Void... voids) {
             // load deck with JSON parser
-            JSONParser jsonParser = new JSONParser();
-            return jsonParser.getDeck(GameActivity.this, chosenDeck);
+            JSONParser jsonParser = new JSONParser(GameActivity.this);
+            return jsonParser.getDeck(chosenDeck);
         }
 
         @Override
@@ -348,7 +355,7 @@ public class GameActivity extends AppCompatActivity {
                         textViewRoundTime.setText(timeLeft);
 
                         //Last 10 Seconds get an extra Sound
-                        if(seconds <= 10){
+                        if(seconds <= 10 && sharedPref.getBoolean("soundModus", false)){
                             mp.start();
                         }
                     }

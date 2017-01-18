@@ -180,8 +180,8 @@ public class NewGameActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Deck> doInBackground(Void... voids) {
-            JSONParser jsonParser = new JSONParser();
-            return jsonParser.getAllDecks(NewGameActivity.this);
+            JSONParser jsonParser = new JSONParser(NewGameActivity.this);
+            return jsonParser.getAllDecks();
         }
 
         @Override

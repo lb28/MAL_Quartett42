@@ -21,30 +21,59 @@ import de.uulm.dbis.quartett42.data.Property;
  * Created by Luis on 12.01.2017.
  */
 public class JSONParser {
-    private String jsonFileName;
+    public static final String JSON_MODE_ASSETS = "jsonexample.json";
+    public static final String JSON_MODE_INTERNAL_STORAGE = "quartett.json";
+    //public static final String JSON_MODE_SERVER = "???";
 
-    public JSONParser() {
-        // use default / example json
-        this("jsonexample.json");
+    // one of the above; maybe as enum?
+    private String jsonMode;
+    private Context context;
+
+    public JSONParser(Context context) {
+        // default constructor from assets, may be changed later
+        this(context, JSON_MODE_ASSETS);
     }
 
-    public JSONParser(String jsonFileName) {
-        this.jsonFileName = jsonFileName;
+    public JSONParser(Context context, String jsonMode) {
+        this.context = context;
+        this.jsonMode = jsonMode;
     }
 
-    // TODO implement getAllDecks, getCard, getGame, etc... (like a DB handler)
+    private JSONObject readJSONObject() {
+        switch (jsonMode) {
+            case JSON_MODE_ASSETS:
+                // read the json object from the assets
+                try {
+                    InputStream in = context.getAssets().open(JSON_MODE_ASSETS);
+                    int size = in.available();
+                    byte[] buffer = new byte[size];
+                    in.read(buffer);
+                    in.close();
+                    String jsonString = new String(buffer, "UTF-8");
+                    // Getting JSON Array node
+                    return new JSONObject(jsonString);
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
+                }
+            case JSON_MODE_INTERNAL_STORAGE:
+                // read the json object from the internal storage
+                break;
+//            case JSON_MODE_SERVER:
+//                break;
+        }
 
-    public ArrayList<Deck> getAllDecks(Context context) {
+        // if everyting failed
+        return null;
+    }
+
+
+    // TODO implement getCard, getGame, etc... (like a DB handler)
+
+    public ArrayList<Deck> getAllDecks() {
         ArrayList<Deck> deckList = new ArrayList<Deck>();
         try {
-            InputStream in = context.getAssets().open(jsonFileName);
-            int size = in.available();
-            byte[] buffer = new byte[size];
-            in.read(buffer);
-            in.close();
-            String jsonString = new String(buffer, "UTF-8");
-            // Getting JSON Array node
-            JSONObject jsonObj = new JSONObject(jsonString);
+            JSONObject jsonObj = readJSONObject();
+
             JSONArray decks = jsonObj.getJSONArray("decks");
             for (int i = 0; i < decks.length(); i++) {
                 JSONObject tmpDeck = decks.getJSONObject(i);
@@ -58,7 +87,7 @@ public class JSONParser {
                 deckList.add(newDeck);
             }
 
-        } catch (JSONException | IOException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -68,21 +97,13 @@ public class JSONParser {
     /**
      * Loads a single deck
      *
-     * @param context
      * @param chosenDeckName
      * @return
      */
-    public Deck getDeck(Context context, String chosenDeckName){
+    public Deck getDeck(String chosenDeckName){
         try {
-            InputStream in = context.getAssets().open(jsonFileName);
-            int size = in.available();
-            byte[] buffer = new byte[size];
-            in.read(buffer);
-            in.close();
-            String jsonString = new String(buffer, "UTF-8");
+            JSONObject jsonObj = readJSONObject();
 
-            // Getting JSON Array node
-            JSONObject jsonObj = new JSONObject(jsonString);
             JSONArray decks = jsonObj.getJSONArray("decks");
             //Nach passendem Deck im JSON-Array suchen:
             for (int i = 0; i < decks.length(); i++) {

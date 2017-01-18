@@ -20,6 +20,15 @@ import java.io.InputStream;
  * Created by Luis on 12.01.2017.
  */
 public class CardImageFragment extends Fragment {
+    AlertDialog descriptionAlertDialog;
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (descriptionAlertDialog != null) {
+            descriptionAlertDialog.dismiss();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,7 +40,7 @@ public class CardImageFragment extends Fragment {
         // Get the arguments that was supplied when the fragment was instantiated by the adapter
         Bundle args = getArguments();
         String imageUri = args.getString("imageUri");
-        String imageDesc = args.getString("imageDesc");
+        final String imageDesc = args.getString("imageDesc");
         assert imageUri != null;
         assert imageDesc != null;
         ImageView cardImageView = (ImageView) rootView.findViewById(R.id.cardImageView);
@@ -49,23 +58,23 @@ public class CardImageFragment extends Fragment {
             e.printStackTrace();
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(imageDesc)
-                .setTitle("Beschreibung")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-        final AlertDialog descriptionAlertDialog = builder.create();
-
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                descriptionAlertDialog.show();
+                descriptionAlertDialog = new AlertDialog.Builder(getActivity())
+                        .setIcon(R.drawable.ic_info_black_24dp)
+                        .setMessage(imageDesc)
+                        .setTitle("Beschreibung")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
+
+
 
         return rootView;
     }

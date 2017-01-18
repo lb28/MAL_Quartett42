@@ -19,16 +19,6 @@
         android:layout_marginTop="24dp"
         android:id="@+id/textView" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/createDecksImageButton"
-        android:onClick="clickCreateDecksFunction"/>
-
     <GridView
         android:id="@+id/galleryGridView"
         android:layout_width="match_parent"
@@ -47,6 +37,18 @@
         android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/createDecksImageButton"
+        android:onClick="clickCreateDecksFunction"
+        app:fabSize="normal"
+        android:tint="@android:color/white" />
 
     <ProgressBar
         android:id="@+id/progressBar1"

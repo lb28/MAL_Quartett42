@@ -40,7 +40,7 @@ public class CompareCardsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         // Dialog "wollen Sie das Spiel beenden?"
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_black_24dp)
                 .setTitle("Spiel beenden")
                 .setMessage("Spielstand speichern?")
                 .setPositiveButton("Speichern", new DialogInterface.OnClickListener()
