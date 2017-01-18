@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:label="Quartett42"
@@ -100,20 +99,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".CompareCardsActivity"
+        <activity
+            android:name=".CompareCardsActivity"
             android:label="Quartett42 Vergleich"
             android:screenOrientation="portrait">
-        <meta-data
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".GameEndActivity"
+        <activity
+            android:name=".GameEndActivity"
             android:label="Quartett42 Spielende"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
+        <activity android:name=".LoadOnlineDecksActivity"></activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class GalleryActivity extends AppCompatActivity {
     GridView gridView;
     GridViewAdapter gridAdapter;
     ProgressBar spinner; //Spinner fuer Ladezeiten
+    ImageButton imagebutton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         spinner = (ProgressBar)findViewById(R.id.progressBar1);
         spinner.setVisibility(View.VISIBLE);
+
+        imagebutton = (ImageButton)findViewById(R.id.createDecksImageButton);
+        imagebutton.bringToFront();
 
         //JSON-String auslesen:
         Intent intent = getIntent();
@@ -108,6 +113,14 @@ public class GalleryActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    //Button-Klick-Methoden:
+    public void clickCreateDecksFunction(View view){
+        //Toast.makeText(getApplicationContext(), "Klick", Toast.LENGTH_SHORT).show();
+        spinner.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(GalleryActivity.this, LoadOnlineDecksActivity.class);
+        startActivity(intent);
     }
 
 }

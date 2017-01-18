@@ -18,6 +18,11 @@ public class Deck {
 
     private ArrayList<Card> cardList;
 
+    /** Erweitert um ID, die beim Download benoetigt wird, aber ansonsten nicht
+     *
+     */
+    private int ID;
+
     //int id; //wird wahrscheinlich nicht gebraucht
 
     /** Konstruktor, Bild und Beschreibung als ImageCard-Object
@@ -81,6 +86,14 @@ public class Deck {
         this.cardList = cardList;
     }
 
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
     /** Zum Testen
      *
      * @return
@@ -94,4 +107,5 @@ public class Deck {
                 ", cardList=" + cardList.toString() +
                 '}';
     }
+
 }
