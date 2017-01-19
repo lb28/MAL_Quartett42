@@ -1,5 +1,9 @@
 package de.uulm.dbis.quartett42.data;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -19,8 +23,6 @@ public class Card {
      */
 
     private HashMap<String, Double> attributeMap;
-
-    //int points; //wird wahrscheinlich nicht gebraucht sondern on the fly berechnet?
 
     /** Konstruktor
      *
@@ -80,5 +82,34 @@ public class Card {
                 ", imageList=" + imageList.toString() +
                 ", attributeMap=" + attributeMap.toString() +
                 '}';
+    }
+
+    public JSONObject toJSON(){
+
+        JSONObject jsonObject= new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("id", id);
+            JSONArray images = new JSONArray();
+            // add all the images to a jsonArray
+            for (ImageCard imageCard : imageList) {
+                images.put(imageCard.toJSON());
+            }
+            jsonObject.put("images", images);
+            // add all the attributes to a jsonArray
+
+            JSONObject values = new JSONObject();
+            for (String attrName : attributeMap.keySet()) {
+                values.put(attrName, attributeMap.get(attrName));
+            }
+            jsonObject.put("values", values);
+
+            return jsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 }

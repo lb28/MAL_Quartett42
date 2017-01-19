@@ -35,6 +35,8 @@ public class GridViewAdapter extends ArrayAdapter {
         View row = convertView;
         ViewHolder holder = null;
 
+        // TODO add the info button that displays the deck description
+
         if (row == null) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);

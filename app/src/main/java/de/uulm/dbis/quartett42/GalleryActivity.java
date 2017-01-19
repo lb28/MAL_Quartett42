@@ -8,16 +8,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
-import de.uulm.dbis.quartett42.data.ImageCard;
 
 public class GalleryActivity extends AppCompatActivity {
     String jsonString = "";
@@ -45,10 +39,11 @@ public class GalleryActivity extends AppCompatActivity {
         //Decks laden:
         new Thread(new Runnable() {
             public void run() {
-                // TODO make AsynchTask calling JSONParser.getDecks()
+                // TODO make AsynchTask calling LocalJSONParser.getDecks()
                 loadData();
             }
         }).start();
+
 
     }
 
@@ -63,40 +58,48 @@ public class GalleryActivity extends AppCompatActivity {
     //Decks laden:
     public void loadData(){
         //ArrayList aller Decks aus JSON erstellen
-        deckList = new ArrayList<Deck>();
-        try {
-            // Getting JSON Array node
-            JSONObject jsonObj = new JSONObject(jsonString);
-            JSONArray decks = jsonObj.getJSONArray("decks");
-            for (int i = 0; i < decks.length(); i++) {
-                JSONObject tmpDeck = decks.getJSONObject(i);
-                String deckName = tmpDeck.getString("name");
-                String deckDescription = tmpDeck.getString("description");
-                String deckImageUri = tmpDeck.getString("image");
-                //Cards und Properties sind erst mal egal fuer die Deckuebersicht
+        LocalJSONParser jsonParser = new LocalJSONParser(this);
+        deckList = jsonParser.getAllDecksLight();
 
-                ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
-                Deck newDeck = new Deck(deckName, newImage, null, null);
-                deckList.add(newDeck);
-            }
 
-            //Test-Ausgabe der Daten:
-            for(int i = 0; i < deckList.size(); i++){
-                System.out.println("Deck "+deckList.get(i).getName()+": "+deckList.get(i).getImage().getDescription());
-            }
+        /*
+        // BEGIN TEST (checks if internal storage json produces same objects as assets)
+        System.out.println("beginning test");
 
-            try{
-                //Als Grid-Layout setzen:
-                gridView = (GridView) findViewById(R.id.galleryGridView);
-                gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
-                gridView.setAdapter(gridAdapter);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
+        ArrayList<Deck> correctDeckList = jsonParser.getAllDecksDetailed();
 
-        } catch (JSONException e) {
+        System.out.println(new Date());
+
+        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_ASSETS);
+        ArrayList<Deck> testDeckList = jsonParser.getAllDecksDetailed();
+        System.out.println("1: " + correctDeckList.toString().equals(testDeckList.toString()));
+
+        System.out.println(new Date());
+
+        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_INTERNAL_STORAGE);
+        testDeckList = jsonParser.getAllDecksDetailed();
+        System.out.println(testDeckList);
+        System.out.println("2: " + correctDeckList.toString().equals(testDeckList.toString()));
+
+        System.out.println(new Date());
+
+        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_BOTH);
+        testDeckList = jsonParser.getAllDecksDetailed();
+        System.out.println("3: " + correctDeckList.toString().equals(testDeckList.toString()));
+
+        System.out.println(new Date());
+
+        System.out.println("end of test");
+        // END TEST
+        */
+
+        try{
+            //Als Grid-Layout setzen:
+            gridView = (GridView) findViewById(R.id.galleryGridView);
+            gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
+            gridView.setAdapter(gridAdapter);
+        }catch(Exception e){
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         //On-Item-Click-Listener fuer einzelne Decks:

@@ -1,5 +1,9 @@
 package de.uulm.dbis.quartett42.data;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 /**
@@ -106,6 +110,32 @@ public class Deck {
                 ", propertyList=" + propertyList.toString() +
                 ", cardList=" + cardList.toString() +
                 '}';
+    }
+
+    public JSONObject toJSON() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("name", name);
+            jsonObject.put("description", image.getDescription());
+            jsonObject.put("image", image.getUri());
+            // add the properties as json array
+            JSONArray properties = new JSONArray();
+            for (Property p : propertyList) {
+                properties.put(p.toJSON());
+            }
+            jsonObject.put("properties", properties);
+            // add the card list as json array
+            JSONArray cards = new JSONArray();
+            for (Card c : cardList) {
+                cards.put(c.toJSON());
+            }
+            jsonObject.put("cards", cards);
+            return jsonObject;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

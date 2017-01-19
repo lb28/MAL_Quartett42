@@ -1,5 +1,8 @@
 package de.uulm.dbis.quartett42.data;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by Fischbach on 21.12.2016.
  */
@@ -98,5 +101,18 @@ public class Property {
                 ", unit='" + unit + '\'' +
                 ", maxWinner=" + maxWinner +
                 '}';
+    }
+
+    public JSONObject toJSON() {
+        JSONObject property = new JSONObject();
+        try {
+            property.put("name", name);
+            property.put("unit", unit);
+            property.put("maxwinner", maxWinner);
+            return property;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

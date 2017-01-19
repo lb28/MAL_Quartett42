@@ -4,6 +4,9 @@ package de.uulm.dbis.quartett42.data;
  * Created by Fischbach on 21.12.2016.
  */
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /** Nicht Image wegen Namensgleichheit der Java Klasse Image
  *
  */
@@ -51,5 +54,17 @@ public class ImageCard {
                 "uri='" + uri + '\'' +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    public JSONObject toJSON() {
+        JSONObject image = new JSONObject();
+        try {
+            image.put("description", description);
+            image.put("URI", uri);
+            return image;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
