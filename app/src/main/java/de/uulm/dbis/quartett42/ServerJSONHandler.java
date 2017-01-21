@@ -1,5 +1,7 @@
 package de.uulm.dbis.quartett42;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -66,7 +68,7 @@ public class ServerJSONHandler {
      * The image of the deck and the cards is still the online URL
      * the picture has to be downloaded and saved when parsing the data object to JSON
      *
-     * @param chosenDeckID the if of the deck which wants to be downloaded
+     * @param chosenDeckID the id of the deck which wants to be downloaded
      * @return the deck with the specified name, or null if no deck was found
      */
 
@@ -161,7 +163,6 @@ public class ServerJSONHandler {
             e.printStackTrace();
         }
 
-        // no deck was found
         return resultDeck;
     }
 
@@ -178,6 +179,8 @@ public class ServerJSONHandler {
      * @return the string containing the json data
      */
     public String loadOnlineData(URL url){
+        System.out.println("Trying to download " + url.toString());
+
         String jsonString = "not started";
         HttpURLConnection urlConnection = null;
         try {

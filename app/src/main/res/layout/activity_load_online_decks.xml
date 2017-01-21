@@ -10,6 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.uulm.dbis.quartett42.LoadOnlineDecksActivity">
 
+    <TextView
+        android:text="Alle downloadbare Decks:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="24dp"
+        android:id="@+id/textView" />
+
     <GridView
         android:id="@+id/galleryGridView"
         android:layout_width="match_parent"
@@ -28,5 +36,12 @@
         android:verticalSpacing="5dp"
         android:focusable="true"
         android:clickable="true"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
