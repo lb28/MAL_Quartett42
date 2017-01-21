@@ -1,7 +1,5 @@
 package de.uulm.dbis.quartett42;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,10 +19,6 @@ import de.uulm.dbis.quartett42.data.ImageCard;
  */
 public class ServerJSONHandler {
     public static final String URL_DECKS_OVERVIEW = "http://quartett.af-mba.dbis.info/decks/";
-
-
-    private Context context;
-    private int jsonMode;
 
     /**
      * Get a list of every deck from the server,
