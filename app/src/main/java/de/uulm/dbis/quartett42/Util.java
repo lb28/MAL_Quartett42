@@ -20,6 +20,7 @@ import de.uulm.dbis.quartett42.data.Property;
  * Created by Luis on 12.01.2017.
  */
 public class Util {
+    private static final String TAG = "Util";
 
     /**
      * for the list view we need to create an arraylist of strings containing
@@ -93,5 +94,17 @@ public class Util {
             }
         }
         return null;
+    }
+
+    /**
+     * stores an image at a subfolder "/deckName/fileName" in internal storage.
+     * @param image
+     * @param deckName
+     * @param fileName
+     * @return true if the image was successfully saved, false otherwise
+     */
+    public static boolean storeImage(Bitmap image, String deckName, String fileName) {
+        // TODO store image at subfolder specified by the string
+        return false;
     }
 }

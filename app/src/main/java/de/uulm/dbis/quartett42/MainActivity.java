@@ -166,21 +166,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-/*
-        //Test: Startbild laden:
-        AssetManager assetManager = getAssets();
-        InputStream is = null;
-        ImageView welcomeImage = (ImageView)findViewById(R.id.welcomeImage);
-        try {
-            is = assetManager.open("menu_image_cut.gif");
-            Bitmap bitmap = BitmapFactory.decodeStream(is);
-            welcomeImage.setImageBitmap(bitmap);
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-*/
 
         //JSON-String lesesn, damit er nicht jedes mal neu gelesen werden muss:
         try {
