@@ -115,12 +115,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.MainActivity" />
         </activity>
-        <activity android:name=".LoadOnlineDecksActivity"
-            android:label="Quartett42 Online Decks"
+        <activity
+            android:name=".LoadOnlineDecksActivity"
+            android:label="Quartett42 Shop"
             android:screenOrientation="portrait">
             <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="de.uulm.dbis.quartett42.MainActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.GalleryActivity" />
         </activity>
     </application>
 
