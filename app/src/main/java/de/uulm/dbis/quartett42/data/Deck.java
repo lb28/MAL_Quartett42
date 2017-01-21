@@ -11,6 +11,15 @@ import java.util.ArrayList;
  */
 
 public class Deck {
+    /*
+     * source modes specify it this deck is in assets, internal storage, or online
+     * necessary for the pictures
+     */
+    public static final int SRC_MODE_ASSETS = 1;
+    public static final int SRC_MODE_INTERNAL_STORAGE = 2;
+    public static final int SRC_MODE_SERVER = 3;
+    public static final int SRC_MODE_NONE = -1;
+
     private String name;
 
     /** Enthaelt auch gleich die Beschreibung somit kein String description mehr noetig.
@@ -21,6 +30,8 @@ public class Deck {
     private ArrayList<Property> propertyList;
 
     private ArrayList<Card> cardList;
+
+    private int srcMode;
 
     /** Erweitert um ID, die beim Download benoetigt wird, aber ansonsten nicht
      *
@@ -35,12 +46,14 @@ public class Deck {
      * @param image
      * @param propertyList
      * @param cardList
+     * @param srcMode
      */
-    public Deck(String name, ImageCard image, ArrayList<Property> propertyList, ArrayList<Card> cardList) {
+    public Deck(String name, ImageCard image, ArrayList<Property> propertyList, ArrayList<Card> cardList, int srcMode) {
         this.name = name;
         this.image = image;
         this.propertyList = propertyList;
         this.cardList = cardList;
+        this.srcMode = srcMode;
     }
 
     /** Konstruktor, falls kein Bild vorhanden
@@ -51,11 +64,7 @@ public class Deck {
      * @param cardList
      */
     public Deck(String name, String description, ArrayList<Property> propertyList, ArrayList<Card> cardList) {
-        this.name = name;
-        ImageCard tmpImage = new ImageCard(null, description);
-        this.image = tmpImage;
-        this.propertyList = propertyList;
-        this.cardList = cardList;
+        this(name, new ImageCard(null, description), propertyList, cardList, SRC_MODE_NONE);
     }
 
     public String getName() {
@@ -97,6 +106,15 @@ public class Deck {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    public int getSrcMode() {
+        return srcMode;
+    }
+
+    public void setSrcMode(int srcMode) {
+        this.srcMode = srcMode;
+    }
+
 
     /** Zum Testen
      *

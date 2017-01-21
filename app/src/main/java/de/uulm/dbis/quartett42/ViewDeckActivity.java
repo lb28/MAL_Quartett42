@@ -148,8 +148,8 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         @Override
         protected Deck doInBackground(Void... voids) {
-            LocalJSONParser localJsonParser = new LocalJSONParser(ViewDeckActivity.this);
-            return localJsonParser.getDeck(chosenDeck);
+            LocalJSONHandler localJsonHandler = new LocalJSONHandler(ViewDeckActivity.this);
+            return localJsonHandler.getDeck(chosenDeck);
         }
 
         @Override

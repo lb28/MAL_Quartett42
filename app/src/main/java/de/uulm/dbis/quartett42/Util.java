@@ -1,5 +1,12 @@
 package de.uulm.dbis.quartett42;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -59,6 +66,32 @@ public class Util {
                 imageCards,
                 attributeMap
         );
+    }
 
+    public static Bitmap downloadBitmap(String imageUri) {
+        HttpURLConnection urlConnection = null;
+        try {
+            URL uri = new URL(imageUri);
+            urlConnection = (HttpURLConnection) uri.openConnection();
+            int statusCode = urlConnection.getResponseCode();
+            if (statusCode != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
+
+            InputStream inputStream = urlConnection.getInputStream();
+            if (inputStream != null) {
+                return BitmapFactory.decodeStream(inputStream);
+            }
+        } catch (Exception e) {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            Log.w("downloadBitmap()", "Error downloading image from " + imageUri);
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+        return null;
     }
 }

@@ -180,8 +180,8 @@ public class NewGameActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Deck> doInBackground(Void... voids) {
-            LocalJSONParser localJsonParser = new LocalJSONParser(NewGameActivity.this);
-            return localJsonParser.getAllDecksLight();
+            LocalJSONHandler localJsonHandler = new LocalJSONHandler(NewGameActivity.this);
+            return localJsonHandler.getDecksOverview();
         }
 
         @Override

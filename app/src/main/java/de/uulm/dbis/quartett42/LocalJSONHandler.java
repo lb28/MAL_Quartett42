@@ -24,7 +24,7 @@ import de.uulm.dbis.quartett42.data.Property;
  * Acts like a DB manager for the json file
  * Created by Luis on 12.01.2017.
  */
-public class LocalJSONParser {
+public class LocalJSONHandler {
     public static final String JSON_FILENAME_ASSETS = "jsonexample.json";
     public static final String JSON_FILENAME_INTERNAL_STORAGE = "quartett.json";
 
@@ -36,12 +36,12 @@ public class LocalJSONParser {
     private Context context;
     private int jsonMode;
 
-    public LocalJSONParser(Context context) {
+    public LocalJSONHandler(Context context) {
         // default constructor is for assets (may be changed later)
         this(context, JSON_MODE_ASSETS);
     }
 
-    public LocalJSONParser(Context context, int jsonMode) {
+    public LocalJSONHandler(Context context, int jsonMode) {
         this.context = context;
         this.jsonMode = jsonMode;
     }
@@ -65,7 +65,7 @@ public class LocalJSONParser {
      *  </ul>
      * @return a list of decks as an overview
      */
-    public ArrayList<Deck> getAllDecksLight() {
+    public ArrayList<Deck> getDecksOverview() {
         ArrayList<Deck> deckList = new ArrayList<Deck>();
         JSONObject jsonObj;
         JSONArray decks;
@@ -84,7 +84,16 @@ public class LocalJSONParser {
                 //Cards und Properties sind erst mal egal fuer die Deckuebersicht
 
                 ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
-                Deck newDeck = new Deck(deckName, newImage, null, null);
+                // set srcMode to assets or internal
+                int srcMode = Deck.SRC_MODE_NONE;
+                if (jsonMode == JSON_MODE_ASSETS) {
+                    srcMode = Deck.SRC_MODE_ASSETS;
+                }
+                else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                    srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
+                }
+
+                Deck newDeck = new Deck(deckName, newImage, null, null, srcMode);
                 deckList.add(newDeck);
             }
 
@@ -98,7 +107,7 @@ public class LocalJSONParser {
 
     /**
      * Get the whole content of the json (all decks with full information).<br>
-     * If you only need the deck overview, go for getAllDecksLight().<br>
+     * If you only need the deck overview, go for getDecksOverview().<br>
      * <b>ATTENTION: THIS READS THE WHOLE JSON (all decks with all cards).</b>
      * @return a list of complete deck objects
      */
@@ -160,8 +169,17 @@ public class LocalJSONParser {
                     Card newCard = new Card(cName, cId, imageList, attributeMap);
                     cardList.add(newCard);
                 }
+                // set srcMode to assets or internal
+                int srcMode = Deck.SRC_MODE_NONE;
+                if (jsonMode != JSON_MODE_ASSETS) {
+                    srcMode = Deck.SRC_MODE_ASSETS;
+                }
+                else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                    srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
+                }
+
                 //return the deck
-                Deck newDeck = new Deck(deckName, deckImage, propertyList, cardList);
+                Deck newDeck = new Deck(deckName, deckImage, propertyList, cardList, srcMode);
 
                 deckList.add(newDeck);
             }
@@ -234,8 +252,17 @@ public class LocalJSONParser {
                         Card newCard = new Card(cName, cId, imageList, attributeMap);
                         cardList.add(newCard);
                     }
+                    // set srcMode to assets or internal
+                    int srcMode = Deck.SRC_MODE_NONE;
+                    if (jsonMode != JSON_MODE_ASSETS) {
+                        srcMode = Deck.SRC_MODE_ASSETS;
+                    }
+                    else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                        srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
+                    }
+
                     //return the deck
-                    return new Deck(chosenDeckName, deckImage, propertyList, cardList);
+                    return new Deck(deckName, deckImage, propertyList, cardList, srcMode);
                 }
             }
 
@@ -276,7 +303,7 @@ public class LocalJSONParser {
 
     /**
      * reads the json object from internal storage or from assets (depending on jsonMode)
-     * @param jsonMode the mode (assets / internal storage), see the constants in LocalJSONParser
+     * @param jsonMode the mode (assets / internal storage), see the constants in LocalJSONHandler
      * @return the root json object
      */
     public JSONObject readJSONFromFile(int jsonMode) {
@@ -318,6 +345,8 @@ public class LocalJSONParser {
                     return null;
                 }
             case JSON_MODE_BOTH:
+                System.err.println("ERROR: Using JSON_MODE_BOTH does not work yet properly" +
+                        "with the deck images (see Deck.srcMode). Pleas use a dedicated json mode");
                 try {
                     // merge deck list from both files
                     JSONObject jsonObjAssets = readJSONFromFile(JSON_MODE_ASSETS);

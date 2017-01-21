@@ -39,7 +39,7 @@ public class GalleryActivity extends AppCompatActivity {
         //Decks laden:
         new Thread(new Runnable() {
             public void run() {
-                // TODO make AsynchTask calling LocalJSONParser.getDecks()
+                // TODO make AsynchTask calling LocalJSONHandler.getDecks()
                 loadData();
             }
         }).start();
@@ -58,8 +58,8 @@ public class GalleryActivity extends AppCompatActivity {
     //Decks laden:
     public void loadData(){
         //ArrayList aller Decks aus JSON erstellen
-        LocalJSONParser jsonParser = new LocalJSONParser(this);
-        deckList = jsonParser.getAllDecksLight();
+        LocalJSONHandler jsonParser = new LocalJSONHandler(this);
+        deckList = jsonParser.getDecksOverview();
 
 
         /*
@@ -70,20 +70,20 @@ public class GalleryActivity extends AppCompatActivity {
 
         System.out.println(new Date());
 
-        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_ASSETS);
+        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_ASSETS);
         ArrayList<Deck> testDeckList = jsonParser.getAllDecksDetailed();
         System.out.println("1: " + correctDeckList.toString().equals(testDeckList.toString()));
 
         System.out.println(new Date());
 
-        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_INTERNAL_STORAGE);
+        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE);
         testDeckList = jsonParser.getAllDecksDetailed();
         System.out.println(testDeckList);
         System.out.println("2: " + correctDeckList.toString().equals(testDeckList.toString()));
 
         System.out.println(new Date());
 
-        jsonParser = new LocalJSONParser(this, LocalJSONParser.JSON_MODE_BOTH);
+        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_BOTH);
         testDeckList = jsonParser.getAllDecksDetailed();
         System.out.println("3: " + correctDeckList.toString().equals(testDeckList.toString()));
 

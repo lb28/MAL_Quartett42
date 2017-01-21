@@ -222,8 +222,8 @@ public class GameActivity extends AppCompatActivity {
         @Override
         protected Deck doInBackground(Void... voids) {
             // load deck with JSON parser
-            LocalJSONParser localJsonParser = new LocalJSONParser(GameActivity.this);
-            return localJsonParser.getDeck(chosenDeck);
+            LocalJSONHandler localJsonHandler = new LocalJSONHandler(GameActivity.this);
+            return localJsonHandler.getDeck(chosenDeck);
         }
 
         @Override

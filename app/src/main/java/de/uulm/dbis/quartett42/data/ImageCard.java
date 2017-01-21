@@ -13,9 +13,9 @@ import org.json.JSONObject;
 public class ImageCard {
     /**
      * Bildname (irgendwas.jpg)
+     * (Used for local URI aswell as online URL)
      */
-    private String uri; //String oder URI?
-
+    private String uri;
     private String description;
 
     /** Konstruktor
