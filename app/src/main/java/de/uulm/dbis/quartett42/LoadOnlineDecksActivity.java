@@ -115,6 +115,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
         // get the deck object from the server
         Deck deck = serverJSONHandler.getDeck(deckID);
+        System.out.println(deck.toString()); //for testing
 
         // download the deck image and save it in internal storage (same file structure as assets)
         String deckImgUrl = deck.getImage().getUri();
