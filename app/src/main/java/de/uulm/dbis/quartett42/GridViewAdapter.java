@@ -2,6 +2,8 @@ package de.uulm.dbis.quartett42;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +15,14 @@ import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
 
-public class GridViewAdapter extends ArrayAdapter {
+public class GridViewAdapter extends ArrayAdapter<Deck> {
     private Context context;
     private int layoutResourceId;
-    private ArrayList<Deck> data = new ArrayList<Deck>();
 
-    public GridViewAdapter(Context context, int layoutResourceId, ArrayList data) {
+    public GridViewAdapter(Context context, int layoutResourceId, ArrayList<Deck> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
-        this.data = data;
     }
 
     @Override
@@ -30,28 +30,44 @@ public class GridViewAdapter extends ArrayAdapter {
         View row = convertView;
         ViewHolder holder;
 
-        // TODO add the info button that displays the deck description
-
         if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.imageTitle = (TextView) row.findViewById(R.id.galleryListName);
             holder.image = (ImageView) row.findViewById(R.id.galleryListImage);
+            holder.descButtonView = (ImageView) row.findViewById(R.id.deckImgDescView);
             row.setTag(holder);
         } else {
             holder = (ViewHolder) row.getTag();
         }
 
-        Deck singleDeck = data.get(position);
+        final Deck singleDeck = getItem(position);
+
         holder.imageTitle.setText(singleDeck.getName());
 
-        String imageUri = singleDeck.getImage().getUri();
+        holder.descButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(context)
+                        .setIcon(R.drawable.ic_info_black_24dp)
+                        .setMessage(singleDeck.getImage().getDescription())
+                        .setTitle("Beschreibung")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
 
+        String imageUri = singleDeck.getImage().getUri();
         // call one of three different tasks for the three srcModes
         switch (singleDeck.getSrcMode()) {
             case Deck.SRC_MODE_SERVER:
                 new ImageLoaderServerTask(holder.image).execute(imageUri);
+                break;
             case Deck.SRC_MODE_ASSETS:
                 imageUri = singleDeck.getName() + "/" + imageUri;
                 new ImageLoaderAssetsTask(holder.image, context).execute(imageUri);
@@ -68,5 +84,6 @@ public class GridViewAdapter extends ArrayAdapter {
     private static class ViewHolder {
         TextView imageTitle;
         ImageView image;
+        ImageView descButtonView;
     }
 }
