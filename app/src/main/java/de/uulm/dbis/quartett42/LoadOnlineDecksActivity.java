@@ -1,6 +1,8 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
@@ -8,10 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileOutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
+
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 
 public class LoadOnlineDecksActivity extends AppCompatActivity {
@@ -78,6 +90,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
+
+                                            //TODO check if deck with this name already exists in the internal storage
                                             downloadDeck(deck.getID());
                                             runOnUiThread(new Runnable() {
                                                 @Override
@@ -93,8 +107,6 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                             .setNegativeButton("Nein", null)
                             .show();
 
-                    // Einzelansicht des Decks aufrufen
-
                 }
 
             });
@@ -106,28 +118,97 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
     /**
      * downloads a single deck, saves it in internal storage and then redirects to the gallery
-     * @param deckID
+     *
+     * Saving all pictures in the same folder and no subfolders for every deck!!!
+     *
+     * @param deckID deckID
      */
     private void downloadDeck(int deckID) {
-        ServerJSONHandler serverJSONHandler = new ServerJSONHandler();
+        System.out.println("starting download...");
 
-        // TODO implement below comments
+        ServerJSONHandler serverJSONHandler = new ServerJSONHandler();
 
         // get the deck object from the server
         Deck deck = serverJSONHandler.getDeck(deckID);
-        System.out.println(deck.toString()); //for testing
 
         // download the deck image and save it in internal storage (same file structure as assets)
-        String deckImgUrl = deck.getImage().getUri();
+        FileOutputStream fos;
+        try {
+            String deckImgUrl = deck.getImage().getUri();
+            Bitmap deckImageBitmap = Util.downloadBitmap(deckImgUrl);
 
+            fos = openFileOutput(deck.getName()+"_deckimage.jpg", Context.MODE_PRIVATE);
 
-        // replace the image uri with the local uri
+            // Writing the bitmap to the output stream
+            deckImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.close();
 
-        // download all the card images and save them in internal storage
+            // replace the image uri with the local uri
+            deck.getImage().setUri(deck.getName()+"_deckimage.jpg");
 
-        // replace all the image uris with the local uris (string.replace() in the json string?)
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // save the deck as json (deck.toJSON())
+        for(int i = 0; i < deck.getCardList().size(); i++){
+            for(int j = 0; j < deck.getCardList().get(i).getImageList().size(); j++){
+                try {
+                    String cardImgUrl = deck.getCardList().get(i).getImageList().get(j).getUri();
+                    Bitmap cardImageBitmap = Util.downloadBitmap(cardImgUrl);
+
+                    fos = openFileOutput(deck.getName()+i+"_"+j+".jpg", Context.MODE_PRIVATE);
+                    // Writing the bitmap to the output stream
+                    cardImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                    fos.close();
+
+                    // replace the image uri with the local uri
+                    deck.getCardList().get(i).getImageList().get(j).setUri(deck.getName()+i+"_"+j+".jpg");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // save the deck as json
+        JSONObject newJsonDeck = deck.toJSON();
+        LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
+
+        //localJsonHandler.deleteJSONFile(); //for testing only
+
+        JSONObject oldJsonDeckList = localJsonHandler.readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        if(oldJsonDeckList != null){
+            try {
+                JSONArray oldDeckArray = oldJsonDeckList.getJSONArray("decks");
+                oldDeckArray.put(newJsonDeck);
+
+                JSONObject newDeckList = new JSONObject();
+                newDeckList.put("decks", oldDeckArray);
+
+                localJsonHandler.saveJSONToFile(newDeckList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else{
+            try {
+                //1tes neues Deck, File nicht vorhanden
+                oldJsonDeckList = new JSONObject();
+                JSONArray newDeckArray = new JSONArray();
+                newDeckArray.put(newJsonDeck);
+                oldJsonDeckList.put("decks", newDeckArray);
+
+                localJsonHandler.saveJSONToFile(oldJsonDeckList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        //for testing:
+        ArrayList<Deck> testDeckArray = localJsonHandler.getAllDecksDetailed();
+        System.out.println(testDeckArray.toString());
+
+        //Toast.makeText(getApplicationContext(), "Deck "+deck.getName()+" erfolgreich runter geladen", Toast.LENGTH_SHORT).show();
+        finish();
+
     }
 
 }

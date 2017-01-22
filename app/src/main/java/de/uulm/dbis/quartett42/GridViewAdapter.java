@@ -73,7 +73,6 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 new ImageLoaderAssetsTask(holder.image, context).execute(imageUri);
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
-                imageUri = singleDeck.getName() + "/" + imageUri;
                 new ImageLoaderInternalStorageTask(holder.image, context).execute(imageUri);
                 break;
         }

@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -339,6 +340,7 @@ public class LocalJSONHandler {
                         jsonString += new String(buffer, 0, bytesRead);
                     }
 
+                    System.out.println(jsonString);
                     return new JSONObject(jsonString);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -396,7 +398,7 @@ public class LocalJSONHandler {
      * with the filename {@value JSON_FILENAME_INTERNAL_STORAGE}.
      * @param jsonObject the json object to save
      */
-    private void saveJSONToFile(JSONObject jsonObject) {
+    public void saveJSONToFile(JSONObject jsonObject) {
         FileOutputStream outputStream;
         try {
             String jsonString = jsonObject.toString(4);
@@ -409,4 +411,14 @@ public class LocalJSONHandler {
             e.printStackTrace();
         }
     }
+
+    /** Method deletes the old JSON Array (for testing only)
+     *
+     */
+    public void deleteJSONFile(){
+        String dir = context.getFilesDir().getAbsolutePath();
+        File file = new File(dir, JSON_FILENAME_INTERNAL_STORAGE);
+        file.delete();
+    }
+
 }

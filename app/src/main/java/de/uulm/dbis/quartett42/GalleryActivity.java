@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
 
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
+
 public class GalleryActivity extends AppCompatActivity {
     String jsonString = "";
     ArrayList<Deck> deckList;
@@ -59,6 +61,7 @@ public class GalleryActivity extends AppCompatActivity {
     public void loadData(){
         //ArrayList aller Decks aus JSON erstellen
         LocalJSONHandler jsonParser = new LocalJSONHandler(this);
+        //LocalJSONHandler jsonParser = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE); //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
         deckList = jsonParser.getDecksOverview();
 
 
