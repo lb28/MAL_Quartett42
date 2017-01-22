@@ -50,7 +50,7 @@
         app:fabSize="normal"
         android:tint="@android:color/white" />
 
-    <ProgressBar
+    <android.support.v4.widget.ContentLoadingProgressBar
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"

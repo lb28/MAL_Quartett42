@@ -7,11 +7,11 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,16 +39,16 @@ public class NewGameActivity extends AppCompatActivity {
     Intent intent;
 
     SharedPreferences sharedPref;
-    ProgressBar spinner; //Spinner fuer Ladezeiten
+    ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_game);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
         spinner.bringToFront();
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -123,14 +123,14 @@ public class NewGameActivity extends AppCompatActivity {
             soundGameText.setText("aus");
         }
 
-        spinner.setVisibility(View.GONE);
+        spinner.hide();
     }
 
     //Button Klick Methoden:
 
     //Einstellungen anpassen:
     public void clickChangeSettingsButtonFunction(View view){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, SettingActivity.class);
         intent.putExtra("setting_source", "new_game");
         startActivity(intent);
@@ -143,7 +143,7 @@ public class NewGameActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Bitte zuerst ein Deck aussuchen!", Toast.LENGTH_SHORT).show();
         }else{
             //Spiel starten und ausgesuchtes Deck sowie JSON-String mitgeben
-            spinner.setVisibility(View.VISIBLE);
+            spinner.hide();
             Intent intent = new Intent(this, GameActivity.class);
             //intent.putExtra("setting_source", "new_game");
             intent.putExtra("chosen_deck", chosenDeck);
@@ -212,7 +212,7 @@ public class NewGameActivity extends AppCompatActivity {
             }
 
             if (spinner != null) {
-                spinner.setVisibility(View.GONE);
+                spinner.hide();
             }
         }
     }

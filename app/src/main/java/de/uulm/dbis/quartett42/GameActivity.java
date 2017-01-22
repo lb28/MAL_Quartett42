@@ -10,6 +10,7 @@ import android.os.CountDownTimer;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,7 +18,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class GameActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
 
-    ProgressBar spinner; //Spinner fuer Ladezeiten
+    ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
 
     TextView textViewRoundsRemaining;
     TextView textViewRoundTime;
@@ -64,8 +64,8 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        spinner.setVisibility(View.VISIBLE);
+        spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
+        spinner.show();
         findViewById(R.id.progressBarWait).setVisibility(View.GONE);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -266,7 +266,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
            
-            spinner.setVisibility(View.GONE);
+            spinner.hide();
             
             // call nextRound to start the game
             nextRound();

@@ -2,12 +2,12 @@ package de.uulm.dbis.quartett42;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class GalleryActivity extends AppCompatActivity {
     ArrayList<Deck> deckList;
     GridView gridView;
     GridViewAdapter gridAdapter;
-    ProgressBar spinner; //Spinner fuer Ladezeiten
+    ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
     ImageButton imagebutton;
 
     @Override
@@ -26,8 +26,8 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        spinner.setVisibility(View.VISIBLE);
+        spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
+        spinner.show();
 
         imagebutton = (ImageButton)findViewById(R.id.createDecksImageButton);
         imagebutton.bringToFront();
@@ -50,7 +50,7 @@ public class GalleryActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        spinner.setVisibility(View.GONE);
+        spinner.hide();
     }
 
     //Methoden der Activity:
@@ -93,35 +93,43 @@ public class GalleryActivity extends AppCompatActivity {
         // END TEST
         */
 
-        try{
-            //Als Grid-Layout setzen:
-            gridView = (GridView) findViewById(R.id.galleryGridView);
-            gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
-            gridView.setAdapter(gridAdapter);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
 
-        //On-Item-Click-Listener fuer einzelne Decks:
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Deck item = (Deck) parent.getItemAtPosition(position);
+        // update the view
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    //Als Grid-Layout setzen:
+                    gridView = (GridView) findViewById(R.id.galleryGridView);
+                    gridAdapter = new GridViewAdapter(GalleryActivity.this, R.layout.grid_item_layout, deckList);
+                    gridView.setAdapter(gridAdapter);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
 
-                // Einzelansicht des Decks aufrufen
-                spinner.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(GalleryActivity.this, ViewDeckActivity.class);
-                intent.putExtra("chosen_deck", item.getName());
-                intent.putExtra("json_string", jsonString);
-                startActivity(intent);
+                //On-Item-Click-Listener fuer einzelne Decks:
+                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                        Deck item = (Deck) parent.getItemAtPosition(position);
+
+                        // Einzelansicht des Decks aufrufen
+                        spinner.show();
+                        Intent intent = new Intent(GalleryActivity.this, ViewDeckActivity.class);
+                        intent.putExtra("chosen_deck", item.getName());
+                        intent.putExtra("json_string", jsonString);
+                        startActivity(intent);
+                    }
+
+                });
             }
-
         });
+
     }
 
     //Button-Klick-Methoden:
     public void clickCreateDecksFunction(View view){
         //Toast.makeText(getApplicationContext(), "Klick", Toast.LENGTH_SHORT).show();
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(GalleryActivity.this, LoadOnlineDecksActivity.class);
         startActivity(intent);
     }

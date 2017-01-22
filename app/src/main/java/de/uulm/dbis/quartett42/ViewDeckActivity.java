@@ -8,12 +8,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class ViewDeckActivity extends AppCompatActivity {
     int currentCardIndex = 0;
     Deck deck = null;
 
-    ProgressBar spinner; //Spinner fuer Ladezeiten
+    ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
     ViewPager viewPager;
     SharedPreferences sharedPref;
 
@@ -37,8 +37,8 @@ public class ViewDeckActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_deck);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
-        spinner.setVisibility(View.VISIBLE);
+        spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
+        spinner.show();
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -156,7 +156,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         protected void onPostExecute(Deck deck) {
             ViewDeckActivity.this.deck = deck; // is this ok?
             updateView();
-            spinner.setVisibility(View.GONE);
+            spinner.hide();
         }
     }
 
@@ -181,7 +181,7 @@ public class ViewDeckActivity extends AppCompatActivity {
     }
 
     public void loadGame(){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
         intent.putExtra("json_string", jsonString);

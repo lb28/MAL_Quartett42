@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +23,7 @@ import java.io.InputStreamReader;
 public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
     SharedPreferences sharedPref;
-    ProgressBar spinner; //Spinner fuer Ladezeiten
+    ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        spinner = (ProgressBar)findViewById(R.id.progressBar1);
+        spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
         spinner.bringToFront();
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
 
         //Daten laden, runOnUiThread weil UI angepasst wird, keine Ahnung ob es was besseres gibt
         runOnUiThread(new Runnable() {
@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        spinner.setVisibility(View.GONE);
+        spinner.hide();
     }
 
     //Methoden fuer Button-Klicks:
 
     //Galerie Button:
     public void clickGalleryButtonFunction(View view){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.putExtra("json_string", jsonString);
         startActivity(intent);
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Settings Button:
     public void clickSettingsButtonFunction(View view){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, SettingActivity.class);
         intent.putExtra("setting_source", "main");
         startActivity(intent);
@@ -118,14 +118,14 @@ public class MainActivity extends AppCompatActivity {
 
     //Statistics Button:
     public void clickStatisticsButtonFunction(View view){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, StatisticsActivity.class);
         startActivity(intent);
     }
 
     //Highscore Button:
     public void clickHighscoreButtonFunction(View view){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, HighscoreActivity.class);
         startActivity(intent);
     }
@@ -134,11 +134,11 @@ public class MainActivity extends AppCompatActivity {
     //Menue-Items:
     public void clickGuideFunction(MenuItem item){
         if(item.getTitle().equals("Anleitung")){
-            spinner.setVisibility(View.VISIBLE);
+            spinner.show();
             Intent intent = new Intent(this, GuideActivity.class);
             startActivity(intent);
         }else if(item.getTitle().equals("Info")){
-            spinner.setVisibility(View.VISIBLE);
+            spinner.show();
             Intent intent = new Intent(this, InfoActivity.class);
             startActivity(intent);
         }
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Neues Spiel starten:
     public void startNewGame(){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("json_string", jsonString);
         intent.putExtra("new_game_source", "main_activity");
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadGame(){
-        spinner.setVisibility(View.VISIBLE);
+        spinner.show();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
         intent.putExtra("json_string", jsonString);
