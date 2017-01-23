@@ -10,9 +10,11 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Deck;
 
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
 import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -60,9 +62,29 @@ public class GalleryActivity extends AppCompatActivity {
     //Decks laden:
     public void loadData(){
         //ArrayList aller Decks aus JSON erstellen
-        //LocalJSONHandler jsonParser = new LocalJSONHandler(this);
-        LocalJSONHandler jsonParser = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE); //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
-        deckList = jsonParser.getDecksOverview();
+
+        // Set of deckNames that we loaded so far (for eliminating duplicates)
+        HashSet<String> deckNames = new HashSet<>();
+
+        // load asset decks
+        LocalJSONHandler jsonParserAssets = new LocalJSONHandler(this, JSON_MODE_ASSETS);
+        deckList = jsonParserAssets.getDecksOverview();
+
+        // put all the names of the deckList in our set
+        for (Deck d :
+                deckList) {
+            deckNames.add(d.getName());
+        }
+
+        // add internal storage decks only if they are not already in the set of names
+        //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
+        LocalJSONHandler jsonParserInternal = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE);
+        for (Deck d :
+                jsonParserInternal.getDecksOverview()) {
+            if (!deckNames.contains(d.getName())) {
+                deckList.add(d);
+            }
+        }
 
         // update the view
         runOnUiThread(new Runnable() {
@@ -86,6 +108,7 @@ public class GalleryActivity extends AppCompatActivity {
                         spinner.show();
                         Intent intent = new Intent(GalleryActivity.this, ViewDeckActivity.class);
                         intent.putExtra("chosen_deck", item.getName());
+                        intent.putExtra("srcMode", item.getSrcMode());
                         intent.putExtra("json_string", jsonString);
                         startActivity(intent);
                     }

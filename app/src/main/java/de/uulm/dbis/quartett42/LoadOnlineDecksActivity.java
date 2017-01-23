@@ -10,15 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileOutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
@@ -203,8 +199,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         }
 
         //for testing:
-        ArrayList<Deck> testDeckArray = localJsonHandler.getAllDecksDetailed();
-        System.out.println(testDeckArray.toString());
+        //ArrayList<Deck> testDeckArray = localJsonHandler.getAllDecksDetailed();
+        //System.out.println(testDeckArray.toString());
 
         //Toast.makeText(getApplicationContext(), "Deck "+deck.getName()+" erfolgreich runter geladen", Toast.LENGTH_SHORT).show();
         finish();

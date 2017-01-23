@@ -16,13 +16,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Game;
 
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
+
 public class NewGameActivity extends AppCompatActivity {
     String jsonString = "";
     String chosenDeck = "";
+    int srcMode = -1;
     ArrayList<Deck> deckList;
     GridView gridView;
     GridViewAdapter gridAdapter;
@@ -147,6 +152,7 @@ public class NewGameActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GameActivity.class);
             //intent.putExtra("setting_source", "new_game");
             intent.putExtra("chosen_deck", chosenDeck);
+            intent.putExtra("srcMode", srcMode);
             //intent.putExtra("json_string", jsonString);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
@@ -170,6 +176,7 @@ public class NewGameActivity extends AppCompatActivity {
 
             //und Galerie nicht laden, dafuer gleich das uebergebene Deck setzen:
             chosenDeck = intent.getStringExtra("chosen_deck");
+            srcMode = intent.getIntExtra("srcMode", -1);
             deckGameText.setText(chosenDeck);
             deckGameText.setTextColor(Color.parseColor("#8a000000"));
         }
@@ -180,8 +187,31 @@ public class NewGameActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Deck> doInBackground(Void... voids) {
-            LocalJSONHandler localJsonHandler = new LocalJSONHandler(NewGameActivity.this);
-            return localJsonHandler.getDecksOverview();
+            // load asset decks
+            LocalJSONHandler jsonParserAssets = new LocalJSONHandler(NewGameActivity.this, JSON_MODE_ASSETS);
+            ArrayList<Deck> deckList = jsonParserAssets.getDecksOverview();
+
+            // Set of deckNames that we loaded so far (for eliminating duplicates)
+            HashSet<String> deckNames = new HashSet<>();
+
+            // put all the names of the deckList in our set
+            for (Deck d :
+                    deckList) {
+                deckNames.add(d.getName());
+            }
+
+            // add internal storage decks only if they are not already in the set of names
+            //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
+            LocalJSONHandler jsonParserInternal = new LocalJSONHandler(
+                    NewGameActivity.this, JSON_MODE_INTERNAL_STORAGE);
+            for (Deck d :
+                    jsonParserInternal.getDecksOverview()) {
+                if (!deckNames.contains(d.getName())) {
+                    deckList.add(d);
+                }
+            }
+
+            return deckList;
         }
 
         @Override
@@ -200,6 +230,7 @@ public class NewGameActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                         Deck item = (Deck) parent.getItemAtPosition(position);
                         chosenDeck = item.getName();
+                        srcMode = item.getSrcMode();
                         deckGameText.setText(chosenDeck);
 
                         // reset color to default color

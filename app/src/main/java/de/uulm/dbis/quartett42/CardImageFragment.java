@@ -1,9 +1,6 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.DialogInterface;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -13,8 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import java.io.IOException;
-import java.io.InputStream;
+import de.uulm.dbis.quartett42.data.Deck;
 
 /**
  * Created by Luis on 12.01.2017.
@@ -37,9 +33,12 @@ public class CardImageFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.card_image_fragment, container, false);
 
-        // Get the arguments that was supplied when the fragment was instantiated by the adapter
+        // Get the arguments that were supplied when the fragment was instantiated by the adapter
         Bundle args = getArguments();
+
+        // image uri will be in the right format when supplied by the pagerAdapter
         String imageUri = args.getString("imageUri");
+        int srcMode = args.getInt("srcMode");
         final String imageDesc = args.getString("imageDesc");
         assert imageUri != null;
         assert imageDesc != null;
@@ -47,6 +46,21 @@ public class CardImageFragment extends Fragment {
         ImageButton imageDescBtn = (ImageButton) rootView.findViewById(R.id.imageDescBtn);
 
         // set bitmap for fragment
+        // call one of three different tasks for the three srcModes
+        switch (srcMode) {
+            case Deck.SRC_MODE_SERVER:
+                new ImageLoaderServerTask(cardImageView).execute(imageUri);
+                break;
+            case Deck.SRC_MODE_ASSETS:
+                new ImageLoaderAssetsTask(cardImageView, getActivity()).execute(imageUri);
+                break;
+            case Deck.SRC_MODE_INTERNAL_STORAGE:
+                new ImageLoaderInternalStorageTask(cardImageView, getActivity()).execute(imageUri);
+                break;
+        }
+
+
+/* old code
         AssetManager assetManager = rootView.getContext().getAssets();
         InputStream is;
         try {
@@ -57,6 +71,7 @@ public class CardImageFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+*/
 
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         spinner.show();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
+        intent.putExtra("srcMode", sharedPref.getInt("srcMode", -1));
         intent.putExtra("json_string", jsonString);
         startActivity(intent);
     }

@@ -9,17 +9,21 @@ import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.ImageCard;
 
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_ASSETS;
+
 /**
  * A simple pager adapter that shows images in sequence
  */
 class ImageSlidePagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<ImageCard> imageCards;
     private String deckName;
+    private int srcMode;
 
-    ImageSlidePagerAdapter(FragmentManager fm, ArrayList<ImageCard> imageCards, String deckName) {
+    ImageSlidePagerAdapter(FragmentManager fm, ArrayList<ImageCard> imageCards, String deckName, int srcMode) {
         super(fm);
         this.imageCards = imageCards;
         this.deckName = deckName;
+        this.srcMode = srcMode;
     }
 
     @Override
@@ -35,9 +39,14 @@ class ImageSlidePagerAdapter extends FragmentStatePagerAdapter {
         Bundle args = new Bundle();
 
         // Set the arguments on the fragment that will be fetched in onCreateView
-        String imageUri = deckName+"/"+currentImageCard.getUri();
+        String imageUri = currentImageCard.getUri();
+        if (srcMode == SRC_MODE_ASSETS) {
+            imageUri = deckName + "/" + imageUri;
+        }
         args.putString("imageUri", imageUri);
         args.putString("imageDesc", currentImageCard.getDescription());
+        args.putInt("srcMode", srcMode);
+
         cardimageFragment.setArguments(args);
 
         return cardimageFragment;

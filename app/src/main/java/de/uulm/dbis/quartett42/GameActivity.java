@@ -43,6 +43,7 @@ public class GameActivity extends AppCompatActivity {
     private static final int REQUEST_COMPARE_CARDS = 1;
 
     String chosenDeck = "";
+    int srcMode = -1;
     Game game;
 
     SharedPreferences sharedPref;
@@ -73,6 +74,7 @@ public class GameActivity extends AppCompatActivity {
         //JSON-String auslesen:
         Intent intent = getIntent();
         chosenDeck = intent.getStringExtra("chosen_deck");
+        srcMode = intent.getIntExtra("srcMode", -1);
 
         textViewRoundsRemaining = (TextView) findViewById(R.id.textViewRoundsRemaining);
         textViewRoundTime = (TextView) findViewById(R.id.textViewRoundTimeLeft);
@@ -110,6 +112,7 @@ public class GameActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("currentChosenDeck", chosenDeck);
+        editor.putInt("srcMode", srcMode);
         editor.putInt("currentRoundsLeft", game.getRoundsLeft());
         editor.putInt("currentPointsPlayer", game.getPointsPlayer());
         editor.putInt("currentPointsComputer", game.getPointsComputer());
@@ -222,7 +225,7 @@ public class GameActivity extends AppCompatActivity {
         @Override
         protected Deck doInBackground(Void... voids) {
             // load deck with JSON parser
-            LocalJSONHandler localJsonHandler = new LocalJSONHandler(GameActivity.this);
+            LocalJSONHandler localJsonHandler = new LocalJSONHandler(GameActivity.this, srcMode);
             return localJsonHandler.getDeck(chosenDeck);
         }
 
@@ -449,7 +452,10 @@ public class GameActivity extends AppCompatActivity {
         // update the image viewPager
         PagerAdapter pagerAdapter =
                 new ImageSlidePagerAdapter(
-                        getSupportFragmentManager(), card.getImageList(), game.getDeck().getName());
+                        getSupportFragmentManager(),
+                        card.getImageList(),
+                        game.getDeck().getName(),
+                        game.getDeck().getSrcMode());
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -548,6 +554,7 @@ public class GameActivity extends AppCompatActivity {
         intent.putExtra("attrValueComputer",
                 cardComputer.getAttributeMap().get(chosenAttribute).doubleValue());
         intent.putExtra("roundWinner", roundWinner);
+        intent.putExtra("srcMode", srcMode);
 
         startActivityForResult(intent, REQUEST_COMPARE_CARDS);
     }
@@ -576,6 +583,7 @@ public class GameActivity extends AppCompatActivity {
         intent.putExtra("pointsPlayer", game.getPointsPlayer());
         intent.putExtra("pointsComputer", game.getPointsComputer());
         intent.putExtra("chosenDeck", chosenDeck);
+        intent.putExtra("srcMode", srcMode);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();

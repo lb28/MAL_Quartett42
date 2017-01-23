@@ -120,6 +120,7 @@ public class CompareCardsActivity extends AppCompatActivity {
         double attrValuePlayer = intent.getDoubleExtra("attrValuePlayer", -1);
         double attrValueComputer = intent.getDoubleExtra("attrValueComputer", -1);
         int roundWinner = intent.getIntExtra("roundWinner", -1);
+        int srcMode = intent.getIntExtra("srcMode", -1);
 
 
         // bring all the data in the right format
@@ -166,7 +167,8 @@ public class CompareCardsActivity extends AppCompatActivity {
         viewPagerPlayer.setAdapter(new ImageSlidePagerAdapter(
                 getSupportFragmentManager(),
                 playerCard.getImageList(),
-                deckName
+                deckName,
+                srcMode
         ));
 
 
@@ -184,7 +186,8 @@ public class CompareCardsActivity extends AppCompatActivity {
         viewPagerComputer.setAdapter(new ImageSlidePagerAdapter(
                 getSupportFragmentManager(),
                 computerCard.getImageList(),
-                deckName
+                deckName,
+                srcMode
         ));
 
         // round winner

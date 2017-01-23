@@ -25,6 +25,7 @@ import de.uulm.dbis.quartett42.data.Property;
 public class ViewDeckActivity extends AppCompatActivity {
     String jsonString = "";
     String chosenDeck = "";
+    int srcMode = -1;
     int currentCardIndex = 0;
     Deck deck = null;
 
@@ -46,6 +47,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         Intent intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
         chosenDeck = intent.getStringExtra("chosen_deck");
+        srcMode = intent.getIntExtra("srcMode", -1);
 
         // use AsyncTask to load Deck from JSON
         new LoadDeckTask().execute();
@@ -135,7 +137,7 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         // update the image viewPager
         PagerAdapter pagerAdapter = new ImageSlidePagerAdapter(
-                getSupportFragmentManager(), card.getImageList(), deck.getName());
+                getSupportFragmentManager(), card.getImageList(), deck.getName(), deck.getSrcMode());
 
         viewPager.setAdapter(pagerAdapter);
 
@@ -148,7 +150,7 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         @Override
         protected Deck doInBackground(Void... voids) {
-            LocalJSONHandler localJsonHandler = new LocalJSONHandler(ViewDeckActivity.this);
+            LocalJSONHandler localJsonHandler = new LocalJSONHandler(ViewDeckActivity.this, srcMode);
             return localJsonHandler.getDeck(chosenDeck);
         }
 
@@ -176,6 +178,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("chosen_deck", chosenDeck);
         intent.putExtra("json_string", jsonString);
+        intent.putExtra("srcMode", deck.getSrcMode());
         intent.putExtra("new_game_source", "view_deck_activity");
         startActivity(intent);
     }
@@ -184,6 +187,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         spinner.show();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
+        intent.putExtra("srcMode", sharedPref.getInt("srcMode", -1));
         intent.putExtra("json_string", jsonString);
         startActivity(intent);
     }

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -31,7 +30,9 @@ public class LocalJSONHandler {
 
     public static final int JSON_MODE_ASSETS = 1;
     public static final int JSON_MODE_INTERNAL_STORAGE = 2;
-    public static final int JSON_MODE_BOTH = 3;
+
+    // mode BOTH is broken
+//    public static final int JSON_MODE_BOTH = 3;
 
 
     private Context context;
@@ -345,6 +346,7 @@ public class LocalJSONHandler {
                     e.printStackTrace();
                     return null;
                 }
+            /*
             case JSON_MODE_BOTH:
                 System.err.println("ERROR: Using JSON_MODE_BOTH does not work yet properly" +
                         "with the deck images (see Deck.srcMode). Pleas use a dedicated json mode");
@@ -386,6 +388,7 @@ public class LocalJSONHandler {
                     e.printStackTrace();
                     return null;
                 }
+                */
         }
 
         // if everyting failed

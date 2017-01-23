@@ -34,6 +34,7 @@ public class GameEndActivity extends AppCompatActivity {
     private int erreichtePunkteSpieler;
     private int pointsPlayer, pointsComputer;
     private String chosenDeck;
+    private int srcMode;
 
     private String nameFürRangliste = "";
 
@@ -77,6 +78,7 @@ public class GameEndActivity extends AppCompatActivity {
         pointsPlayer = intent.getIntExtra("pointsPlayer", -1);
         pointsComputer = intent.getIntExtra("pointsComputer", -1);
         chosenDeck = intent.getStringExtra("chosenDeck");
+        srcMode = intent.getIntExtra("srcMode", -1);
 
         endstand.setText("Endstand: "+pointsPlayer+" : "+pointsComputer);
 
@@ -489,6 +491,7 @@ public class GameEndActivity extends AppCompatActivity {
             //Spiel starten und ausgesuchtes Deck sowie JSON-String mitgeben
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra("chosen_deck", chosenDeck);
+            intent.putExtra("srcMode", srcMode);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
