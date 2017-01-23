@@ -2,11 +2,13 @@ package de.uulm.dbis.quartett42;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -23,6 +25,7 @@ import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAG
 
 
 public class LoadOnlineDecksActivity extends AppCompatActivity {
+    private static final String TAG = "LoadOnlineDecksActivity";
 
     // https://dhc.restlet.com/ for testing
 
@@ -44,13 +47,13 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         // TODO make all this AsynchTask
         new Thread(new Runnable() {
             public void run() {
-                ServerJSONHandler jsonHandler = new ServerJSONHandler();
-                deckList = jsonHandler.getDecksOverview();
+                ServerJSONHandler jsonHandler = new ServerJSONHandler(LoadOnlineDecksActivity.this);
+                // param "true" means: hide decks that are already in internal memory
+                deckList = jsonHandler.getDecksOverview(true);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run(){
                         makeGridView(deckList);
-                        spinner.hide();
                     }
                 });
             }
@@ -68,6 +71,15 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             gridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, deckList);
             gridView.setAdapter(gridAdapter);
             //On-Item-Click-Listener fuer einzelne Decks:
+
+            // hide the spinner
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    spinner.hide();
+                }
+            });
+
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     final Deck deck = (Deck) parent.getItemAtPosition(position);
@@ -82,16 +94,16 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // download the deck
+                                    Log.i(TAG, "onClick: showing spinner");
                                     spinner.show();
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
-
-                                            //TODO check if deck with this name already exists in the internal storage
                                             downloadDeck(deck.getID());
                                             runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    Log.i(TAG, "run: hiding spinner");
                                                     spinner.hide();
                                                 }
                                             });
@@ -122,7 +134,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
     private void downloadDeck(int deckID) {
         System.out.println("starting download...");
 
-        ServerJSONHandler serverJSONHandler = new ServerJSONHandler();
+        ServerJSONHandler serverJSONHandler = new ServerJSONHandler(this);
 
         // get the deck object from the server
         Deck deck = serverJSONHandler.getDeck(deckID);
@@ -203,7 +215,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         //System.out.println(testDeckArray.toString());
 
         //Toast.makeText(getApplicationContext(), "Deck "+deck.getName()+" erfolgreich runter geladen", Toast.LENGTH_SHORT).show();
-        finish();
+        Intent intent = new Intent(this, GalleryActivity.class);
+        startActivity(intent);
 
     }
 

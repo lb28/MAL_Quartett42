@@ -1,8 +1,10 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +20,8 @@ import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
 import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 public class GalleryActivity extends AppCompatActivity {
+    private static final String TAG = "GalleryActivity";
+
     String jsonString = "";
     ArrayList<Deck> deckList;
     GridView gridView;
@@ -51,10 +55,16 @@ public class GalleryActivity extends AppCompatActivity {
 
     }
 
+    @Override
     protected void onResume() {
         super.onResume();
 
         spinner.hide();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onSupportNavigateUp();
     }
 
     //Methoden der Activity:
@@ -113,6 +123,54 @@ public class GalleryActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
 
+                });
+
+                gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
+                        final Deck deck = (Deck) parent.getItemAtPosition(position);
+
+                        // show confirmation dialog before downloading
+                        new AlertDialog.Builder(GalleryActivity.this)
+                                .setIcon(R.drawable.ic_warning_black_24dp)
+                                .setTitle("Deck löschen")
+                                .setMessage("Wollen Sie Deck " + deck.getName() + " wirklich löschen?")
+                                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        // delete the deck
+                                        spinner.show();
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                LocalJSONHandler localJSONHandler =
+                                                        new LocalJSONHandler(GalleryActivity.this,
+                                                                JSON_MODE_INTERNAL_STORAGE);
+
+                                                if (!localJSONHandler.removeDeck(deck.getName())) {
+                                                    System.err.println("Deck " + deck.getName()
+                                                    + " could not be removed!");
+                                                }
+
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        spinner.hide();
+                                                    }
+                                                });
+                                            }
+                                        }).start();
+                                    }
+
+                                })
+                                .setNegativeButton("Nein", null)
+                                .show();
+
+                        // returning true to prevent the normal click listener from firing
+                        return true;
+                    }
                 });
             }
         });

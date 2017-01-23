@@ -1,5 +1,6 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -12,6 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -27,32 +29,52 @@ import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_SERVER;
 public class ServerJSONHandler {
     private static final String TAG = "ServerJSONHandler";
 
-    public static final String URL_DECKS_OVERVIEW = "http://quartett.af-mba.dbis.info/decks/";
+    private static final String URL_DECKS_OVERVIEW = "http://quartett.af-mba.dbis.info/decks/";
     private static final String URL_AUTHORIZATION = "Basic YWRtaW46ZGIxJGFkbWlu";
+
+    private Context context;
+
+    public ServerJSONHandler(Context context) {
+        this.context = context;
+    }
 
     /**
      * Get a list of every deck from the server,
      * <b>each deck containing only name and one imagecard</b>.
      * Used for showing a deck overview.
+     * @param hideDownloadedDecks specifies if the list should contain the decks that the user
+     *                            already downloaded (i.e. decks that are in internal storage)
      * @return a list of decks as an overview
      */
-    public ArrayList<Deck> getDecksOverview() {
+    public ArrayList<Deck> getDecksOverview(boolean hideDownloadedDecks) {
         ArrayList<Deck> onlineDecks = new ArrayList<Deck>();
+
+        // get hashSet of names to be hidden
+        HashSet<String> hiddenNames = new HashSet<>();
+        LocalJSONHandler localJSONHandler = new LocalJSONHandler(
+                context, LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE);
+        for (Deck deck : localJSONHandler.getDecksOverview()) {
+            hiddenNames.add(deck.getName());
+        }
 
         try{
             String jsonString = loadOnlineData(new URL(URL_DECKS_OVERVIEW));
             JSONArray onlineDeckList = new JSONArray(jsonString);
             for(int i = 0; i < onlineDeckList.length(); i++){
                 JSONObject onlineDeck = onlineDeckList.getJSONObject(i);
-                int deckID = onlineDeck.getInt("id");
                 String deckName = onlineDeck.getString("name");
-                String deckDescription = onlineDeck.getString("description");
-                String imageUri = onlineDeck.getString("image");
+                // if hideDownloadedDecks is true, then
+                // only add deck to list if it is not in the hidden decks list
+                if (!(hideDownloadedDecks && hiddenNames.contains(deckName))) {
+                    int deckID = onlineDeck.getInt("id");
+                    String deckDescription = onlineDeck.getString("description");
+                    String imageUri = onlineDeck.getString("image");
 
-                ImageCard newImage = new ImageCard(imageUri, deckDescription);
-                Deck newDeck = new Deck(deckName, newImage, null, null, SRC_MODE_SERVER);
-                newDeck.setID(deckID);
-                onlineDecks.add(newDeck);
+                    ImageCard newImage = new ImageCard(imageUri, deckDescription);
+                    Deck newDeck = new Deck(deckName, newImage, null, null, SRC_MODE_SERVER);
+                    newDeck.setID(deckID);
+                    onlineDecks.add(newDeck);
+                }
             }
 
         } catch(Exception e){

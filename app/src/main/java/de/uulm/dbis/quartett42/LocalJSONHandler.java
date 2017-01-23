@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.os.Build;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,6 +76,10 @@ public class LocalJSONHandler {
         try {
 
             jsonObj = readJSONFromFile(jsonMode);
+
+            // if json was empty, return the empty deck list
+            if (jsonObj == null) return deckList;
+            
             decks = jsonObj.getJSONArray("decks");
 
 
@@ -298,6 +303,34 @@ public class LocalJSONHandler {
         }
     }
 
+    public boolean removeDeck(String deleteDeckName) {
+        boolean success = false;
+
+        JSONObject jsonObj = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        try {
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                if (deck.get("name").equals(deleteDeckName)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        decks.remove(i);
+                        String imageUri = ""; // TODO get image uri
+                        return deleteImage(imageUri);
+                    } else {
+                        // TODO implement manually or increase target API
+                        // (http://stackoverflow.com/questions/8820551/how-do-i-remove-a-specific-element-from-a-jsonarray)
+                        return false;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        return success;
+    }
+
 
     ///////////////////
     // FILE HANDLING //
@@ -320,7 +353,7 @@ public class LocalJSONHandler {
                     in.read(buffer);
                     in.close();
                     String jsonString = new String(buffer, "UTF-8");
-                    // Getting JSON Array node
+                    if (jsonString.isEmpty()) return null;
                     return new JSONObject(jsonString);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -340,7 +373,7 @@ public class LocalJSONHandler {
                     while((bytesRead = in.read(buffer)) != -1) {
                         jsonString += new String(buffer, 0, bytesRead);
                     }
-
+                    if (jsonString.isEmpty()) return null;
                     return new JSONObject(jsonString);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
@@ -421,6 +454,17 @@ public class LocalJSONHandler {
         String dir = context.getFilesDir().getAbsolutePath();
         File file = new File(dir, JSON_FILENAME_INTERNAL_STORAGE);
         file.delete();
+    }
+
+
+    /**
+     * deletes an image from internal storage with the given uri
+     * @param imageUri the uri of the image to be deleted
+     * @return true if the deletion was successful
+     */
+    private boolean deleteImage(String imageUri) {
+        // TODO delete image with the specified url from internal storage and return true if successful
+        return false;
     }
 
 }
