@@ -173,7 +173,7 @@ public class LocalJSONHandler {
                 }
                 // set srcMode to assets or internal
                 int srcMode = Deck.SRC_MODE_NONE;
-                if (jsonMode != JSON_MODE_ASSETS) {
+                if (jsonMode == JSON_MODE_ASSETS) {
                     srcMode = Deck.SRC_MODE_ASSETS;
                 }
                 else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
@@ -256,7 +256,7 @@ public class LocalJSONHandler {
                     }
                     // set srcMode to assets or internal
                     int srcMode = Deck.SRC_MODE_NONE;
-                    if (jsonMode != JSON_MODE_ASSETS) {
+                    if (jsonMode == JSON_MODE_ASSETS) {
                         srcMode = Deck.SRC_MODE_ASSETS;
                     }
                     else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {

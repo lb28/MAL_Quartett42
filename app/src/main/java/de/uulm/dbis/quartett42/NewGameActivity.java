@@ -25,6 +25,8 @@ import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
 import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 public class NewGameActivity extends AppCompatActivity {
+    private static final String TAG = "NewGameActivity";
+
     String jsonString = "";
     String chosenDeck = "";
     int srcMode = -1;

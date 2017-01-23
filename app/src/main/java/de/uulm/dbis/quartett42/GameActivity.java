@@ -43,7 +43,7 @@ public class GameActivity extends AppCompatActivity {
     private static final int REQUEST_COMPARE_CARDS = 1;
 
     String chosenDeck = "";
-    int srcMode = -1;
+    int srcMode;
     Game game;
 
     SharedPreferences sharedPref;

@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             InputStream in = getAssets().open("jsonexample.json");
             int size = in.available();
             byte[] buffer = new byte[size];
-            System.out.println(in.read(buffer));
+            in.read(buffer);
             in.close();
             jsonString = new String(buffer, "UTF-8");
             //System.out.println(jsonString);

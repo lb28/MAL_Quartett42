@@ -180,7 +180,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("chosen_deck", chosenDeck);
         intent.putExtra("json_string", jsonString);
-        intent.putExtra("srcMode", deck.getSrcMode());
+        intent.putExtra("srcMode", srcMode);
         intent.putExtra("new_game_source", "view_deck_activity");
         startActivity(intent);
     }
