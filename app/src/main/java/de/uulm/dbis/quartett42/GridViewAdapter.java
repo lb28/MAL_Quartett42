@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import de.uulm.dbis.quartett42.data.Deck;
 
 public class GridViewAdapter extends ArrayAdapter<Deck> {
+    private static final String TAG = "GridViewAdapter";
+
     private Context context;
     private int layoutResourceId;
 
@@ -64,6 +66,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
 
         String imageUri = singleDeck.getImage().getUri();
         // call one of three different tasks for the three srcModes
+
         switch (singleDeck.getSrcMode()) {
             case Deck.SRC_MODE_SERVER:
                 new ImageLoaderServerTask(holder.image).execute(imageUri);

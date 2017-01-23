@@ -16,6 +16,8 @@ import de.uulm.dbis.quartett42.data.Deck;
  * Created by Luis on 12.01.2017.
  */
 public class CardImageFragment extends Fragment {
+    public static final String TAG = "CardImageFragment";
+
     AlertDialog descriptionAlertDialog;
 
     @Override

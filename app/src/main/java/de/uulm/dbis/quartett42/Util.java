@@ -70,7 +70,7 @@ public class Util {
     }
 
     public static Bitmap downloadBitmap(String imageUri) {
-        System.out.println("Trying to download " + imageUri);
+        Log.i(TAG, "downloadBitmap: Trying to download " + imageUri);
 
         HttpURLConnection urlConnection = null;
         try {

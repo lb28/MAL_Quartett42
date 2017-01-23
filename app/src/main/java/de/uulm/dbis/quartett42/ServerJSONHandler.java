@@ -25,6 +25,8 @@ import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_SERVER;
  * Created by Luis on 12.01.2017.
  */
 public class ServerJSONHandler {
+    private static final String TAG = "ServerJSONHandler";
+
     public static final String URL_DECKS_OVERVIEW = "http://quartett.af-mba.dbis.info/decks/";
     private static final String URL_AUTHORIZATION = "Basic YWRtaW46ZGIxJGFkbWlu";
 
@@ -179,8 +181,7 @@ public class ServerJSONHandler {
      * @return the string containing the json data
      */
     public String loadOnlineData(URL url){
-        System.out.println("Trying to download " + url.toString());
-
+        Log.i(TAG, "loadOnlineData: Trying to download " + url.toString());
         String jsonString = "not started";
         HttpURLConnection urlConnection = null;
         try {

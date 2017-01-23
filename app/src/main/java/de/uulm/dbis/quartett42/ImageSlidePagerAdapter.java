@@ -15,6 +15,8 @@ import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_ASSETS;
  * A simple pager adapter that shows images in sequence
  */
 class ImageSlidePagerAdapter extends FragmentStatePagerAdapter {
+    private static final String TAG = "ImageSlidePagerAdapter";
+
     private ArrayList<ImageCard> imageCards;
     private String deckName;
     private int srcMode;

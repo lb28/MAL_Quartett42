@@ -23,6 +23,8 @@ import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Property;
 
 public class ViewDeckActivity extends AppCompatActivity {
+    public static final String TAG = "ViewDeckActivity";
+
     String jsonString = "";
     String chosenDeck = "";
     int srcMode = -1;
@@ -137,7 +139,7 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         // update the image viewPager
         PagerAdapter pagerAdapter = new ImageSlidePagerAdapter(
-                getSupportFragmentManager(), card.getImageList(), deck.getName(), deck.getSrcMode());
+                getSupportFragmentManager(), card.getImageList(), deck.getName(), srcMode);
 
         viewPager.setAdapter(pagerAdapter);
 
