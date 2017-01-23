@@ -28,16 +28,18 @@
         android:layout_above="@+id/galleryButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:textSize="30sp"
         android:onClick="clickNewGameButtonFunction"/>
 
     <Button
-        android:text="GALERIE"
+        android:text="DECKS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/galleryButton"
         android:layout_above="@+id/settingsButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:textSize="20sp"
         android:onClick="clickGalleryButtonFunction"/>
 
     <Button

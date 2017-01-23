@@ -133,8 +133,10 @@
                 android:textColor="@color/colorAccent"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/deckLabel"
-                android:layout_toEndOf="@+id/deckLabel"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:maxLines="1" />
 
             <TextView
                 android:text="Modus"

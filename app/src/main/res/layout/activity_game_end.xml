@@ -23,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/SpielzuEnde"
-        android:paddingTop="40dp"
+        android:paddingTop="20dp"
         android:text="Gewonnen!"
         android:gravity="center"
         android:textSize="35sp"/>
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/endPunkteStand"
-        android:paddingTop="50dp"
+        android:paddingTop="20dp"
         android:text="Du hast es in die Top 5 geschafft."/>
 
     <EditText

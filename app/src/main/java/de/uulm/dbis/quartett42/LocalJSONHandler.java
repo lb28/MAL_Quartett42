@@ -306,23 +306,39 @@ public class LocalJSONHandler {
     public boolean removeDeck(String deleteDeckName) {
         boolean success = false;
 
-        JSONObject jsonObj = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        //TODO ggf. spaeter bessere Abfrage oder am besten ganz weglassen wenn alle Decks auf dem Server sind
+        if(deleteDeckName.equals("Sesamstrasse") || deleteDeckName.equals("Bikes")){
+            return false;
+        }
+
+        JSONObject oldJsonObj = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        JSONObject newJsonObj = new JSONObject();
         try {
-            JSONArray decks = jsonObj.getJSONArray("decks");
-            for (int i = 0; i < decks.length(); i++) {
-                JSONObject deck = decks.getJSONObject(i);
+            JSONArray oldDecks = oldJsonObj.getJSONArray("decks");
+            JSONArray newDecks = new JSONArray();
+            for (int i = 0; i < oldDecks.length(); i++) {
+                JSONObject deck = oldDecks.getJSONObject(i);
                 if (deck.get("name").equals(deleteDeckName)) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        decks.remove(i);
-                        String imageUri = ""; // TODO get image uri
-                        return deleteImage(imageUri);
-                    } else {
-                        // TODO implement manually or increase target API
-                        // (http://stackoverflow.com/questions/8820551/how-do-i-remove-a-specific-element-from-a-jsonarray)
-                        return false;
+                    //Delete all images
+                    deleteImage(deck.getString("image"));
+                    JSONArray cardArray = deck.getJSONArray("cards");
+                    for(int c = 0; c < cardArray.length(); c++){
+                        JSONObject card = cardArray.getJSONObject(c);
+                        JSONArray imageArray = card.getJSONArray("images");
+                        for(int j = 0; j < imageArray.length(); j++){
+                            JSONObject image = imageArray.getJSONObject(j);
+                            deleteImage(image.getString("URI"));
+                        }
                     }
+                }else{
+                    //Write old JSON object into new JSON object
+                    newDecks.put(deck);
                 }
             }
+            newJsonObj.put("decks", newDecks);
+            saveJSONToFile(newJsonObj);
+            success = true;
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -450,10 +466,8 @@ public class LocalJSONHandler {
     /** Method deletes the old JSON Array (for testing only)
      *
      */
-    public void deleteJSONFile(){
-        String dir = context.getFilesDir().getAbsolutePath();
-        File file = new File(dir, JSON_FILENAME_INTERNAL_STORAGE);
-        file.delete();
+    public boolean deleteJSONFile(){
+        return deleteImage(JSON_FILENAME_INTERNAL_STORAGE);
     }
 
 
@@ -463,8 +477,9 @@ public class LocalJSONHandler {
      * @return true if the deletion was successful
      */
     private boolean deleteImage(String imageUri) {
-        // TODO delete image with the specified url from internal storage and return true if successful
-        return false;
+        String dir = context.getFilesDir().getAbsolutePath();
+        File file = new File(dir, imageUri);
+        return file.delete();
     }
 
 }

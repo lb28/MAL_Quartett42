@@ -2,7 +2,10 @@ package de.uulm.dbis.quartett42;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +32,7 @@ public class GalleryActivity extends AppCompatActivity {
     GridViewAdapter gridAdapter;
     ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
     ImageButton imagebutton;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class GalleryActivity extends AppCompatActivity {
 
         spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
         spinner.show();
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         imagebutton = (ImageButton)findViewById(R.id.createDecksImageButton);
         imagebutton.bringToFront();
@@ -152,6 +159,19 @@ public class GalleryActivity extends AppCompatActivity {
                                                 if (!localJSONHandler.removeDeck(deck.getName())) {
                                                     System.err.println("Deck " + deck.getName()
                                                     + " could not be removed!");
+                                                }else{
+                                                    //Laufende Spielvariable auf 0 setzen, falls dieses Deck gerade in der Pause ist
+                                                    if(sharedPref.getInt("runningGame", 0) == 1){
+                                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                                        editor.putInt("runningGame", 0);
+                                                        editor.putInt("currentRoundsLeft", 0);
+                                                        editor.putInt("currentPointsPlayer", 0);
+                                                        editor.putInt("currentPointsComputer", 0);
+                                                        editor.putString("currentCardsPlayer", "");
+                                                        editor.putString("currentCardsComputer", "");
+                                                        editor.apply();
+                                                    }
+                                                    finish();
                                                 }
 
                                                 runOnUiThread(new Runnable() {
@@ -182,7 +202,10 @@ public class GalleryActivity extends AppCompatActivity {
         //Toast.makeText(getApplicationContext(), "Klick", Toast.LENGTH_SHORT).show();
         spinner.show();
         Intent intent = new Intent(GalleryActivity.this, LoadOnlineDecksActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
     }
+
 
 }

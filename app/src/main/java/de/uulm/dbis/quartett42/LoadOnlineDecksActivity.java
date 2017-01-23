@@ -3,8 +3,10 @@ package de.uulm.dbis.quartett42;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,10 +36,14 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
     GridView gridView;
     GridViewAdapter gridAdapter;
 
+    SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_load_online_decks);
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         deckList = new ArrayList<Deck>();
         spinner = (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
@@ -181,8 +187,6 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         JSONObject newJsonDeck = deck.toJSON();
         LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
 
-        //localJsonHandler.deleteJSONFile(); //for testing only
-
         JSONObject oldJsonDeckList = localJsonHandler.readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
         if(oldJsonDeckList != null){
             try {
@@ -215,8 +219,16 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         //System.out.println(testDeckArray.toString());
 
         //Toast.makeText(getApplicationContext(), "Deck "+deck.getName()+" erfolgreich runter geladen", Toast.LENGTH_SHORT).show();
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("new_online_decks", sharedPref.getInt("new_online_decks", 1) - 1);
+        editor.apply();
+
+
         Intent intent = new Intent(this, GalleryActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+        finish();
 
     }
 

@@ -1,5 +1,8 @@
 package de.uulm.dbis.quartett42;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +22,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
@@ -41,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 loadData();
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        makeNotification();
+                    }
+                }).start();
+
             }});
     }
 
@@ -181,6 +193,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
+        //For testing only:
+        /*
+        LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
+        localJsonHandler.deleteJSONFile();
+        */
+
     }
 
     //Neues Spiel starten:
@@ -199,6 +217,33 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("srcMode", sharedPref.getInt("srcMode", -1));
         intent.putExtra("json_string", jsonString);
         startActivity(intent);
+    }
+
+    //Makes a notification if new games are uploaded into the online store
+    public void makeNotification(){
+        try{
+            ServerJSONHandler serverJsonHandler = new ServerJSONHandler(this);
+            int availableDecks = serverJsonHandler.getDecksOverview(true).size();
+            if(availableDecks > sharedPref.getInt("new_online_decks", 0)){
+                int newDecks = availableDecks - sharedPref.getInt("new_online_decks", 0);
+
+                NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                Notification notify=new Notification.Builder
+                        (getApplicationContext()).setContentTitle("Quartett42").setContentText("Es " +
+                        "sind "+newDecks+" neue Decks im Store erhältlich").
+                        setContentTitle("Quartett42").setSmallIcon(R.drawable.menu_image_cut).build();
+
+                notify.flags |= Notification.FLAG_AUTO_CANCEL;
+                notif.notify(0, notify);
+
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt("new_online_decks", availableDecks);
+                editor.apply();
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
