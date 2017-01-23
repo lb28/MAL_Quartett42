@@ -60,42 +60,9 @@ public class GalleryActivity extends AppCompatActivity {
     //Decks laden:
     public void loadData(){
         //ArrayList aller Decks aus JSON erstellen
-        LocalJSONHandler jsonParser = new LocalJSONHandler(this);
-        //LocalJSONHandler jsonParser = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE); //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
+        //LocalJSONHandler jsonParser = new LocalJSONHandler(this);
+        LocalJSONHandler jsonParser = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE); //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
         deckList = jsonParser.getDecksOverview();
-
-
-        /*
-        // BEGIN TEST (checks if internal storage json produces same objects as assets)
-        System.out.println("beginning test");
-
-        ArrayList<Deck> correctDeckList = jsonParser.getAllDecksDetailed();
-
-        System.out.println(new Date());
-
-        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_ASSETS);
-        ArrayList<Deck> testDeckList = jsonParser.getAllDecksDetailed();
-        System.out.println("1: " + correctDeckList.toString().equals(testDeckList.toString()));
-
-        System.out.println(new Date());
-
-        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE);
-        testDeckList = jsonParser.getAllDecksDetailed();
-        System.out.println(testDeckList);
-        System.out.println("2: " + correctDeckList.toString().equals(testDeckList.toString()));
-
-        System.out.println(new Date());
-
-        jsonParser = new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_BOTH);
-        testDeckList = jsonParser.getAllDecksDetailed();
-        System.out.println("3: " + correctDeckList.toString().equals(testDeckList.toString()));
-
-        System.out.println(new Date());
-
-        System.out.println("end of test");
-        // END TEST
-        */
-
 
         // update the view
         runOnUiThread(new Runnable() {

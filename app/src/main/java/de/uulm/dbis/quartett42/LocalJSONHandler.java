@@ -340,7 +340,6 @@ public class LocalJSONHandler {
                         jsonString += new String(buffer, 0, bytesRead);
                     }
 
-                    System.out.println(jsonString);
                     return new JSONObject(jsonString);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
