@@ -1,5 +1,6 @@
 package de.uulm.dbis.quartett42;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -100,8 +101,12 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // download the deck
-                                    Log.i(TAG, "onClick: showing spinner");
-                                    spinner.show();
+                                    ProgressDialog.show(
+                                            LoadOnlineDecksActivity.this,
+                                            "Deck wird heruntergeladen...",
+                                            "Bitte warten...",
+                                            true);
+
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {

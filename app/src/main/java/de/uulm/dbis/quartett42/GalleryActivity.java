@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -171,8 +169,12 @@ public class GalleryActivity extends AppCompatActivity {
                                                         editor.putString("currentCardsComputer", "");
                                                         editor.apply();
                                                     }
-                                                    finish();
                                                 }
+
+                                                // refresh the activity
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
 
                                                 runOnUiThread(new Runnable() {
                                                     @Override
