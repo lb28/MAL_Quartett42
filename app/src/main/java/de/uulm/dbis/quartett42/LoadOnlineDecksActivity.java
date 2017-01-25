@@ -37,6 +37,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
     ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
     GridView gridView;
     GridViewAdapter gridAdapter;
+    ProgressDialog barProgressDialog1, barProgressDialog2;
 
     SharedPreferences sharedPref;
 
@@ -102,11 +103,14 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // download the deck
+                                    /*
                                     ProgressDialog.show(
                                             LoadOnlineDecksActivity.this,
                                             "Deck wird heruntergeladen...",
                                             "Bitte warten...",
                                             true);
+                                     */
+
 
                                     new Thread(new Runnable() {
                                         @Override
@@ -146,6 +150,17 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
     private void downloadDeck(int deckID) {
         Log.v(TAG, "starting download...");
 
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                barProgressDialog1 = new ProgressDialog(LoadOnlineDecksActivity.this);
+                barProgressDialog1.setTitle("Deck wird heruntergeladen...");
+                barProgressDialog1.setMessage("Bitte wartem ...");
+                barProgressDialog1.setProgressStyle(barProgressDialog1.STYLE_SPINNER);
+                barProgressDialog1.show();
+            }
+        });
+
         ServerJSONHandler serverJSONHandler = new ServerJSONHandler(this);
 
         // get the deck object from the server
@@ -153,6 +168,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         if(deck == null){
 
             Log.e(TAG, "Deck Download fehlgeschlagen ");
+            barProgressDialog1.dismiss();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -166,6 +182,22 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                barProgressDialog2 = new ProgressDialog(LoadOnlineDecksActivity.this);
+                barProgressDialog2.setTitle("Deck wird heruntergeladen...");
+                barProgressDialog2.setMessage("Bitte wartem ...");
+                barProgressDialog2.setProgressStyle(barProgressDialog2.STYLE_HORIZONTAL);
+                barProgressDialog2.setProgress(10);
+                barProgressDialog2.setMax(100);
+                barProgressDialog1.dismiss();
+                barProgressDialog2.show();
+            }
+        });
+
+        int leftProgress = 0;
 
         // download the deck image and save it in internal storage (same file structure as assets)
         FileOutputStream fos;
@@ -181,6 +213,10 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
             // replace the image uri with the local uri
             deck.getImage().setUri(deck.getName()+"_deckimage.jpg");
+
+            barProgressDialog2.setProgress(20);
+            leftProgress = 70/deck.getCardList().size();
+            System.out.println("Progress "+leftProgress);
 
         } catch (Exception e) {
             //Abbruch möglich, da Deck nicht zwingend ein Bild haben mus
@@ -206,6 +242,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     e.printStackTrace();
 
                     Log.e(TAG, "Deck Download fehlgeschlagen ");
+                    barProgressDialog2.dismiss();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -220,6 +257,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     return;
                 }
             }
+            barProgressDialog2.setProgress(barProgressDialog2.getProgress()+ leftProgress);
         }
 
         //if deck has no image use the one from the first card:
@@ -231,6 +269,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             e.printStackTrace();
 
             Log.e(TAG, "Deck Download fehlgeschlagen ");
+            barProgressDialog2.dismiss();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -263,6 +302,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 e.printStackTrace();
 
                 Log.e(TAG, "Deck Download fehlgeschlagen ");
+                barProgressDialog2.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -289,6 +329,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 e.printStackTrace();
 
                 Log.e(TAG, "Deck Download fehlgeschlagen ");
+                barProgressDialog2.dismiss();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -314,6 +355,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         editor.putInt("new_online_decks", sharedPref.getInt("new_online_decks", 1) - 1);
         editor.apply();
 
+        barProgressDialog2.setProgress(100);
+
         Log.i(TAG, "Deck Download erfolgreich ");
         runOnUiThread(new Runnable() {
             @Override
@@ -324,6 +367,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        barProgressDialog2.dismiss();
         startActivity(intent);
         finish();
 

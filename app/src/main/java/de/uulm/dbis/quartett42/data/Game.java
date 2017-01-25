@@ -188,62 +188,69 @@ public class Game {
         int numberOfProperties = averageValues.size();
         Set<String> propertySet = averageValues.keySet();
         String[] propertyArray = propertySet.toArray(new String[numberOfProperties]);
-        if(difficulty == 3){
-            //Profi: Alle Werte durchlaufen
-            //Damit der Computer nicht immer genau das gleiche Attribut nimmt noch ein wenig Random dazu:
-            if(r.nextInt(100) <= 10){
-                int randomProperty = r.nextInt(numberOfProperties);
-                chosenAttribute = propertyArray[randomProperty];
-            }else{
-                for(int i = 0; i < numberOfProperties; i++){
+        try {
+            if (difficulty == 3) {
+                //Profi: Alle Werte durchlaufen
+                //Damit der Computer nicht immer genau das gleiche Attribut nimmt noch ein wenig Random dazu:
+                if (r.nextInt(100) <= 10) {
+                    int randomProperty = r.nextInt(numberOfProperties);
+                    chosenAttribute = propertyArray[randomProperty];
+                } else {
+                    for (int i = 0; i < numberOfProperties; i++) {
+                        boolean tmpMaxwinner = true;
+                        for (Property px : deck.getPropertyList()) {
+                            if (px.getName().equals(propertyArray[i])) {
+                                tmpMaxwinner = px.isMaxWinner();
+                            }
+                        }
+                        if (insaneModus) {
+                            tmpMaxwinner = !tmpMaxwinner;
+                        }
+                        if (tmpMaxwinner) {
+                            if ((tmpCard.getAttributeMap().get(propertyArray[i]) / averageValues.get(propertyArray[i])) > chosenValue) {
+                                chosenValue = tmpCard.getAttributeMap().get(propertyArray[i]) / averageValues.get(propertyArray[i]);
+                                chosenAttribute = propertyArray[i];
+                            }
+                        } else {
+                            if ((averageValues.get(propertyArray[i]) / tmpCard.getAttributeMap().get(propertyArray[i])) > chosenValue) {
+                                chosenValue = averageValues.get(propertyArray[i]) / tmpCard.getAttributeMap().get(propertyArray[i]);
+                                chosenAttribute = propertyArray[i];
+                            }
+                        }
+                    }
+                }
+            } else if (difficulty == 2) {
+                //Mittel: Aus der Haelfte aller Werte zufaellige welche auswaehlen und vergleichen
+                for (int i = 0; i < numberOfProperties; i++) {
+                    int randomProperty = r.nextInt(numberOfProperties);
                     boolean tmpMaxwinner = true;
-                    for(Property px : deck.getPropertyList()){
-                        if(px.getName().equals(propertyArray[i])){
+                    for (Property px : deck.getPropertyList()) {
+                        if (px.getName().equals(propertyArray[randomProperty])) {
                             tmpMaxwinner = px.isMaxWinner();
                         }
                     }
-                    if(insaneModus){
+                    if (insaneModus) {
                         tmpMaxwinner = !tmpMaxwinner;
                     }
-                    if(tmpMaxwinner){
-                        if((tmpCard.getAttributeMap().get(propertyArray[i]) / averageValues.get(propertyArray[i])) > chosenValue){
-                            chosenValue = tmpCard.getAttributeMap().get(propertyArray[i])/averageValues.get(propertyArray[i]);
-                            chosenAttribute = propertyArray[i];
+                    if (tmpMaxwinner) {
+                        if ((tmpCard.getAttributeMap().get(propertyArray[randomProperty]) / averageValues.get(propertyArray[randomProperty])) > chosenValue) {
+                            chosenValue = tmpCard.getAttributeMap().get(propertyArray[randomProperty]) / averageValues.get(propertyArray[randomProperty]);
+                            chosenAttribute = propertyArray[randomProperty];
                         }
-                    }else{
-                        if((averageValues.get(propertyArray[i]) / tmpCard.getAttributeMap().get(propertyArray[i])) > chosenValue){
-                            chosenValue = averageValues.get(propertyArray[i])/tmpCard.getAttributeMap().get(propertyArray[i]);
-                            chosenAttribute = propertyArray[i];
+                    } else {
+                        if ((averageValues.get(propertyArray[randomProperty]) / tmpCard.getAttributeMap().get(propertyArray[randomProperty])) > chosenValue) {
+                            chosenValue = averageValues.get(propertyArray[randomProperty]) / tmpCard.getAttributeMap().get(propertyArray[randomProperty]);
+                            chosenAttribute = propertyArray[randomProperty];
                         }
                     }
                 }
-            }
-        }else if(difficulty == 2){
-            //Mittel: Aus der Haelfte aller Werte zufaellige welche auswaehlen und vergleichen
-            for(int i = 0; i < numberOfProperties; i++){
+            } else {
+                //Leicht: Zufaelliger Wert auswaehlen:
                 int randomProperty = r.nextInt(numberOfProperties);
-                boolean tmpMaxwinner = true;
-                for(Property px : deck.getPropertyList()){
-                    if(px.getName().equals(propertyArray[randomProperty])){
-                        tmpMaxwinner = px.isMaxWinner();
-                    }
-                }
-                if(insaneModus){
-                    tmpMaxwinner = !tmpMaxwinner;
-                }
-                if(tmpMaxwinner){
-                    if((tmpCard.getAttributeMap().get(propertyArray[randomProperty]) / averageValues.get(propertyArray[randomProperty])) > chosenValue){
-                        chosenValue = tmpCard.getAttributeMap().get(propertyArray[randomProperty])/averageValues.get(propertyArray[randomProperty]);
-                        chosenAttribute = propertyArray[randomProperty];
-                    }
-                }else{
-                    if((averageValues.get(propertyArray[randomProperty]) / tmpCard.getAttributeMap().get(propertyArray[randomProperty])) > chosenValue){
-                        chosenValue = averageValues.get(propertyArray[randomProperty])/tmpCard.getAttributeMap().get(propertyArray[randomProperty]);
-                        chosenAttribute = propertyArray[randomProperty];
-                    }
-                }
+                chosenAttribute = propertyArray[randomProperty];
             }
-        }else{
+        }catch(Exception e){
+            //Falls ein Attribut den Wert 0 hat
             //Leicht: Zufaelliger Wert auswaehlen:
             int randomProperty = r.nextInt(numberOfProperties);
             chosenAttribute = propertyArray[randomProperty];

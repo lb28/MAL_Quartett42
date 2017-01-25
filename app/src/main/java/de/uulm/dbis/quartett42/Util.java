@@ -21,6 +21,7 @@ import de.uulm.dbis.quartett42.data.Property;
  */
 public class Util {
     private static final String TAG = "Util";
+    private static final int MAXIMUM_DOWNLOAD_SIZE = 1000000;
 
     /**
      * for the list view we need to create an arraylist of strings containing
@@ -88,7 +89,7 @@ public class Util {
                 // (Wenn manche meinen sie müssen riesen grosse Bilder hochladen
                 // nehmen wir ihre Decks einfach nicht an)
                 //System.out.println("groesse "+result.getByteCount());
-                if (result.getByteCount() >= 1000000){
+                if (result.getByteCount() >= MAXIMUM_DOWNLOAD_SIZE){
                     return null;
                 }else{
                     return result;
