@@ -138,6 +138,7 @@ public class GameEndActivity extends AppCompatActivity {
             inDieTop5.setVisibility(View.VISIBLE);
             rangliste.setVisibility(View.VISIBLE);
             nameEintragen.setVisibility(View.VISIBLE);
+            nameEintragen.setText(sharedPref.getString("latest_user_name", ""));
 
         }
 
@@ -330,6 +331,8 @@ public class GameEndActivity extends AppCompatActivity {
             editor.putString("vierterNameRunden", highscorenamen.get(3));
             editor.putString("fuenfterNameRunden", highscorenamen.get(4));
 
+            editor.putString("latest_user_name", nameEintragen.getText().toString());
+
             editor.apply();
 
             Toast.makeText(getApplicationContext(), "In Rangliste eingetragen", Toast.LENGTH_SHORT).show();
@@ -402,6 +405,8 @@ public class GameEndActivity extends AppCompatActivity {
             editor.putString("vierterNameZeit", highscorenamen.get(3));
             editor.putString("fuenfterNameZeit", highscorenamen.get(4));
 
+            editor.putString("latest_user_name", nameEintragen.getText().toString());
+
             editor.apply();
 
             Toast.makeText(getApplicationContext(), "In Rangliste eingetragen", Toast.LENGTH_SHORT).show();
@@ -472,6 +477,8 @@ public class GameEndActivity extends AppCompatActivity {
             editor.putString("dritterNamePunkte", highscorenamen.get(2));
             editor.putString("vierterNamePunkte", highscorenamen.get(3));
             editor.putString("fuenfterNamePunkte", highscorenamen.get(4));
+
+            editor.putString("latest_user_name", nameEintragen.getText().toString());
 
             editor.apply();
 

@@ -83,7 +83,16 @@ public class Util {
 
             InputStream inputStream = urlConnection.getInputStream();
             if (inputStream != null) {
-                return BitmapFactory.decodeStream(inputStream);
+                Bitmap result = BitmapFactory.decodeStream(inputStream);
+                //If Image is too big do not use it
+                // (Wenn manche meinen sie müssen riesen grosse Bilder hochladen
+                // nehmen wir ihre Decks einfach nicht an)
+                //System.out.println("groesse "+result.getByteCount());
+                if (result.getByteCount() >= 1000000){
+                    return null;
+                }else{
+                    return result;
+                }
             }
         } catch (Exception e) {
             if (urlConnection != null) {
@@ -108,5 +117,28 @@ public class Util {
     public static boolean storeImage(Bitmap image, String deckName, String fileName) {
         // TODO store image at subfolder specified by the string
         return false;
+    }
+
+    /** Checks if a String doesn not contain any illegal Characters for saving it into a json file.
+     *
+     * @param inputString the String to check
+     * @return true if valid, false if invalid
+     */
+    public static boolean checkString(String inputString){
+        if(inputString.indexOf(';') != -1) return false;
+        if(inputString.indexOf(',') != -1) return false;
+        if(inputString.indexOf('<') != -1) return false;
+        if(inputString.indexOf('>') != -1) return false;
+        if(inputString.indexOf('{') != -1) return false;
+        if(inputString.indexOf('}') != -1) return false;
+        if(inputString.indexOf('[') != -1) return false;
+        if(inputString.indexOf(']') != -1) return false;
+        if(inputString.indexOf('(') != -1) return false;
+        if(inputString.indexOf(')') != -1) return false;
+        if(inputString.indexOf('"') != -1) return false;
+        if(inputString.indexOf('\'') != -1) return false;
+        if(inputString.indexOf('=') != -1) return false;
+
+        return true;
     }
 }

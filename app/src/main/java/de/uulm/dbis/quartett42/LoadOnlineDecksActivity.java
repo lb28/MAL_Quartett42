@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -143,12 +144,28 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
      * @param deckID deckID
      */
     private void downloadDeck(int deckID) {
-        System.out.println("starting download...");
+        Log.v(TAG, "starting download...");
 
         ServerJSONHandler serverJSONHandler = new ServerJSONHandler(this);
 
         // get the deck object from the server
         Deck deck = serverJSONHandler.getDeck(deckID);
+        if(deck == null){
+
+            Log.e(TAG, "Deck Download fehlgeschlagen ");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Intent intent = new Intent(this, GalleryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            return;
+        }
 
         // download the deck image and save it in internal storage (same file structure as assets)
         FileOutputStream fos;
@@ -166,7 +183,9 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             deck.getImage().setUri(deck.getName()+"_deckimage.jpg");
 
         } catch (Exception e) {
+            //Abbruch möglich, da Deck nicht zwingend ein Bild haben mus
             e.printStackTrace();
+            deck.getImage().setUri("NO_DECK_IMAGE");
         }
 
         for(int i = 0; i < deck.getCardList().size(); i++){
@@ -185,9 +204,47 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+
+                    Log.e(TAG, "Deck Download fehlgeschlagen ");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    Intent intent = new Intent(this, GalleryActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                    return;
                 }
             }
         }
+
+        //if deck has no image use the one from the first card:
+        try{
+            if(deck.getImage().getUri().equals("NO_DECK_IMAGE")){
+                deck.getImage().setUri(deck.getCardList().get(0).getImageList().get(0).getUri());
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+
+            Log.e(TAG, "Deck Download fehlgeschlagen ");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            Intent intent = new Intent(this, GalleryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         // save the deck as json
         JSONObject newJsonDeck = deck.toJSON();
         LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
@@ -204,6 +261,20 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 localJsonHandler.saveJSONToFile(newDeckList);
             } catch (Exception e) {
                 e.printStackTrace();
+
+                Log.e(TAG, "Deck Download fehlgeschlagen ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                Intent intent = new Intent(this, GalleryActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+                return;
             }
         }else{
             try {
@@ -216,6 +287,20 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 localJsonHandler.saveJSONToFile(oldJsonDeckList);
             } catch (Exception e) {
                 e.printStackTrace();
+
+                Log.e(TAG, "Deck Download fehlgeschlagen ");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                Intent intent = new Intent(this, GalleryActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+                return;
             }
         }
 
@@ -229,6 +314,13 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         editor.putInt("new_online_decks", sharedPref.getInt("new_online_decks", 1) - 1);
         editor.apply();
 
+        Log.i(TAG, "Deck Download erfolgreich ");
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Deck erfolgreich herunter geladen", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Intent intent = new Intent(this, GalleryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

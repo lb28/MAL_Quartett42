@@ -102,16 +102,20 @@ public class ServerJSONHandler {
             //1. Load Deck information:
             String deckURL = URL_DECKS_OVERVIEW+chosenDeckID+"/";
             String jsonStringDeck = loadOnlineData(new URL(deckURL));
+            if(jsonStringDeck.equals("error")) return null;
 
             JSONObject onlineDeck = new JSONObject(jsonStringDeck);
             String deckName = onlineDeck.getString("name");
+            if(!Util.checkString(deckName)) return null;
             String deckDescription = onlineDeck.getString("description");
+            if(!Util.checkString(deckDescription)) return null;
             String deckImageURL = onlineDeck.getString("image");
             ImageCard deckImage = new ImageCard(deckImageURL, deckDescription);
 
             //2. Load List of all cards:
             String deckCardsURL = deckURL+"cards/";
             String jsonStringCards = loadOnlineData(new URL(deckCardsURL));
+            if(jsonStringCards.equals("error")) return null;
 
             ArrayList<Property> propertyArrayList = new ArrayList<Property>();
             ArrayList<Card> cardArrayList = new ArrayList<Card>();
@@ -126,9 +130,11 @@ public class ServerJSONHandler {
                 //3. Load Data for single Card:
                 String singleCardURL = deckCardsURL+onlineCardID+"/";
                 String jsonStringSingleCard = loadOnlineData(new URL(singleCardURL));
+                if(jsonStringSingleCard.equals("error")) return null;
 
                 JSONObject onlineSingleCard = new JSONObject(jsonStringSingleCard);
                 String cardName = onlineSingleCard.getString("name");
+                if(!Util.checkString(cardName)) return null;
 
                 HashMap<String, Double> tmpAttributeHashmap = new HashMap<String, Double>();
 
@@ -136,13 +142,16 @@ public class ServerJSONHandler {
                 //4. Load Properties
                 String propertiesURL = singleCardURL+"attributes/";
                 String jsonStringProperties = loadOnlineData(new URL(propertiesURL));
+                if(jsonStringProperties.equals("error")) return null;
 
                 JSONArray attributeArrayList = new JSONArray(jsonStringProperties);
                 if(i == 0){ //do this only once
                     for(int p = 0; p < attributeArrayList.length(); p++){
                         JSONObject onlineProperty = attributeArrayList.getJSONObject(p);
                         String propertyName = onlineProperty.getString("name");
+                        if(!Util.checkString(propertyName)) return null;
                         String propertyUnit = onlineProperty.getString("unit");
+                        if(!Util.checkString(propertyUnit)) return null;
                         boolean maxWinner = onlineProperty.getString("what_wins").equals("higher_wins");
 
                         Property tmpProperty = new Property(propertyName, propertyUnit, maxWinner);
@@ -155,6 +164,7 @@ public class ServerJSONHandler {
                 for(int p = 0; p < attributeArrayList.length(); p++){
                     JSONObject onlineProperty = attributeArrayList.getJSONObject(p);
                     String propertyName = onlineProperty.getString("name");
+                    if(!Util.checkString(propertyName)) return null;
                     Double propertyValue = onlineProperty.getDouble("value");
                     tmpAttributeHashmap.put(propertyName, propertyValue);
                 }
@@ -162,6 +172,7 @@ public class ServerJSONHandler {
                 //6. Load Images and Descriptions
                 String cardImagesURL = singleCardURL+"images/";
                 String jsonCardImages = loadOnlineData(new URL(cardImagesURL));
+                if(jsonCardImages.equals("error")) return null;
 
                 ArrayList<ImageCard> tmpImageList = new ArrayList<ImageCard>();
                 JSONArray cardImagesArray = new JSONArray(jsonCardImages);
@@ -169,6 +180,7 @@ public class ServerJSONHandler {
                     JSONObject onlineCardImage = cardImagesArray.getJSONObject(l);
                     String cardImageURL = onlineCardImage.getString("image");
                     String cardImageDescription = onlineCardImage.getString("description");
+                    if(!Util.checkString(cardImageDescription)) return null;
 
                     ImageCard tmpCardImage = new ImageCard(cardImageURL, cardImageDescription);
                     tmpImageList.add(tmpCardImage);
@@ -204,7 +216,7 @@ public class ServerJSONHandler {
      */
     public String loadOnlineData(URL url){
         Log.i(TAG, "loadOnlineData: Trying to download " + url.toString());
-        String jsonString = "not started";
+        String jsonString = "error";
         HttpURLConnection urlConnection = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
