@@ -1,7 +1,6 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
-import android.os.Build;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -345,6 +344,36 @@ public class LocalJSONHandler {
 
 
         return success;
+    }
+
+
+    /**
+     * adds a deck to the internal storage json file (without overwriting)
+     * @param deck
+     * @throws JSONException
+     */
+    public void saveDeck(Deck deck) throws JSONException {
+        JSONObject newJsonDeck = deck.toJSON();
+        JSONObject oldJsonDeckList = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+
+        if (oldJsonDeckList != null) {
+            JSONArray oldDeckArray = oldJsonDeckList.getJSONArray("decks");
+            oldDeckArray.put(newJsonDeck);
+
+            JSONObject newDeckList = new JSONObject();
+            newDeckList.put("decks", oldDeckArray);
+
+            saveJSONToFile(newDeckList);
+
+        } else {
+            //1tes neues Deck, File nicht vorhanden
+            oldJsonDeckList = new JSONObject();
+            JSONArray newDeckArray = new JSONArray();
+            newDeckArray.put(newJsonDeck);
+            oldJsonDeckList.put("decks", newDeckArray);
+
+            saveJSONToFile(oldJsonDeckList);
+        }
     }
 
 

@@ -2,6 +2,7 @@ package de.uulm.dbis.quartett42;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -204,11 +205,21 @@ public class MainActivity extends AppCompatActivity {
             if(availableDecks > sharedPref.getInt("new_online_decks", 0)){
                 int newDecks = availableDecks - sharedPref.getInt("new_online_decks", 0);
 
+                Intent notificationIntent = new Intent(this, MainActivity.class);
+                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+                PendingIntent intent = PendingIntent.getActivity(this, 0,
+                        notificationIntent, 0);
+
                 NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
                 Notification notify=new Notification.Builder
                         (getApplicationContext()).setContentTitle("Quartett42").setContentText("Es " +
                         "sind "+newDecks+" neue Decks im Store erhältlich").
-                        setContentTitle("Quartett42").setSmallIcon(R.drawable.menu_image_cut).build();
+                        setContentTitle("Quartett42").setSmallIcon(R.drawable.menu_image_cut)
+                        .setContentIntent(intent)
+                        .build();
+
 
                 notify.flags |= Notification.FLAG_AUTO_CANCEL;
                 notif.notify(0, notify);

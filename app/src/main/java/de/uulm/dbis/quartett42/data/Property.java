@@ -52,6 +52,13 @@ public class Property {
         this.value = value;
     }
 
+    /**
+     * Default constructor: creates property with empty name, unit, and maxWinner = false
+     */
+    public Property() {
+        this("", "", false);
+    }
+
     public String getName() {
         return name;
     }

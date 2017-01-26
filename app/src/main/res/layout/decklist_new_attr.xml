@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height"
+    >
+
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:inputType="textPersonName"
+        android:hint="Name"
+        android:maxLength="40"
+        android:id="@+id/editTextAttrName"
+        android:layout_weight="2"
+        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
+        android:gravity="end|center_vertical"
+        android:layout_gravity="center_vertical"
+        android:textAlignment="gravity"
+        android:textSize="15sp"
+        />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:id="@+id/maxWinnerBtn"
+        android:text="\u25B2"
+        android:textSize="25sp"
+        android:layout_gravity="center_vertical"
+        android:padding="0dp" />
+
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:inputType="textPersonName"
+        android:hint="Einheit"
+        android:maxLength="25"
+        android:id="@+id/editTextAttrUnit"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:textAlignment="gravity"
+        android:textSize="15sp"
+        android:layout_gravity="center_vertical"
+        />
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:id="@+id/deleteRowBtn"
+        android:textSize="25sp"
+        android:layout_gravity="center_vertical"
+        android:padding="0dp"
+        android:src="@drawable/ic_delete_black_24dp" />
+
+</LinearLayout>

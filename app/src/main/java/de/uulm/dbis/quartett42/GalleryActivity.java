@@ -88,7 +88,6 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
         // add internal storage decks only if they are not already in the set of names
-        //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
         LocalJSONHandler jsonParserInternal = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE);
         for (Deck d :
                 jsonParserInternal.getDecksOverview()) {

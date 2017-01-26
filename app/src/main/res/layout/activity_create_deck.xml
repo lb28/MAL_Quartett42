@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_create_deck"
     android:orientation="vertical"
@@ -15,21 +16,24 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="5dp"
         android:hint="Deckname"
         android:inputType="textAutoCorrect|textAutoComplete"
         android:id="@+id/editTextDeckName"
         android:maxLines="1"
+        android:maxLength="50"
         />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="5dp"
         android:hint="Beschreibung"
         android:inputType="textAutoCorrect|textAutoComplete"
         android:id="@+id/editTextDeckDescr"
-        android:maxLines="3"/>
+        android:maxLines="3"
+        android:maxLength="300"
+        />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -41,32 +45,43 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:id="@+id/textView11"
             android:layout_gravity="center_vertical"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
             />
 
-        <ImageButton
-            android:layout_width="150dp"
+        <ImageView
+            android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_add_a_photo_black_24dp"
-            android:id="@+id/imageView"
-            android:scaleType="fitCenter"
-            />
+            android:id="@+id/deckImgBtn"
+            android:onClick="changeDecPic"
+            android:src="@mipmap/custom_launcher_icon" />
 
     </LinearLayout>
 
 
-
+    <TextView
+        android:text="Attribute der Karten:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        />
     <ListView
+        android:id="@+id/addDeckAttrListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_marginTop="5dp"
+        tools:listfooter="@layout/decklist_new_attr"
         >
-
-
     </ListView>
+
+
+    <Button
+        android:text="Weiter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/saveButton"
+        android:onClick="clickAddCardsBtn"/>
 
 
 </LinearLayout>

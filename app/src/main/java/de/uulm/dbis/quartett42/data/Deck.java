@@ -20,6 +20,9 @@ public class Deck {
     public static final int SRC_MODE_SERVER = 3;
     public static final int SRC_MODE_NONE = -1;
 
+    public static final String UNICODE_MAX_WINNER = "\u25B2";
+    public static final String UNICODE_MIN_WINNER = "\u25BC";
+
     private String name;
 
     /** Enthaelt auch gleich die Beschreibung somit kein String description mehr noetig.

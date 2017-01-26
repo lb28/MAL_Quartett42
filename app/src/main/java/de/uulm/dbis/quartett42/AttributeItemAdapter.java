@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Property;
 
 /**
@@ -53,9 +54,9 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
         // Populate the data into the template view using the data object
         String nameAndMaxWinner = property.getName();
         if (maxWinner) {
-            nameAndMaxWinner += " (\u2191)"; // upwards arrow
+            nameAndMaxWinner += " "+ Deck.UNICODE_MAX_WINNER; // upwards arrow
         } else {
-            nameAndMaxWinner += " (\u2193)"; // downwards arrow
+            nameAndMaxWinner += " "+ Deck.UNICODE_MIN_WINNER; // downwards arrow
         }
         textViewAttrName.setText(nameAndMaxWinner);
 

@@ -108,18 +108,6 @@ public class Util {
         return null;
     }
 
-    /**
-     * stores an image at a subfolder "/deckName/fileName" in internal storage.
-     * @param image
-     * @param deckName
-     * @param fileName
-     * @return true if the image was successfully saved, false otherwise
-     */
-    public static boolean storeImage(Bitmap image, String deckName, String fileName) {
-        // TODO store image at subfolder specified by the string
-        return false;
-    }
-
     /** Checks if a String doesn not contain any illegal Characters for saving it into a json file.
      *
      * @param inputString the String to check

@@ -17,9 +17,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
@@ -285,64 +282,27 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         }
 
         // save the deck as json
-        JSONObject newJsonDeck = deck.toJSON();
         LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
 
-        JSONObject oldJsonDeckList = localJsonHandler.readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
-        if(oldJsonDeckList != null){
-            try {
-                JSONArray oldDeckArray = oldJsonDeckList.getJSONArray("decks");
-                oldDeckArray.put(newJsonDeck);
+        try {
+            localJsonHandler.saveDeck(deck);
 
-                JSONObject newDeckList = new JSONObject();
-                newDeckList.put("decks", oldDeckArray);
+        } catch (Exception e) {
+            e.printStackTrace();
 
-                localJsonHandler.saveJSONToFile(newDeckList);
-            } catch (Exception e) {
-                e.printStackTrace();
+            Log.e(TAG, "Deck Download fehlgeschlagen ");
+            barProgressDialog2.dismiss();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-                Log.e(TAG, "Deck Download fehlgeschlagen ");
-                barProgressDialog2.dismiss();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Intent intent = new Intent(this, GalleryActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-                return;
-            }
-        }else{
-            try {
-                //1tes neues Deck, File nicht vorhanden
-                oldJsonDeckList = new JSONObject();
-                JSONArray newDeckArray = new JSONArray();
-                newDeckArray.put(newJsonDeck);
-                oldJsonDeckList.put("decks", newDeckArray);
-
-                localJsonHandler.saveJSONToFile(oldJsonDeckList);
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                Log.e(TAG, "Deck Download fehlgeschlagen ");
-                barProgressDialog2.dismiss();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                Intent intent = new Intent(this, GalleryActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-                return;
-            }
+            Intent intent = new Intent(this, GalleryActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         }
 
         //for testing:
