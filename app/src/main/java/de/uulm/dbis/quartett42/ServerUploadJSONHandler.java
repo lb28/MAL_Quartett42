@@ -55,6 +55,10 @@ public class ServerUploadJSONHandler {
             //test erstellen
             JSONObject postData = new JSONObject();
             postData.put("name", deckToUpload);
+            postData.put("description", "Testdeck42");
+            postData.put("misc", "");
+            postData.put("misc_version", "1");
+            postData.put("image", "");
             Log.i("parameter", postData.toString());
 
             //connection
@@ -151,6 +155,7 @@ public class ServerUploadJSONHandler {
             result.append(URLEncoder.encode(value.toString(), "UTF-8"));
         }
 
+        Log.i("result.toString", result.toString());
         return result.toString();
     }
 
