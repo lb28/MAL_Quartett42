@@ -15,15 +15,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
 
 public class MainActivity extends AppCompatActivity {
     public String jsonString = "";
@@ -160,24 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Lade-Methode fuer Start-Daten und JSON-Datei:
     public void loadData(){
-        //Test: Willkommen Text laden:
-        TextView welcomeText = (TextView)findViewById(R.id.welcomeText);
-        try {
-            InputStream json = getAssets().open("welcometext.txt");
-            BufferedReader in=
-                    new BufferedReader(new InputStreamReader(json, "UTF-8"));
-            String welcomeMessage = "";
-            String str = "";
-            while ((str = in.readLine()) != null) {
-                welcomeMessage = welcomeMessage+str;
-            }
-            welcomeText.setText(welcomeMessage);
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
 
         //JSON-String lesesn, damit er nicht jedes mal neu gelesen werden muss:
         try {

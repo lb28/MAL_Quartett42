@@ -125,6 +125,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.GalleryActivity" />
         </activity>
+        <activity android:name=".CreateDeckActivity"
+            android:label="Quartett42 Neues Deck"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.uulm.dbis.quartett42.GalleryActivity" />
+        </activity>
     </application>
 
 </manifest>

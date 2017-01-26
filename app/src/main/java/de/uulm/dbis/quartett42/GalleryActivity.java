@@ -11,7 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
+
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +30,6 @@ public class GalleryActivity extends AppCompatActivity {
     GridView gridView;
     GridViewAdapter gridAdapter;
     ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
-    ImageButton imagebutton;
     SharedPreferences sharedPref;
 
     @Override
@@ -42,9 +42,6 @@ public class GalleryActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        imagebutton = (ImageButton)findViewById(R.id.createDecksImageButton);
-        imagebutton.bringToFront();
-
         //JSON-String auslesen:
         Intent intent = getIntent();
         jsonString = intent.getStringExtra("json_string");
@@ -56,7 +53,6 @@ public class GalleryActivity extends AppCompatActivity {
                 loadData();
             }
         }).start();
-
 
     }
 
@@ -125,7 +121,9 @@ public class GalleryActivity extends AppCompatActivity {
                         intent.putExtra("chosen_deck", item.getName());
                         intent.putExtra("srcMode", item.getSrcMode());
                         intent.putExtra("json_string", jsonString);
+                        ((FloatingActionMenu) findViewById(R.id.createDecksFAM)).close(true);
                         startActivity(intent);
+
                     }
 
                 });
@@ -200,13 +198,20 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
     //Button-Klick-Methoden:
-    public void clickCreateDecksFunction(View view){
-        //Toast.makeText(getApplicationContext(), "Klick", Toast.LENGTH_SHORT).show();
+    public void clickGoToShopButton(View view){
         spinner.show();
+        ((FloatingActionMenu) findViewById(R.id.createDecksFAM)).close(true);
         Intent intent = new Intent(GalleryActivity.this, LoadOnlineDecksActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-        finish();
+    }
+
+    public void clickCreateDeckButton(View view) {
+        spinner.show();
+        ((FloatingActionMenu) findViewById(R.id.createDecksFAM)).close(true);
+        Intent intent = new Intent(GalleryActivity.this, CreateDeckActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
 
