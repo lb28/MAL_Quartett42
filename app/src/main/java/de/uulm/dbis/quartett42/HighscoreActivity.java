@@ -220,5 +220,18 @@ public class HighscoreActivity extends AppCompatActivity {
         fuenfterPunkteZeit = sharedPref.getInt("fuenfterPunkteZeit", DEFAULT_POINTS_INT);
     }
 
+    public void clickUploadButtonFunction(View view){
+
+        final ServerUploadJSONHandler suh = new ServerUploadJSONHandler(this);
+
+        new Thread(new Runnable() {
+            public void run() {
+                // TODO make AsynchTask calling LocalJSONHandler.getDecks()
+                suh.uploadDeck("");
+            }
+        }).start();
+
+    }
+
 
 }
