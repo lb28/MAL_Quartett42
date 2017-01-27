@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,10 +26,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
+import de.uulm.dbis.quartett42.data.ImageCard;
+import de.uulm.dbis.quartett42.data.Property;
 
 /**
  * Created by Tim on 25.01.17.
@@ -46,11 +50,31 @@ public class ServerUploadJSONHandler {
     private int deckToUploadId;
     private ArrayList<Deck> deckOverviewList;
     private ArrayList<Card> cardsToUpload;
+    private ArrayList<Property> propertyList;
+    private HashMap<String, Double> hashMap;
+    private ArrayList<ImageCard> imageList;
+
 
     public ServerUploadJSONHandler(Context context){
         this.context = context;
     }
 
+    /**
+     * lädt ein deck hoch
+     * erst der deckname nach:
+     * http://quartett.af-mba.dbis.info/decks/
+     * holt id des decks
+     * für alle karten:
+     * name der karte hochladen nach:
+     * http://quartett.af-mba.dbis.info/decks/{deck_id}/cards
+     * holt karten id
+     * alle attribute der karte mit werten hochladen nach:
+     * http://quartett.af-mba.dbis.info/decks/{deck_id}/cards/{card_id}/attributes
+     * alle bilder der karte hochladen nach:
+     * http://quartett.af-mba.dbis.info/decks/{deck_id}/cards/{card_id}/images
+     *
+     * @param deckname
+     */
     public void uploadDeck(String deckname){
 
         //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
@@ -71,7 +95,7 @@ public class ServerUploadJSONHandler {
             postData.put("misc", "");
             postData.put("misc_version", "1");
             postData.put("filename", ""); //TODO filename suchen
-            postData.put("image_base64", url /* + name des bildes*/);
+            postData.put("image_base64", url /* + name des bildes*/); //TODO bild als base64
 
             //connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -147,11 +171,15 @@ public class ServerUploadJSONHandler {
         //dann id holen
         //dann attribute hochladen
         //dann bilder
+
+        propertyList = deckToUpload.getPropertyList();
+
         for (Card c : cardsToUpload){
 
             try {
                 //name der karte hochladen
                 url = new URL(URL_DECKS + deckToUploadId + "/cards/");
+                Log.i("karte hochladen url", "" + url);
 
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("name", c.getName());
@@ -193,8 +221,140 @@ public class ServerUploadJSONHandler {
                     Log.i("response Card name", "false: " + responseCode);
                 }
 
-                // id der karte holen
 
+
+                // id der karte holen
+                int tmpCardID = 0;
+
+                String jsonStringCards = sjh.loadOnlineData(url);
+                JSONArray cardsArray = new JSONArray(jsonStringCards);
+
+                for(int i = 0; i < cardsArray.length(); i++) {
+                    JSONObject tmpIDCard = cardsArray.getJSONObject(i);
+                    tmpCardID = tmpIDCard.getInt("id");
+                }
+                Log.i("card id error", "" + tmpCardID);
+
+
+
+                //attribute hochladen
+                url = new URL(URL_DECKS + deckToUploadId + "/cards/" + tmpCardID + "/attributes/");
+                Log.i("url attribute hochladen", "" + url);
+
+                hashMap = c.getAttributeMap();
+
+                JSONArray jsonArray = new JSONArray();
+                JSONObject jsonObjectAttribute = new JSONObject();
+                //hole alle Name-Werte-Paare und pack sie in den post request
+                for (Property p : propertyList){
+                    String higher_wins = "lower_wins";
+                    Boolean higherWins = p.isMaxWinner();
+                    if (higherWins == true){
+                        higher_wins = "higher_wins";
+                    }
+                    String nameProperty = p.getName();
+
+                    jsonObjectAttribute.put("name", nameProperty);
+                    jsonObjectAttribute.put("value", hashMap.get(nameProperty));
+                    jsonObjectAttribute.put("unit", p.getUnit());
+                    jsonObjectAttribute.put("order", 0);
+                    jsonObjectAttribute.put("what_wins", higher_wins);
+
+                    jsonArray.put(jsonObjectAttribute);
+                }
+
+                //connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", URL_AUTHORIZATION);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.setDoOutput(true);
+
+                //write
+                OutputStream ost = urlConnection.getOutputStream();
+                BufferedWriter bwriter = new BufferedWriter(new OutputStreamWriter(ost, "UTF-8"));
+                bwriter.write(jsonArray.toString());
+                bwriter.flush();
+                bwriter.close();
+                ost.close();
+
+                int responseCode2 = urlConnection.getResponseCode();
+
+                //response
+                if (responseCode2 == HttpURLConnection.HTTP_OK || responseCode2 == HttpURLConnection.HTTP_CREATED){
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null){
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    Log.i("response Card attr", sb.toString());
+                } else{
+                    //TODO bei fehler vielleicht false als return
+                    Log.i("response Card attr", "false: " + responseCode);
+                }
+
+                //bilder jeder karte hochladen
+                url = new URL(URL_DECKS + deckToUploadId + "/cards/" + tmpCardID + "/images/");
+                Log.i("url attribute hochladen", "" + url);
+
+                imageList = c.getImageList();
+
+                JSONArray jsonArrayImages = new JSONArray();
+                JSONObject jsonObjectImages = new JSONObject();
+
+                for (ImageCard i : imageList){
+
+                    jsonObjectImages.put("description", i.getDescription());
+                    jsonObjectImages.put("order", 0);
+                    jsonObjectImages.put("filename", ""); //TODO filename
+                    jsonObjectImages.put("image_base64", ""); //TODO base64 string aus uri erstellen
+
+                    jsonArrayImages.put(jsonObjectImages);
+                }
+
+                //connection
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("POST");
+                urlConnection.setRequestProperty("Authorization", URL_AUTHORIZATION);
+                urlConnection.setRequestProperty("Content-Type", "application/json");
+                urlConnection.setRequestProperty("Accept", "application/json");
+                urlConnection.setDoOutput(true);
+
+                //write
+                OutputStream ostr = urlConnection.getOutputStream();
+                BufferedWriter buwriter = new BufferedWriter(new OutputStreamWriter(ostr, "UTF-8"));
+                buwriter.write(jsonArray.toString());
+                buwriter.flush();
+                buwriter.close();
+                ostr.close();
+
+                int responseCode3 = urlConnection.getResponseCode();
+
+                //response
+                if (responseCode3 == HttpURLConnection.HTTP_OK || responseCode3 == HttpURLConnection.HTTP_CREATED){
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(urlConnection.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line = "";
+
+                    while ((line = in.readLine()) != null){
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    Log.i("response Card images", sb.toString());
+                } else{
+                    //TODO bei fehler vielleicht false als return
+                    Log.i("response Card images", "false: " + responseCode);
+                }
 
 
 
@@ -209,23 +369,9 @@ public class ServerUploadJSONHandler {
 
         }
 
-
-
-
-
-        //detaillierte karten (id?, deck, name, order) hochladen
-        // /decks/{deck_id}/cards/{card_id}
-
-        //attribute jeder karte (id, card, name, value, unit, what_wins, image="") hochladen
-        // /decks/{deck_id}/cards/{card_id}/attributes
-
-        //bilder (id, card, order, description, image) hochladen
-        // /decks/{deck_id}/cards/{card_id}/images
-
-
-
     }
 
+    /*
     public String getPostDataString(JSONObject params) throws Exception{
         StringBuilder result = new StringBuilder();
         boolean first = true;
@@ -303,6 +449,8 @@ public class ServerUploadJSONHandler {
 //      Log.d(TAG,"encodedImageBase64: " + encodedImageBase64);
         return encodedImageBase64;
     }
+
+    */
 
 
 
