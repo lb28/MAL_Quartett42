@@ -165,15 +165,15 @@ public class CreateDeckActivity extends AppCompatActivity {
             // test
             System.out.println(newDeck.toJSON().toString(4));
             LocalJSONHandler localJSONHandler =
-                    new LocalJSONHandler(this, LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE);
+                    new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
             localJSONHandler.saveDeck(newDeck);
+
+            // TODO go to AddCardsActivity (send deck name in intent)
 
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Eingaben sind ungültig!", Toast.LENGTH_SHORT).show();
         }
-
-        // TODO send deck to AddCardsActivity or save deck?
 
     }
 
@@ -234,8 +234,8 @@ public class CreateDeckActivity extends AppCompatActivity {
                 // load image into imageBtn
                 Picasso.with(this)
                         .load(uri)
-                        .resize(300,300)
-                        .centerCrop()
+                        .resize(500,500)
+                        .centerInside()
                         .into(deckImgBtnTarget);
             }
         }

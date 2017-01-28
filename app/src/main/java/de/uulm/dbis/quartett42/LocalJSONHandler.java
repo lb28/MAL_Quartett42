@@ -20,6 +20,9 @@ import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
 
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_ASSETS;
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
+
 /**
  * Acts like a DB manager for the json file
  * Created by Luis on 12.01.2017.
@@ -27,9 +30,6 @@ import de.uulm.dbis.quartett42.data.Property;
 public class LocalJSONHandler {
     public static final String JSON_FILENAME_ASSETS = "jsonexample.json";
     public static final String JSON_FILENAME_INTERNAL_STORAGE = "quartett.json";
-
-    public static final int JSON_MODE_ASSETS = 1;
-    public static final int JSON_MODE_INTERNAL_STORAGE = 2;
 
     // mode BOTH is broken
 //    public static final int JSON_MODE_BOTH = 3;
@@ -40,7 +40,7 @@ public class LocalJSONHandler {
 
     public LocalJSONHandler(Context context) {
         // default constructor is for assets (may be changed later)
-        this(context, JSON_MODE_ASSETS);
+        this(context, SRC_MODE_ASSETS);
     }
 
     public LocalJSONHandler(Context context, int jsonMode) {
@@ -92,10 +92,10 @@ public class LocalJSONHandler {
                 ImageCard newImage = new ImageCard(deckImageUri, deckDescription);
                 // set srcMode to assets or internal
                 int srcMode = Deck.SRC_MODE_NONE;
-                if (jsonMode == JSON_MODE_ASSETS) {
-                    srcMode = Deck.SRC_MODE_ASSETS;
+                if (jsonMode == SRC_MODE_ASSETS) {
+                    srcMode = SRC_MODE_ASSETS;
                 }
-                else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                else if (jsonMode == SRC_MODE_INTERNAL_STORAGE) {
                     srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
                 }
 
@@ -177,10 +177,10 @@ public class LocalJSONHandler {
                 }
                 // set srcMode to assets or internal
                 int srcMode = Deck.SRC_MODE_NONE;
-                if (jsonMode == JSON_MODE_ASSETS) {
-                    srcMode = Deck.SRC_MODE_ASSETS;
+                if (jsonMode == SRC_MODE_ASSETS) {
+                    srcMode = SRC_MODE_ASSETS;
                 }
-                else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                else if (jsonMode == SRC_MODE_INTERNAL_STORAGE) {
                     srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
                 }
 
@@ -260,10 +260,10 @@ public class LocalJSONHandler {
                     }
                     // set srcMode to assets or internal
                     int srcMode = Deck.SRC_MODE_NONE;
-                    if (jsonMode == JSON_MODE_ASSETS) {
-                        srcMode = Deck.SRC_MODE_ASSETS;
+                    if (jsonMode == SRC_MODE_ASSETS) {
+                        srcMode = SRC_MODE_ASSETS;
                     }
-                    else if (jsonMode == JSON_MODE_INTERNAL_STORAGE) {
+                    else if (jsonMode == SRC_MODE_INTERNAL_STORAGE) {
                         srcMode = Deck.SRC_MODE_INTERNAL_STORAGE;
                     }
 
@@ -310,7 +310,7 @@ public class LocalJSONHandler {
             return false;
         }
 
-        JSONObject oldJsonObj = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        JSONObject oldJsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
         JSONObject newJsonObj = new JSONObject();
         try {
             JSONArray oldDecks = oldJsonObj.getJSONArray("decks");
@@ -354,7 +354,7 @@ public class LocalJSONHandler {
      */
     public void saveDeck(Deck deck) throws JSONException {
         JSONObject newJsonDeck = deck.toJSON();
-        JSONObject oldJsonDeckList = readJSONFromFile(JSON_MODE_INTERNAL_STORAGE);
+        JSONObject oldJsonDeckList = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
 
         if (oldJsonDeckList != null) {
             JSONArray oldDeckArray = oldJsonDeckList.getJSONArray("decks");
@@ -389,7 +389,7 @@ public class LocalJSONHandler {
     public JSONObject readJSONFromFile(int jsonMode) {
 
         switch (jsonMode) {
-            case JSON_MODE_ASSETS:
+            case SRC_MODE_ASSETS:
                 // read the json object from the assets
                 try {
                     InputStream in = context.getAssets().open(JSON_FILENAME_ASSETS);
@@ -405,7 +405,7 @@ public class LocalJSONHandler {
                     return null;
                 }
 
-            case JSON_MODE_INTERNAL_STORAGE:
+            case SRC_MODE_INTERNAL_STORAGE:
                 // read the json object from the internal storage
                 try {
                     FileInputStream fin = context.openFileInput(

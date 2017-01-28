@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
@@ -20,13 +21,11 @@ import de.uulm.dbis.quartett42.data.Deck;
 public class GridViewAdapter extends ArrayAdapter<Deck> {
     private static final String TAG = "GridViewAdapter";
 
-    private Context context;
     private int layoutResourceId;
 
     public GridViewAdapter(Context context, int layoutResourceId, ArrayList<Deck> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
-        this.context = context;
     }
 
     @Override
@@ -35,7 +34,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
         ViewHolder holder;
 
         if (row == null) {
-             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+             LayoutInflater inflater = ((Activity) getContext()).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
             holder = new ViewHolder();
             holder.imageTitle = (TextView) row.findViewById(R.id.galleryListName);
@@ -53,7 +52,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
         holder.descButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(getContext())
                         .setIcon(R.drawable.ic_info_black_24dp)
                         .setMessage(singleDeck.getImage().getDescription())
                         .setTitle("Beschreibung")
@@ -74,7 +73,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 if (imageUri.isEmpty()) {
                     imageUri = null;
                 }
-                Picasso.with(context)
+                Picasso.with(getContext())
                         .load(imageUri)
                         .resize(500, 500)
                         .centerInside()
@@ -83,13 +82,25 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                         .into(holder.image);
                 break;
             case Deck.SRC_MODE_ASSETS:
-                // TODO replace with picasso?
-                imageUri = singleDeck.getName() + "/" + imageUri;
-                new ImageLoaderAssetsTask(holder.image, context).execute(imageUri);
+                imageUri = "file:///android_asset/" + singleDeck.getName() + "/" + imageUri;
+                Picasso.with(getContext())
+                        .load(imageUri)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .placeholder(R.drawable.menu_image)
+                        .into(holder.image);
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
-                // TODO replace with picasso?
-                new ImageLoaderInternalStorageTask(holder.image, context).execute(imageUri);
+                File imgFile = new File(getContext().getFilesDir() + "/" + imageUri);
+                System.out.println(imgFile);
+                Picasso.with(getContext())
+                        .load(imgFile)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .placeholder(R.drawable.menu_image)
+                        .into(holder.image);
                 break;
         }
 

@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+
 import de.uulm.dbis.quartett42.data.Deck;
 
 /**
@@ -42,8 +46,7 @@ public class CardImageFragment extends Fragment {
         String imageUri = args.getString("imageUri");
         int srcMode = args.getInt("srcMode");
         final String imageDesc = args.getString("imageDesc");
-        assert imageUri != null;
-        assert imageDesc != null;
+        String deckName = args.getString("deckName");
         ImageView cardImageView = (ImageView) rootView.findViewById(R.id.cardImageView);
         ImageButton imageDescBtn = (ImageButton) rootView.findViewById(R.id.imageDescBtn);
 
@@ -51,29 +54,36 @@ public class CardImageFragment extends Fragment {
         // call one of three different tasks for the three srcModes
         switch (srcMode) {
             case Deck.SRC_MODE_SERVER:
-                new ImageLoaderServerTask(cardImageView).execute(imageUri);
+                if (imageUri != null && imageUri.isEmpty()) {
+                    imageUri = null;
+                }
+                Picasso.with(getContext())
+                        .load(imageUri)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .into(cardImageView);
                 break;
             case Deck.SRC_MODE_ASSETS:
-                new ImageLoaderAssetsTask(cardImageView, getActivity()).execute(imageUri);
+                imageUri = "file:///android_asset/" + deckName + "/" + imageUri;
+                Picasso.with(getContext())
+                        .load(imageUri)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .into(cardImageView);
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
-                new ImageLoaderInternalStorageTask(cardImageView, getActivity()).execute(imageUri);
+                File imgFile = new File(getContext().getFilesDir() + "/" + imageUri);
+                System.out.println(imgFile);
+                Picasso.with(getContext())
+                        .load(imgFile)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .into(cardImageView);
                 break;
         }
-
-
-/* old code
-        AssetManager assetManager = rootView.getContext().getAssets();
-        InputStream is;
-        try {
-            is = assetManager.open(imageUri);
-            Bitmap bitmap = BitmapFactory.decodeStream(is);
-            cardImageView.setImageBitmap(bitmap);
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-*/
 
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override

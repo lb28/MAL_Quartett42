@@ -113,21 +113,20 @@ public class Util {
      * @param inputString the String to check
      * @return true if valid, false if invalid
      */
-    public static boolean checkString(String inputString){
-        if(inputString.indexOf(';') != -1) return false;
-        if(inputString.indexOf(',') != -1) return false;
-        if(inputString.indexOf('<') != -1) return false;
-        if(inputString.indexOf('>') != -1) return false;
-        if(inputString.indexOf('{') != -1) return false;
-        if(inputString.indexOf('}') != -1) return false;
-        if(inputString.indexOf('[') != -1) return false;
-        if(inputString.indexOf(']') != -1) return false;
-        if(inputString.indexOf('(') != -1) return false;
-        if(inputString.indexOf(')') != -1) return false;
-        if(inputString.indexOf('"') != -1) return false;
-        if(inputString.indexOf('\'') != -1) return false;
-        if(inputString.indexOf('=') != -1) return false;
-
-        return true;
+    public static boolean checkString(String inputString) {
+        return inputString.indexOf(';') == -1
+                || inputString.indexOf(',') == -1
+                || inputString.indexOf('<') == -1
+                || inputString.indexOf('>') == -1
+                || inputString.indexOf('{') == -1
+                || inputString.indexOf('}') == -1
+                || inputString.indexOf('[') == -1
+                || inputString.indexOf(']') == -1
+                || inputString.indexOf('(') == -1
+                || inputString.indexOf(')') == -1
+                || inputString.indexOf('"') == -1
+                || inputString.indexOf('\'') == -1
+                || inputString.indexOf('=') == -1;
     }
+
 }

@@ -68,7 +68,7 @@ public class ServerUploadJSONHandler {
     public void uploadDeck(String deckname){
 
         //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
-        LocalJSONHandler ljh = new LocalJSONHandler(context);
+        LocalJSONHandler ljh = new LocalJSONHandler(context, Deck.SRC_MODE_ASSETS);
         deckToUpload = ljh.getDeck(deckname);
 
         //TODO deckToUpload might be null (if the handler does not find it)

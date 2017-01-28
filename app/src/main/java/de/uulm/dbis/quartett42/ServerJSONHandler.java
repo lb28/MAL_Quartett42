@@ -52,7 +52,7 @@ public class ServerJSONHandler {
         // get hashSet of names to be hidden
         HashSet<String> hiddenNames = new HashSet<>();
         LocalJSONHandler localJSONHandler = new LocalJSONHandler(
-                context, LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE);
+                context, Deck.SRC_MODE_INTERNAL_STORAGE);
         for (Deck deck : localJSONHandler.getDecksOverview()) {
             hiddenNames.add(deck.getName());
         }

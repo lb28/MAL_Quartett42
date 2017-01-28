@@ -21,8 +21,8 @@ import java.util.HashSet;
 import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.Game;
 
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_ASSETS;
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
 
 public class NewGameActivity extends AppCompatActivity {
     private static final String TAG = "NewGameActivity";
@@ -190,7 +190,7 @@ public class NewGameActivity extends AppCompatActivity {
         @Override
         protected ArrayList<Deck> doInBackground(Void... voids) {
             // load asset decks
-            LocalJSONHandler jsonParserAssets = new LocalJSONHandler(NewGameActivity.this, JSON_MODE_ASSETS);
+            LocalJSONHandler jsonParserAssets = new LocalJSONHandler(NewGameActivity.this, SRC_MODE_ASSETS);
             ArrayList<Deck> deckList = jsonParserAssets.getDecksOverview();
 
             // Set of deckNames that we loaded so far (for eliminating duplicates)
@@ -203,9 +203,8 @@ public class NewGameActivity extends AppCompatActivity {
             }
 
             // add internal storage decks only if they are not already in the set of names
-            //TODO Rest der Galerie anpassen (Einzelansicht, Spiel, ...
             LocalJSONHandler jsonParserInternal = new LocalJSONHandler(
-                    NewGameActivity.this, JSON_MODE_INTERNAL_STORAGE);
+                    NewGameActivity.this, SRC_MODE_INTERNAL_STORAGE);
             for (Deck d :
                     jsonParserInternal.getDecksOverview()) {
                 if (!deckNames.contains(d.getName())) {

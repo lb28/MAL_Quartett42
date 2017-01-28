@@ -19,8 +19,8 @@ import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Deck;
 
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_ASSETS;
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_ASSETS;
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
 
 public class GalleryActivity extends AppCompatActivity {
     private static final String TAG = "GalleryActivity";
@@ -78,7 +78,7 @@ public class GalleryActivity extends AppCompatActivity {
         HashSet<String> deckNames = new HashSet<>();
 
         // load asset decks
-        LocalJSONHandler jsonParserAssets = new LocalJSONHandler(this, JSON_MODE_ASSETS);
+        LocalJSONHandler jsonParserAssets = new LocalJSONHandler(this, SRC_MODE_ASSETS);
         deckList = jsonParserAssets.getDecksOverview();
 
         // put all the names of the deckList in our set
@@ -88,7 +88,7 @@ public class GalleryActivity extends AppCompatActivity {
         }
 
         // add internal storage decks only if they are not already in the set of names
-        LocalJSONHandler jsonParserInternal = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE);
+        LocalJSONHandler jsonParserInternal = new LocalJSONHandler(this, SRC_MODE_INTERNAL_STORAGE);
         for (Deck d :
                 jsonParserInternal.getDecksOverview()) {
             if (!deckNames.contains(d.getName())) {
@@ -149,7 +149,7 @@ public class GalleryActivity extends AppCompatActivity {
 
                                                 LocalJSONHandler localJSONHandler =
                                                         new LocalJSONHandler(GalleryActivity.this,
-                                                                JSON_MODE_INTERNAL_STORAGE);
+                                                                SRC_MODE_INTERNAL_STORAGE);
 
                                                 if (!localJSONHandler.removeDeck(deck.getName())) {
                                                     System.err.println("Deck " + deck.getName()

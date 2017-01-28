@@ -22,8 +22,7 @@ import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
 
-import static de.uulm.dbis.quartett42.LocalJSONHandler.JSON_MODE_INTERNAL_STORAGE;
-
+import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
 
 public class LoadOnlineDecksActivity extends AppCompatActivity {
     private static final String TAG = "LoadOnlineDecksActivity";
@@ -255,6 +254,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 }
             }
             barProgressDialog2.setProgress(barProgressDialog2.getProgress()+ leftProgress);
+
+
         }
 
         //if deck has no image use the one from the first card:
@@ -282,7 +283,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         }
 
         // save the deck as json
-        LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
+        LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, SRC_MODE_INTERNAL_STORAGE );
 
         try {
             localJsonHandler.saveDeck(deck);
