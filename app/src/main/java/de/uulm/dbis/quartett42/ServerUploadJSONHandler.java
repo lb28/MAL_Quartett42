@@ -65,13 +65,16 @@ public class ServerUploadJSONHandler {
      *
      * @param deckname
      */
-    public void uploadDeck(String deckname){
+    public boolean uploadDeck(String deckname){
 
         //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
         LocalJSONHandler ljh = new LocalJSONHandler(context, Deck.SRC_MODE_ASSETS);
         deckToUpload = ljh.getDeck(deckname);
 
-        //TODO deckToUpload might be null (if the handler does not find it)
+        //deckToUpload might be null (if the handler does not find it)
+        if (deckToUpload == null){
+            return false;
+        }
 
         //testen ob hochladen wegen name möglich
         // /decks
@@ -86,8 +89,8 @@ public class ServerUploadJSONHandler {
             postData.put("description", deckToUpload.getImage().getDescription());
             postData.put("misc", "");
             postData.put("misc_version", "1");
-            postData.put("filename", ""); //TODO filename suchen
-            postData.put("image_base64", url /* + name des bildes*/); //TODO bild als base64
+            postData.put("filename", "" + deckToUpload.getName() + "_thumbnail"); //TODO über fileendung nachdenken
+            postData.put("image_base64", "" /* TODO bild als base64-string*/);
 
             //connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -123,8 +126,9 @@ public class ServerUploadJSONHandler {
                 in.close();
                 Log.i("response", sb.toString());
             } else{
-                //TODO bei fehler vielleicht false als return
+                //if an error occured return false
                 Log.i("response", "false: " + responseCode);
+                return false;
             }
 
         } catch(IOException e){
@@ -209,8 +213,9 @@ public class ServerUploadJSONHandler {
                     in.close();
                     Log.i("response Card name", sb.toString());
                 } else{
-                    //TODO bei fehler vielleicht false als return
+                    //if an error ocurred return false
                     Log.i("response Card name", "false: " + responseCode);
+                    return false;
                 }
 
 
@@ -288,8 +293,9 @@ public class ServerUploadJSONHandler {
                     in.close();
                     Log.i("response Card attr", sb.toString());
                 } else{
-                    //TODO bei fehler vielleicht false als return
+                    //if an error ocurred return false
                     Log.i("response Card attr", "false: " + responseCode);
+                    return false;
                 }
 
                 //bilder jeder karte hochladen
@@ -301,11 +307,13 @@ public class ServerUploadJSONHandler {
                 JSONArray jsonArrayImages = new JSONArray();
                 JSONObject jsonObjectImages = new JSONObject();
 
-                for (ImageCard i : imageList){
+                for (int i = 0; i < imageList.size(); i++){
 
-                    jsonObjectImages.put("description", i.getDescription());
+                    ImageCard imageCard = imageList.get(i);
+
+                    jsonObjectImages.put("description", imageCard.getDescription());
                     jsonObjectImages.put("order", 0);
-                    jsonObjectImages.put("filename", ""); //TODO filename
+                    jsonObjectImages.put("filename", "" + c.getName() + "_" + i /*TODO fileendung*/);
                     jsonObjectImages.put("image_base64", ""); //TODO base64 string aus uri erstellen
 
                     jsonArrayImages.put(jsonObjectImages);
@@ -344,8 +352,9 @@ public class ServerUploadJSONHandler {
                     in.close();
                     Log.i("response Card images", sb.toString());
                 } else{
-                    //TODO bei fehler vielleicht false als return
+                    //if an error ocurred return false
                     Log.i("response Card images", "false: " + responseCode);
+                    return false;
                 }
 
 
@@ -360,6 +369,8 @@ public class ServerUploadJSONHandler {
 
 
         }
+
+        return true;
 
     }
 
@@ -443,10 +454,5 @@ public class ServerUploadJSONHandler {
     }
 
     */
-
-
-
-
-
 
 }
