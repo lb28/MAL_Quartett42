@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Deck;
@@ -69,13 +71,24 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
 
         switch (singleDeck.getSrcMode()) {
             case Deck.SRC_MODE_SERVER:
-                new ImageLoaderServerTask(holder.image).execute(imageUri);
+                if (imageUri.isEmpty()) {
+                    imageUri = null;
+                }
+                Picasso.with(context)
+                        .load(imageUri)
+                        .resize(500, 500)
+                        .centerInside()
+                        .onlyScaleDown()
+                        .placeholder(R.drawable.menu_image)
+                        .into(holder.image);
                 break;
             case Deck.SRC_MODE_ASSETS:
+                // TODO replace with picasso?
                 imageUri = singleDeck.getName() + "/" + imageUri;
                 new ImageLoaderAssetsTask(holder.image, context).execute(imageUri);
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
+                // TODO replace with picasso?
                 new ImageLoaderInternalStorageTask(holder.image, context).execute(imageUri);
                 break;
         }

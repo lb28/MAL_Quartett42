@@ -5,22 +5,24 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.ThumbnailUtils;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +36,8 @@ import de.uulm.dbis.quartett42.data.Property;
 public class CreateDeckActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE_REQUEST = 2;
+
+    private static final String TAG = "CreateDeckActivity";
 
     // the Deck we are building
     private Deck newDeck;
@@ -51,6 +55,27 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     private CreateDeckItemAdapter createDeckItemAdapter;
 
+    // the target for the picasso loader
+    private Target deckImgBtnTarget = new Target() {
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            deckImage = bitmap;
+            deckImgBtn.setImageBitmap(deckImage);
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            deckImage = BitmapFactory.decodeResource(
+                    getResources(), R.drawable.menu_image);
+            Log.i(TAG, "onBitmapFailed: ");
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +88,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         deckImgBtn = (ImageView) findViewById(R.id.deckImgBtn);
 
         // default deck image
-        deckImage = BitmapFactory.decodeResource(getResources(), R.mipmap.custom_launcher_icon);
-
+        deckImage = BitmapFactory.decodeResource(getResources(), R.drawable.menu_image);
         // add the footer (for adding items to the list)
         footerView = getLayoutInflater().inflate(R.layout.decklist_footer, null, false);
         addDeckAttrListView.addFooterView(footerView);
@@ -205,32 +229,14 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         } else if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
-
                 Uri uri = data.getData();
 
-                try {
-                    Cursor cursor = getContentResolver().query(uri,
-                            null, null, null, null);
-                    if(cursor!=null &&  cursor.moveToFirst()) {
-                        long size = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE));
-                        cursor.close();
-
-                        System.out.println("file size: " + size);
-                        if (size > 3000000) { // TODO solve this in a better way
-                            throw new IOException("file size too large: " + size);
-                        }
-                    }
-
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                    int newWidth = 300;
-                    int sizeFactor = bitmap.getWidth() / newWidth;
-                    int newHeight = bitmap.getHeight() / sizeFactor;
-                    deckImage = ThumbnailUtils.extractThumbnail(bitmap, newWidth, newHeight);
-
-                    deckImgBtn.setImageBitmap(deckImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                // load image into imageBtn
+                Picasso.with(this)
+                        .load(uri)
+                        .resize(300,300)
+                        .centerCrop()
+                        .into(deckImgBtnTarget);
             }
         }
     }

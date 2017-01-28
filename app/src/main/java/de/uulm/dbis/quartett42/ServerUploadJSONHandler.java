@@ -1,33 +1,23 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -80,6 +70,8 @@ public class ServerUploadJSONHandler {
         //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
         LocalJSONHandler ljh = new LocalJSONHandler(context);
         deckToUpload = ljh.getDeck(deckname);
+
+        //TODO deckToUpload might be null (if the handler does not find it)
 
         //testen ob hochladen wegen name möglich
         // /decks
