@@ -1,6 +1,9 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -9,6 +12,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -70,6 +74,8 @@ public class ServerUploadJSONHandler {
         //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
         LocalJSONHandler ljh = new LocalJSONHandler(context, Deck.SRC_MODE_ASSETS);
         deckToUpload = ljh.getDeck(deckname);
+        Log.i("deckToUpload", deckToUpload.getName());
+        Log.i("deck bild", deckToUpload.getImage().getUri());
 
         //deckToUpload might be null (if the handler does not find it)
         if (deckToUpload == null){
@@ -89,8 +95,8 @@ public class ServerUploadJSONHandler {
             postData.put("description", deckToUpload.getImage().getDescription());
             postData.put("misc", "");
             postData.put("misc_version", "1");
-            postData.put("filename", "" + deckToUpload.getName() + "_thumbnail"); //TODO über fileendung nachdenken
-            postData.put("image_base64", "" /* TODO bild als base64-string*/);
+            //postData.put("filename", "" + deckToUpload.getName() + "_thumbnail"); //TODO über fileendung nachdenken
+            postData.put("image_base64", urlToBase64(deckToUpload.getImage().getUri()));
 
             //connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -313,8 +319,8 @@ public class ServerUploadJSONHandler {
 
                     jsonObjectImages.put("description", imageCard.getDescription());
                     jsonObjectImages.put("order", 0);
-                    jsonObjectImages.put("filename", "" + c.getName() + "_" + i /*TODO fileendung*/);
-                    jsonObjectImages.put("image_base64", ""); //TODO base64 string aus uri erstellen
+                    //jsonObjectImages.put("filename", "" + c.getName() + "_" + i /*TODO fileendung*/);
+                    jsonObjectImages.put("image_base64", urlToBase64(imageCard.getUri())); //TODO base64 string aus uri erstellen
 
                     jsonArrayImages.put(jsonObjectImages);
                 }
@@ -372,6 +378,20 @@ public class ServerUploadJSONHandler {
 
         return true;
 
+    }
+
+    public String urlToBase64(String url){
+
+        Bitmap bm = BitmapFactory.decodeFile(url);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] byteArrayImage = baos.toByteArray();
+
+
+
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+
+        return encodedImage;
     }
 
     /*

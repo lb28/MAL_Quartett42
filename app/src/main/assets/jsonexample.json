@@ -637,6 +637,58 @@
 				}
 			}
 		]
+	},
+	{
+		"name" : "TestDeckHochladen",
+		"description" : "TestDeckBeschreibung",
+		"image" : "Testbild.jpg",
+		"properties" : [
+			{
+				"name" : "Alter",
+				"unit" : "Jahre",
+				"maxwinner" : true
+			},
+			{
+				"name" : "Gewicht",
+				"unit" : "kg",
+				"maxwinner" : false
+			}
+		],
+		"cards" : [
+			{
+				"name" : "Testkarte1",
+				"id" : 0,
+				"images" : [
+					{
+						"URI" : "Testbild.jpg",
+						"description" : "TestBeschreibung 1"
+					},
+					{
+						"URI" : "Testbild.jpg",
+						"description" : "TestBeschreibung 2"
+					}
+				],
+				"values" : {
+					"Alter" : 40,
+					"Gewicht" : 111
+				}
+			},
+			{
+				"name" : "Testkarte2",
+				"id" : 1,
+				"images" : [
+					{
+						"URI" : "Testbild.jpg",
+						"description" : "Testbeschreibung3"
+					}
+				],
+				"values" : {
+					"Alter" : 18,
+					"Gewicht" : 43
+				}
+			}
+		]
 	}
+
 	]	
 }

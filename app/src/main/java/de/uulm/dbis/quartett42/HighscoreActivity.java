@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HighscoreActivity extends AppCompatActivity {
 
@@ -227,12 +228,12 @@ public class HighscoreActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 // TODO make AsynchTask calling LocalJSONHandler.getDecks()
-                boolean uploadSuccessful = suh.uploadDeck("");
+                boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen");
 
                 if (uploadSuccessful == false){
-                    //show Toast upload not successful?
+                    Toast.makeText(getApplicationContext(), "Upload erfolgreich", Toast.LENGTH_SHORT).show();
                 } else {
-                    //shot Toast upload successful?
+                    Toast.makeText(getApplicationContext(), "Upload fehlgeschlagen", Toast.LENGTH_SHORT).show();
                 }
             }
         }).start();
