@@ -40,7 +40,9 @@ public class Util {
         for (Property p: propList) {
             // get the cards value
             double attrValue = 0;
-            if (card != null && card.getAttributeMap() != null) {
+            if (card != null
+                    && card.getAttributeMap() != null
+                    && card.getAttributeMap().get(p.getName()) != null) {
                 attrValue = card.getAttributeMap().get(p.getName());
             }
             // put it inside the property for the adapter

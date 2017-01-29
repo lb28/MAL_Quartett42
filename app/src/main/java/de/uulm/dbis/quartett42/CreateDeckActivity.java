@@ -2,7 +2,6 @@ package de.uulm.dbis.quartett42;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
@@ -24,8 +23,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import de.uulm.dbis.quartett42.data.Card;
@@ -158,23 +155,11 @@ public class CreateDeckActivity extends AppCompatActivity {
 
         // TODO maybe check for invalid user input
 
-        // save the deck image in internal storage
-        String imageUri = "NO_DECK_IMAGE"; // inconsistency --> TODO put this into constant
-        if (deckImage != null) {
-            imageUri = newDeckName+"_deckimage.jpg";
-            FileOutputStream fos;
-            try {
-                fos = openFileOutput(imageUri, Context.MODE_PRIVATE);
-                // Writing the bitmap to the output stream
-                deckImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        String imageUri = newDeckName+"_deckimage.jpg";
 
-        // create ImageCard
-        ImageCard deckImageCard = new ImageCard(imageUri, deckDescr);
+        // create the ImageCard
+        LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+        ImageCard deckImageCard = jsonHandler.createImageCard(imageUri, deckImage, deckDescr);
 
         // create the deck
         try {
@@ -208,7 +193,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         createDeckItemAdapter.notifyDataSetChanged();
     }
 
-    public  void changeDecPic(View view) {
+    public void changeDecPic(View view) {
         String[] options = {"Take Photo", "Choose From Gallery"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

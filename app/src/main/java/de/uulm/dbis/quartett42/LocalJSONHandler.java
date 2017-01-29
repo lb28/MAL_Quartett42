@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -360,10 +361,7 @@ public class LocalJSONHandler {
             JSONArray oldDeckArray = oldJsonDeckList.getJSONArray("decks");
             oldDeckArray.put(newJsonDeck);
 
-            JSONObject newDeckList = new JSONObject();
-            newDeckList.put("decks", oldDeckArray);
-
-            saveJSONToFile(newDeckList);
+            saveJSONToFile(oldJsonDeckList);
 
         } else {
             //1tes neues Deck, File nicht vorhanden
@@ -376,6 +374,68 @@ public class LocalJSONHandler {
         }
     }
 
+    /**
+     * adds a card object to a deck without overwriting (in internal storage).
+     * The images have to be saved and the correct uris set already
+     * @param deckName the name of the deck the card should be inserted in
+     * @param card the card to insert
+     * @throws JSONException
+     */
+    public boolean saveCard(String deckName, Card card) throws JSONException {
+        // convert the card into json format
+        JSONObject newJsonCard = card.toJSON();
+
+        // get the old card list from the deck
+        JSONObject jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+        JSONArray jsonDecks = jsonObj.getJSONArray("decks");
+
+        // look for the deck with the name
+        for (int i = 0; i < jsonDecks.length(); i++) {
+            JSONObject jsonDeck = jsonDecks.getJSONObject(i);
+            if (jsonDeck.get("name").equals(deckName)) {
+                JSONArray jsonCardArray = jsonDeck.getJSONArray("cards");
+
+                // append the new card to the card list
+                jsonCardArray.put(newJsonCard);
+
+                // TODO not sure if we have to update the jsonObj explicitly
+
+                // save the new jsonObj
+                saveJSONToFile(jsonObj);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * creates an imagecard with the specified picture and description and stores the picture
+     * in internal storage with the specified name
+     *
+     * @param fileName the image Uri as it should appear in the json file
+     * @param bitmap the image
+     * @param descr the image description
+     * @return the imagecard containing the uri for the json file
+     */
+    public ImageCard createImageCard(String fileName, Bitmap bitmap, String descr) {
+        String imageUri = "NO_DECK_IMAGE"; // inconsistency --> TODO put this into constant
+        if (bitmap != null) {
+            imageUri = fileName;
+            FileOutputStream fos;
+            try {
+                fos = context.openFileOutput(imageUri, Context.MODE_PRIVATE);
+                // Writing the bitmap to the output stream
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return new ImageCard(imageUri, descr);
+    }
 
     ///////////////////
     // FILE HANDLING //

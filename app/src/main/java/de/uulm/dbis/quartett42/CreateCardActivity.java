@@ -1,11 +1,14 @@
 package de.uulm.dbis.quartett42;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -15,19 +18,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
+import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
 
 public class CreateCardActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE_REQUEST = 2;
+
+    private CreateCardItemAdapter itemAdapter;
 
     private ArrayList<Bitmap> cardImages;
     private ArrayList<String> imgDescriptions;
@@ -41,6 +49,7 @@ public class CreateCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_card);
 
         cardImages = new ArrayList<>();
+        imgDescriptions = new ArrayList<>();
         currentCardIndex = 0;
 
         String deckName = getIntent().getStringExtra("newDeckName");
@@ -56,6 +65,10 @@ public class CreateCardActivity extends AppCompatActivity {
         updateView();
     }
 
+    /**
+     * called by clicking the "show previous card" button on the left
+     * @param view
+     */
     public void showPreviousCard(View view) {
     }
 
@@ -63,7 +76,11 @@ public class CreateCardActivity extends AppCompatActivity {
      * called when user is done adding cards and wants to save the deck
      */
     public void saveNewDeck(View view) {
+        saveCard();
 
+        // TODO redirect to GalleryActivity, but first get rid of the json string
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     /**
@@ -71,18 +88,66 @@ public class CreateCardActivity extends AppCompatActivity {
      * @param view
      */
     public void showNextCard(View view) {
-
+        // try to save the current card
+        if (!saveCard()) {
+            Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_SHORT).show();
+        } else {
+            // go to the next card
+            currentCardIndex++;
+            updateView();
+        }
     }
 
     /**
-     * called by clicking the "show previous card" button on the left
-     * @param view
+     * saves the current card into the existing deck, i.e.: <br/>
+     * - saves the pictures of the card <br/>
+     * - adds the card in the json file
+     * - empties the imageCard and imgDescriptions lists
      */
-    public void addAttribute(View view) {
+    private boolean saveCard() {
+        LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+        ArrayList<ImageCard> imageCards = new ArrayList<>();
+        EditText editTextCardName = (EditText) findViewById(R.id.editTextCardName);
 
+        try {
+            // save each picture with corresponding description
+            for (int i = 0; i < cardImages.size(); i++) {
+                String imageUri = newDeck.getName() + currentCardIndex + "_" + i + ".jpg";
+                ImageCard imageCard = jsonHandler.createImageCard(
+                        imageUri, cardImages.get(i), imgDescriptions.get(i));
+                imageCards.add(imageCard);
+            }
+
+            HashMap<String, Double> attributeMap = new HashMap<>();
+
+            // put all the values of the properties into a hashmap with the name as key
+            for (int i = 0; i < newDeck.getPropertyList().size(); i++) {
+                Property p = itemAdapter.getItem(i);
+                attributeMap.put(p.getName(), p.getValue());
+            }
+
+            String cardName = editTextCardName.getText().toString();
+
+            Card newCard = new Card(cardName, currentCardIndex, imageCards, attributeMap);
+            newDeck.getCardList().set(currentCardIndex, newCard);
+
+            // save the card in the json file
+            jsonHandler.saveCard(newDeck.getName(), newCard);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void updateView() {
+
+        // show the spinner
+        ContentLoadingProgressBar spinner =
+                (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
+        spinner.show();
+
         // get all the views
         EditText editTextCardName = (EditText) findViewById(R.id.editTextCardName);
         LinearLayout cardImgContainer = (LinearLayout) findViewById(R.id.createCardImgLinearLayout);
@@ -116,54 +181,36 @@ public class CreateCardActivity extends AppCompatActivity {
 
         // populate the views:
 
-        // set attribute list
-        ArrayList<Property> attrList = Util.buildAttrList(newDeck.getPropertyList(), card);
-        CreateCardItemAdapter itemAdapter = new CreateCardItemAdapter(
-                this, R.layout.create_card_attr, attrList);
-        createCardAttrListView.setAdapter(itemAdapter);
-
-        // refresh the image container
-        cardImgContainer.removeAllViews();
-        for (int i = 0; i < cardImages.size(); i++) {
-            // TODO add an imageview using makeImageCard()
-        }
-
-        cardImgContainer.addView(makeAddPhotoImgView(cardImages.size()));
-
         // set card name
         editTextCardName.setText(card.getName());
 
-    }
+        // set attribute list
+        ArrayList<Property> attrList = Util.buildAttrList(newDeck.getPropertyList(), card);
+        itemAdapter = new CreateCardItemAdapter(
+                this, R.layout.create_card_attr, attrList);
+        createCardAttrListView.setAdapter(itemAdapter);
 
-    private ImageView makeAddPhotoImgView(int id) {
-        ImageView imageView = new ImageView(this);
-        imageView.setId(id);
-        imageView.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.MATCH_PARENT));
-        imageView.setMinimumWidth(150);
-        imageView.setImageResource(R.drawable.ic_add_a_photo_black_24dp);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("call image picker");
-                // TODO call image picker dialog and
-                // TODO in OnActivityResult save image in the last element of the container
-            }
-        });
-        return imageView;
+        // empty the image container
+        cardImgContainer.removeAllViews();
+
+        // add all the bitmaps (and descriptions) to the container
+        for (int i = 0; i < cardImages.size(); i++) {
+            cardImgContainer.addView(makeImageCard(i));
+        }
+
+        // add the "add photo" button behind the last element
+        cardImgContainer.addView(makeAddPhotoImgView(cardImages.size()));
+
+        // hide the spinner when done
+        spinner.hide();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
-
                 Bundle extras = data.getExtras();
-                cardImages.add((Bitmap) extras.get("data"));
-
-                updateView();
+                addCardPic((Bitmap) extras.get("data"));
             }
         } else if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
@@ -172,8 +219,7 @@ public class CreateCardActivity extends AppCompatActivity {
                 Target deckImgBtnTarget = new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        cardImages.add(bitmap);
-                        updateView();
+                        addCardPic(bitmap);
                     }
 
                     @Override
@@ -199,6 +245,33 @@ public class CreateCardActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * adds a bitmap to the list of pictures, adds an empty description to the list of descriptions,
+     * then updates the view
+     */
+    private void addCardPic(Bitmap bitmap){
+        cardImages.add(bitmap);
+        imgDescriptions.add("");
+        updateView();
+    }
+
+    private ImageView makeAddPhotoImgView(int id) {
+        ImageView imageView = new ImageView(this);
+        imageView.setId(id);
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        imageView.setMinimumWidth(150);
+        imageView.setImageResource(R.drawable.ic_add_a_photo_black_24dp);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addPicDialog();
+            }
+        });
+        return imageView;
+    }
 
     /**
      * creates a imagecard (imageview with descr button) for the specified position
@@ -230,7 +303,7 @@ public class CreateCardActivity extends AppCompatActivity {
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog descriptionAlertDialog = new AlertDialog.Builder(CreateCardActivity.this)
+                new AlertDialog.Builder(CreateCardActivity.this)
                         .setIcon(R.drawable.ic_info_black_24dp)
                         .setMessage(imgDescriptions.get(position))
                         .setTitle("Beschreibung")
@@ -254,5 +327,40 @@ public class CreateCardActivity extends AppCompatActivity {
         });
 
         return rootView;
+    }
+
+    public void addPicDialog() {
+        String[] options = {"Foto aufnehmen", "Aus Galerie wählen"};
+
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Bild hinzufügen")
+                .setItems(options, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            takePicture();
+                        } else if (which == 1) {
+                            pickImage();
+                        }
+                    }
+                });
+        Dialog d = builder.create();
+        d.show();
+    }
+
+    public void takePicture() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    public void pickImage() {
+        Intent intent;
+        intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+
     }
 }
