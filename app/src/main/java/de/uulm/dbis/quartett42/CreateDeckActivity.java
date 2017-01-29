@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -24,6 +23,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,10 +41,14 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     // the Deck we are building
     private Deck newDeck;
+
     // the attribute list
-    private ArrayList<Property> deckAttrList = new ArrayList<>();
+    private ArrayList<Property> deckAttrList;
     // the deck image
     private Bitmap deckImage;
+
+    // for copying an existing Deck
+    private String copyFromDeckName;
 
     // the views
     private EditText editTextDeckName;
@@ -65,9 +69,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
         @Override
         public void onBitmapFailed(Drawable errorDrawable) {
-            deckImage = BitmapFactory.decodeResource(
-                    getResources(), R.drawable.menu_image);
-            Log.i(TAG, "onBitmapFailed: ");
+            Log.w(TAG, "onBitmapFailed: Bitmap could not be loaded");
         }
 
         @Override
@@ -87,18 +89,38 @@ public class CreateDeckActivity extends AppCompatActivity {
         editTextDeckDescr = (EditText) findViewById(R.id.editTextDeckDescr);
         deckImgBtn = (ImageView) findViewById(R.id.deckImgBtn);
 
-        // default deck image
-        deckImage = BitmapFactory.decodeResource(getResources(), R.drawable.menu_image);
+        // if we were given a deck name, it means we are going to change an existing deck
+        copyFromDeckName = getIntent().getStringExtra("deckName");
+        if (copyFromDeckName != null) {
+            // existing deck (from internal storage only)
+            LocalJSONHandler localJSONHandler =
+                    new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+            newDeck = localJSONHandler.getDeck(copyFromDeckName);
+            // fill the activity with the decks data
+            deckAttrList = newDeck.getPropertyList();
+            editTextDeckName.setText(newDeck.getName() + " - Kopie");
+            editTextDeckDescr.setText(newDeck.getImage().getDescription());
+            File imgFile = new File(getFilesDir() + "/" + newDeck.getImage().getUri());
+            // load image into imageBtn
+            Picasso.with(this)
+                    .load(imgFile)
+                    .resize(500,500)
+                    .centerInside()
+                    .into(deckImgBtnTarget);
+        } else {
+            // new deck
+            deckAttrList = new ArrayList<>();
+            // add one property for convenience
+            deckAttrList.add(new Property());
+        }
+
         // add the footer (for adding items to the list)
-        footerView = getLayoutInflater().inflate(R.layout.decklist_footer, null, false);
+        footerView = getLayoutInflater().inflate(R.layout.add_attribute_footer, null, false);
         addDeckAttrListView.addFooterView(footerView);
 
         // set the adapter
-        createDeckItemAdapter = new CreateDeckItemAdapter(this, R.layout.decklist_new_attr, deckAttrList);
+        createDeckItemAdapter = new CreateDeckItemAdapter(this, R.layout.create_deck_attr, deckAttrList);
         addDeckAttrListView.setAdapter(createDeckItemAdapter);
-
-        // add one property for convenience
-        deckAttrList.add(new Property());
 
         // change the color of the add button when the list changes
         createDeckItemAdapter.registerDataSetObserver(new DataSetObserver() {
@@ -112,7 +134,6 @@ public class CreateDeckActivity extends AppCompatActivity {
         });
 
         createDeckItemAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -127,9 +148,8 @@ public class CreateDeckActivity extends AppCompatActivity {
     }
 
     public void clickAddCardsBtn(View view) {
-        String deckName = editTextDeckName.getText().toString();
+        String newDeckName = editTextDeckName.getText().toString();
         String deckDescr = editTextDeckDescr.getText().toString();
-        String imageUri = deckName+"_deckimage.jpg";
 
         // get all the properties from the listview
         for (int i = 0; i < deckAttrList.size(); i++) {
@@ -139,14 +159,18 @@ public class CreateDeckActivity extends AppCompatActivity {
         // TODO maybe check for invalid user input
 
         // save the deck image in internal storage
-        FileOutputStream fos;
-        try {
-            fos = openFileOutput(imageUri, Context.MODE_PRIVATE);
-            // Writing the bitmap to the output stream
-            deckImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        String imageUri = "NO_DECK_IMAGE"; // inconsistency --> TODO put this into constant
+        if (deckImage != null) {
+            imageUri = newDeckName+"_deckimage.jpg";
+            FileOutputStream fos;
+            try {
+                fos = openFileOutput(imageUri, Context.MODE_PRIVATE);
+                // Writing the bitmap to the output stream
+                deckImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // create ImageCard
@@ -155,20 +179,22 @@ public class CreateDeckActivity extends AppCompatActivity {
         // create the deck
         try {
             newDeck = new Deck(
-                    deckName,
+                    newDeckName,
                     deckImageCard,
                     deckAttrList,
                     new ArrayList<Card>(),
                     Deck.SRC_MODE_INTERNAL_STORAGE);
 
-
-            // test
-            System.out.println(newDeck.toJSON().toString(4));
+            // save the deck json (with empty card list)
             LocalJSONHandler localJSONHandler =
                     new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
             localJSONHandler.saveDeck(newDeck);
 
-            // TODO go to AddCardsActivity (send deck name in intent)
+            // go to CreateCardActivity (send deck name in intent)
+            Intent intent = new Intent(this, CreateCardActivity.class);
+            intent.putExtra("newDeckName", newDeckName);
+            intent.putExtra("copyFromDeckName", copyFromDeckName);
+            startActivity(intent);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,7 +203,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     }
 
-    public void addDeckAttribute(View view) {
+    public void addAttribute(View view) {
         deckAttrList.add(new Property());
         createDeckItemAdapter.notifyDataSetChanged();
     }

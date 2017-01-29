@@ -50,7 +50,6 @@ public class AttributeItemAdapter extends ArrayAdapter<Property> {
         TextView textViewAttrValue = (TextView) convertView.findViewById(R.id.textViewAttrValue);
         TextView textViewAttrUnit = (TextView) convertView.findViewById(R.id.textViewAttrUnit);
 
-        assert property != null;
         // Populate the data into the template view using the data object
         String nameAndMaxWinner = property.getName();
         if (maxWinner) {

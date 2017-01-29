@@ -31,6 +31,7 @@ public class Util {
      * - unit
      * @param card the currently selected card
      * @return the list of attributes formatted for display
+     * (value is 0 if there was no card or no value)
      */
     public static ArrayList<Property> buildAttrList(ArrayList<Property> propList, Card card) {
         ArrayList<Property> attrList = new ArrayList<Property>();
@@ -38,7 +39,10 @@ public class Util {
         // loop through each property
         for (Property p: propList) {
             // get the cards value
-            double attrValue = card.getAttributeMap().get(p.getName());
+            double attrValue = 0;
+            if (card != null && card.getAttributeMap() != null) {
+                attrValue = card.getAttributeMap().get(p.getName());
+            }
             // put it inside the property for the adapter
             Property cardAttr = new Property(p.getName(), p.getUnit(), p.isMaxWinner(), attrValue);
             attrList.add(cardAttr);

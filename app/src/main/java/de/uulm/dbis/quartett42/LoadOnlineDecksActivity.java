@@ -99,15 +99,6 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // download the deck
-                                    /*
-                                    ProgressDialog.show(
-                                            LoadOnlineDecksActivity.this,
-                                            "Deck wird heruntergeladen...",
-                                            "Bitte warten...",
-                                            true);
-                                     */
-
-
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -151,7 +142,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             public void run() {
                 barProgressDialog1 = new ProgressDialog(LoadOnlineDecksActivity.this);
                 barProgressDialog1.setTitle("Deck wird heruntergeladen...");
-                barProgressDialog1.setMessage("Bitte wartem ...");
+                barProgressDialog1.setMessage("Bitte warten");
                 barProgressDialog1.setProgressStyle(barProgressDialog1.STYLE_SPINNER);
                 barProgressDialog1.show();
             }
@@ -184,8 +175,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             public void run() {
                 barProgressDialog2 = new ProgressDialog(LoadOnlineDecksActivity.this);
                 barProgressDialog2.setTitle("Deck wird heruntergeladen...");
-                barProgressDialog2.setMessage("Bitte wartem ...");
-                barProgressDialog2.setProgressStyle(barProgressDialog2.STYLE_HORIZONTAL);
+                barProgressDialog2.setMessage("Bitte warten");
+                barProgressDialog2.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 barProgressDialog2.setProgress(10);
                 barProgressDialog2.setMax(100);
                 barProgressDialog1.dismiss();
@@ -242,7 +233,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Download abgebrochen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
                         }
                     });
 

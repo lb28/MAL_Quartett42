@@ -24,6 +24,10 @@ public class Card {
 
     private HashMap<String, Double> attributeMap;
 
+    public Card(int id) {
+        this("", id, new ArrayList<ImageCard>(), new HashMap<String, Double>());
+    }
+
     /** Konstruktor
      *
      * @param name

@@ -93,7 +93,6 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
                 File imgFile = new File(getContext().getFilesDir() + "/" + imageUri);
-                System.out.println(imgFile);
                 Picasso.with(getContext())
                         .load(imgFile)
                         .resize(500, 500)

@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:hint="Deckname"
-        android:inputType="textAutoCorrect|textAutoComplete"
+        android:inputType="textAutoCorrect|textAutoComplete|textCapSentences"
         android:id="@+id/editTextDeckName"
         android:maxLines="1"
         android:maxLength="50"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:hint="Beschreibung"
-        android:inputType="textAutoCorrect|textAutoComplete"
+        android:inputType="textAutoCorrect|textAutoComplete|textCapSentences"
         android:id="@+id/editTextDeckDescr"
         android:maxLines="3"
         android:maxLength="300"
@@ -54,8 +54,8 @@
             android:layout_gravity="center_vertical"
             android:id="@+id/deckImgBtn"
             android:onClick="changeDecPic"
-            android:src="@drawable/menu_image"
-            />
+            android:src="@drawable/ic_add_a_photo_black_24dp"
+            android:minWidth="150dp" />
 
     </LinearLayout>
 
@@ -72,7 +72,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="5dp"
-        tools:listfooter="@layout/decklist_new_attr"
+        tools:listfooter="@layout/create_deck_attr"
         >
     </ListView>
 

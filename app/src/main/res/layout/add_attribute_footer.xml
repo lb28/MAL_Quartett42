@@ -9,6 +9,6 @@
         android:layout_height="@dimen/list_item_height"
         android:id="@+id/decklist_new_attr_btn"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:onClick="addDeckAttribute"
+        android:onClick="addAttribute"
         />
 </LinearLayout>

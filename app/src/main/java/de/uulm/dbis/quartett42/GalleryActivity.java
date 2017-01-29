@@ -1,5 +1,6 @@
 package de.uulm.dbis.quartett42;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionMenu;
 
@@ -131,61 +133,38 @@ public class GalleryActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
                         final Deck deck = (Deck) parent.getItemAtPosition(position);
+                        final String deckName = deck.getName();
 
-                        // show confirmation dialog before downloading
-                        new AlertDialog.Builder(GalleryActivity.this)
-                                .setIcon(R.drawable.ic_warning_black_24dp)
-                                .setTitle("Deck löschen")
-                                .setMessage("Wollen Sie Deck " + deck.getName() + " wirklich löschen?")
-                                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
-                                {
-                                    @Override
+                        String[] menuOptions = {"Bearbeiten", "Hochladen", "Löschen"};
+                        android.app.AlertDialog.Builder builder =
+                                new android.app.AlertDialog.Builder(GalleryActivity.this);
+                        builder.setTitle("Deck \"" + deckName +"\"")
+                                .setItems(menuOptions, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        // delete the deck
-                                        spinner.show();
-                                        new Thread(new Runnable() {
-                                            @Override
-                                            public void run() {
-
-                                                LocalJSONHandler localJSONHandler =
-                                                        new LocalJSONHandler(GalleryActivity.this,
-                                                                SRC_MODE_INTERNAL_STORAGE);
-
-                                                if (!localJSONHandler.removeDeck(deck.getName())) {
-                                                    System.err.println("Deck " + deck.getName()
-                                                    + " could not be removed!");
-                                                }else{
-                                                    //Laufende Spielvariable auf 0 setzen, falls dieses Deck gerade in der Pause ist
-                                                    if(sharedPref.getInt("runningGame", 0) == 1){
-                                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                                        editor.putInt("runningGame", 0);
-                                                        editor.putInt("currentRoundsLeft", 0);
-                                                        editor.putInt("currentPointsPlayer", 0);
-                                                        editor.putInt("currentPointsComputer", 0);
-                                                        editor.putString("currentCardsPlayer", "");
-                                                        editor.putString("currentCardsComputer", "");
-                                                        editor.apply();
-                                                    }
-                                                }
-
-                                                // refresh the activity
-                                                Intent intent = getIntent();
-                                                finish();
+                                        switch (which) {
+                                            case 0: // edit deck
+                                                Intent intent = new Intent(GalleryActivity.this,
+                                                        CreateDeckActivity.class);
+                                                intent.putExtra("deckName", deckName);
                                                 startActivity(intent);
-
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        spinner.hide();
-                                                    }
-                                                });
-                                            }
-                                        }).start();
+                                                break;
+                                            case 1: // upload deck
+                                                // TODO show confirm dialog, then upload deck
+                                                // (with progress similar to download)
+                                                Toast.makeText(GalleryActivity.this,
+                                                        "TODO show confirm dialog, then upload " +
+                                                                "deck (with progress similar to download)",
+                                                        Toast.LENGTH_SHORT).show();
+                                                break;
+                                            case 2: // delete deck
+                                                showDeleteDialog(deckName);
+                                                break;
+                                        }
                                     }
+                                });
+                        Dialog d = builder.create();
+                        d.show();
 
-                                })
-                                .setNegativeButton("Nein", null)
-                                .show();
 
                         // returning true to prevent the normal click listener from firing
                         return true;
@@ -193,6 +172,64 @@ public class GalleryActivity extends AppCompatActivity {
                 });
             }
         });
+
+    }
+
+    private void showDeleteDialog(final String deckName) {
+        // show confirmation dialog before deleting
+        new AlertDialog.Builder(GalleryActivity.this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Deck löschen")
+                .setMessage("Wollen Sie Deck \"" + deckName + "\" wirklich löschen?")
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // delete the deck
+                        spinner.show();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                LocalJSONHandler localJSONHandler =
+                                        new LocalJSONHandler(GalleryActivity.this,
+                                                SRC_MODE_INTERNAL_STORAGE);
+
+                                if (!localJSONHandler.removeDeck(deckName)) {
+                                    System.err.println("Deck " + deckName
+                                            + " could not be removed!");
+                                }else{
+                                    //Laufende Spielvariable auf 0 setzen, falls dieses Deck gerade in der Pause ist
+                                    if(sharedPref.getInt("runningGame", 0) == 1){
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putInt("runningGame", 0);
+                                        editor.putInt("currentRoundsLeft", 0);
+                                        editor.putInt("currentPointsPlayer", 0);
+                                        editor.putInt("currentPointsComputer", 0);
+                                        editor.putString("currentCardsPlayer", "");
+                                        editor.putString("currentCardsComputer", "");
+                                        editor.apply();
+                                    }
+                                }
+
+                                // refresh the activity
+                                Intent intent = getIntent();
+                                finish();
+                                startActivity(intent);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        spinner.hide();
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
+
+                })
+                .setNegativeButton("Nein", null)
+                .show();
 
     }
 

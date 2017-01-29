@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -37,13 +36,13 @@ public class CreateDeckItemAdapter extends ArrayAdapter<Property> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.decklist_new_attr, parent, false);
+                    R.layout.create_deck_attr, parent, false);
         }
 
         // Lookup view for data population
         final EditText editTextAttrName = (EditText) convertView.findViewById(R.id.editTextAttrName);
         Button maxWinnerBtn = (Button) convertView.findViewById(R.id.maxWinnerBtn);
-        final TextView editTextAttrUnit = (TextView) convertView.findViewById(R.id.editTextAttrUnit);
+        final EditText editTextAttrUnit = (EditText) convertView.findViewById(R.id.editTextAttrUnit);
         ImageButton deleteRowBtn = (ImageButton) convertView.findViewById(R.id.deleteRowBtn);
 
         // Populate the template view with the data
