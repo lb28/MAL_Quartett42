@@ -383,9 +383,22 @@ public class CreateCardActivity extends AppCompatActivity {
         cardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                cardImages.remove(position);
-                imgDescriptions.remove(position);
-                updateImageContainer();
+                new AlertDialog.Builder(CreateCardActivity.this)
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .setTitle("Bild löschen")
+                        .setMessage("Wollen Sie das Bild löschen?")
+                        .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                cardImages.remove(position);
+                                imgDescriptions.remove(position);
+                                updateImageContainer();
+                            }
+
+                        })
+                        .setNegativeButton("Nein", null)
+                        .show();
                 return true;
             }
         });

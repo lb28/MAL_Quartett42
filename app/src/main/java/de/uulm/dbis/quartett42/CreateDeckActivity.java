@@ -309,6 +309,6 @@ public class CreateDeckActivity extends AppCompatActivity {
                 return true;
             }
         }
-        return true;
+        return false;
     }
 }
