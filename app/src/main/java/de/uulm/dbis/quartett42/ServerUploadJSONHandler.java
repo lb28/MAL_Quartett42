@@ -293,7 +293,7 @@ public class ServerUploadJSONHandler {
                     //write
                     OutputStream ost = urlConnection.getOutputStream();
                     BufferedWriter bwriter = new BufferedWriter(new OutputStreamWriter(ost, "UTF-8"));
-                    bwriter.write(jsonObject.toString());
+                    bwriter.write(jsonObjectAttribute.toString());
                     bwriter.flush();
                     bwriter.close();
                     ost.close();
