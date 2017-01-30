@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import de.uulm.dbis.quartett42.data.Deck;
+
 public class HighscoreActivity extends AppCompatActivity {
 
     // the default string to display when there is no entry (both for name and points)
@@ -228,7 +230,7 @@ public class HighscoreActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 // TODO make AsynchTask calling LocalJSONHandler.getDecks()
-                boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen");
+                boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen", Deck.SRC_MODE_ASSETS);
 
                 if (uploadSuccessful == false){
                     Toast.makeText(getApplicationContext(), "Upload erfolgreich", Toast.LENGTH_SHORT).show();

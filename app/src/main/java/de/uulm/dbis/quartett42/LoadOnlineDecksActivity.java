@@ -154,7 +154,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         Deck deck = serverJSONHandler.getDeck(deckID);
         if(deck == null
             || deck.getCardList().size() < 2
-            || deck.getPropertyList().size() < 2
+            || deck.getPropertyList().size() < 1
             || deck.getCardList().get(0).getAttributeMap().size() < 1){
 
             Log.e(TAG, "Deck Download fehlgeschlagen weil invalid");

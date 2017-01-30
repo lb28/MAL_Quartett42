@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 break;
             case Deck.SRC_MODE_ASSETS:
                 imageUri = "file:///android_asset/" + singleDeck.getName() + "/" + imageUri;
+                Log.i(TAG, "------------FILENAME: "+imageUri);
                 Picasso.with(getContext())
                         .load(imageUri)
                         .resize(500, 500)
@@ -93,6 +95,8 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 break;
             case Deck.SRC_MODE_INTERNAL_STORAGE:
                 File imgFile = new File(getContext().getFilesDir() + "/" + imageUri);
+                //imageUri = "file:///android_asset/" + singleDeck.getName() + "/" + imageUri;
+                Log.i(TAG, "------------FILENAME: "+imgFile.getPath());
                 Picasso.with(getContext())
                         .load(imgFile)
                         .resize(500, 500)

@@ -155,6 +155,15 @@ public class GalleryActivity extends AppCompatActivity {
                                                         "TODO show confirm dialog, then upload " +
                                                                 "deck (with progress similar to download)",
                                                         Toast.LENGTH_SHORT).show();
+
+                                                new Thread(new Runnable() {
+                                                    public void run() {
+                                                        ServerUploadJSONHandler suh = new ServerUploadJSONHandler(GalleryActivity.this);
+                                                        suh.uploadDeck(deckName, deck.SRC_MODE_INTERNAL_STORAGE);
+                                                        //TODO Mode kriegen von Deck
+                                                    }
+                                                }).start();
+
                                                 break;
                                             case 2: // delete deck
                                                 showDeleteDialog(deckName);
