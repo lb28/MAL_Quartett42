@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -41,7 +42,8 @@ public class ServerUploadJSONHandler {
     private HttpURLConnection urlConnection = null;
     private URL url;
     private Deck deckToUpload, tempDeck;
-    private int deckToUploadId;
+    private int deckToUploadId, src_mode = 0;
+    private String base64String = "";
     private ArrayList<Deck> deckOverviewList;
     private ArrayList<Card> cardsToUpload;
     private ArrayList<Property> propertyList;
@@ -69,10 +71,9 @@ public class ServerUploadJSONHandler {
      *
      * @param deckname
      */
-    public boolean uploadDeck(String deckname){
+    public boolean uploadDeck(String deckname, int src_mode){
 
-        //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
-        LocalJSONHandler ljh = new LocalJSONHandler(context, Deck.SRC_MODE_ASSETS);
+        LocalJSONHandler ljh = new LocalJSONHandler(context, src_mode);
         deckToUpload = ljh.getDeck(deckname);
         Log.i("deckToUpload", deckToUpload.getName());
         Log.i("deck bild", deckToUpload.getImage().getUri());
@@ -89,6 +90,12 @@ public class ServerUploadJSONHandler {
         try {
             url = new URL(URL_DECKS);
 
+            //bild als base64 string holen
+            base64String = urlToBase64(deckToUpload.getImage().getUri());
+            if (base64String.equals("")){
+                return false;
+            }
+
             //json objekt erstellen
             JSONObject postData = new JSONObject();
             postData.put("name", deckToUpload.getName());
@@ -96,7 +103,7 @@ public class ServerUploadJSONHandler {
             postData.put("misc", "");
             postData.put("misc_version", "1");
             //postData.put("filename", "" + deckToUpload.getName() + "_thumbnail"); //TODO über fileendung nachdenken
-            postData.put("image_base64", urlToBase64(deckToUpload.getImage().getUri()));
+            postData.put("image_base64", base64String);
 
             //connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -317,10 +324,16 @@ public class ServerUploadJSONHandler {
 
                     ImageCard imageCard = imageList.get(i);
 
+                    //base64 string erstellen
+                    base64String = urlToBase64(imageCard.getUri());
+                    if (base64String.equals("")){
+                        return false;
+                    }
+
                     jsonObjectImages.put("description", imageCard.getDescription());
                     jsonObjectImages.put("order", 0);
                     //jsonObjectImages.put("filename", "" + c.getName() + "_" + i /*TODO fileendung*/);
-                    jsonObjectImages.put("image_base64", urlToBase64(imageCard.getUri())); //TODO base64 string aus uri erstellen
+                    jsonObjectImages.put("image_base64", base64String);
 
                     jsonArrayImages.put(jsonObjectImages);
                 }
@@ -382,11 +395,21 @@ public class ServerUploadJSONHandler {
 
     public String urlToBase64(String url){
 
-        Bitmap bm = BitmapFactory.decodeFile(url);
+        String urlToFile = "";
+
+        //src_assets = 1, src_internal = 2
+        if (src_mode == 1){
+            urlToFile = "file:///android_asset/" + deckToUpload.getName() + "/" + url;
+        } else if (src_mode == 2){
+            urlToFile = context.getFilesDir() + "/" + url;
+        } else {
+            return "";
+        }
+
+        Bitmap bm = BitmapFactory.decodeFile(urlToFile);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
-
 
 
         String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);

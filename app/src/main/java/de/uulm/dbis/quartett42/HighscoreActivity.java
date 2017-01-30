@@ -228,7 +228,9 @@ public class HighscoreActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             public void run() {
                 // TODO make AsynchTask calling LocalJSONHandler.getDecks()
-                boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen");
+
+                //
+                boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen", 1 /* src_mode je nach deck*/);
 
                 if (uploadSuccessful == false){
                     Toast.makeText(getApplicationContext(), "Upload erfolgreich", Toast.LENGTH_SHORT).show();
