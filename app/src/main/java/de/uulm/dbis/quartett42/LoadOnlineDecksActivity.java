@@ -152,9 +152,12 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
         // get the deck object from the server
         Deck deck = serverJSONHandler.getDeck(deckID);
-        if(deck == null){
+        if(deck == null
+            || deck.getCardList().size() < 2
+            || deck.getPropertyList().size() < 2
+            || deck.getCardList().get(0).getAttributeMap().size() < 1){
 
-            Log.e(TAG, "Deck Download fehlgeschlagen ");
+            Log.e(TAG, "Deck Download fehlgeschlagen weil invalid");
             barProgressDialog1.dismiss();
             runOnUiThread(new Runnable() {
                 @Override
