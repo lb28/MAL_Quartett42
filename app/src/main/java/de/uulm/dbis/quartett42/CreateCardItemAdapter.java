@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -71,9 +72,17 @@ public class CreateCardItemAdapter extends ArrayAdapter<Property> {
                         // update the name of the property
                         double newVal = 0;
                         if (!editTextAttrValue.getText().toString().isEmpty()) {
-                            newVal = Double.parseDouble(editTextAttrValue.getText().toString());
+                            try {
+                                newVal = Double.parseDouble(editTextAttrValue.getText().toString());
+                            } catch (NumberFormatException nfe) {
+                                nfe.printStackTrace();
+                                Toast.makeText(getContext(), "Ungültiger Wert", Toast.LENGTH_SHORT)
+                                        .show();
+                                newVal = 0;
+                            }
                         }
                         p.setValue(newVal);
+                        editTextAttrValue.setText(String.valueOf(newVal));
                         attrList.set(position, p);
                     } catch (IndexOutOfBoundsException e) {/* row was already deleted */}
                 }

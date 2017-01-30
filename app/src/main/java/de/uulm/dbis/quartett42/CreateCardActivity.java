@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,7 +63,7 @@ public class CreateCardActivity extends AppCompatActivity {
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
         newDeck = jsonHandler.getDeck(deckName);
 
-        updateView();
+        updateViewFromCard();
     }
 
     /**
@@ -94,7 +95,7 @@ public class CreateCardActivity extends AppCompatActivity {
         } else {
             // go to the next card
             currentCardIndex++;
-            updateView();
+            updateViewFromCard();
         }
     }
 
@@ -141,8 +142,11 @@ public class CreateCardActivity extends AppCompatActivity {
         }
     }
 
-    public void updateView() {
-
+    /**
+     * updates the view to show the current content of the model
+     * TODO text from the textfields is lost during the update
+     */
+    public void updateViewFromCard() {
         // show the spinner
         ContentLoadingProgressBar spinner =
                 (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
@@ -150,7 +154,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
         // get all the views
         EditText editTextCardName = (EditText) findViewById(R.id.editTextCardName);
-        LinearLayout cardImgContainer = (LinearLayout) findViewById(R.id.createCardImgLinearLayout);
         ListView createCardAttrListView = (ListView) findViewById(R.id.createCardAttrListView);
         ImageButton btnRight = (ImageButton) findViewById(R.id.createCardButtonRight);
         ImageButton btnLeft = (ImageButton) findViewById(R.id.createCardButtonLeft);
@@ -190,6 +193,15 @@ public class CreateCardActivity extends AppCompatActivity {
                 this, R.layout.create_card_attr, attrList);
         createCardAttrListView.setAdapter(itemAdapter);
 
+        updateImageContainer();
+
+        // hide the spinner when done
+        spinner.hide();
+    }
+
+    private void updateImageContainer() {
+        LinearLayout cardImgContainer = (LinearLayout) findViewById(R.id.createCardImgLinearLayout);
+
         // empty the image container
         cardImgContainer.removeAllViews();
 
@@ -201,8 +213,6 @@ public class CreateCardActivity extends AppCompatActivity {
         // add the "add photo" button behind the last element
         cardImgContainer.addView(makeAddPhotoImgView(cardImages.size()));
 
-        // hide the spinner when done
-        spinner.hide();
     }
 
     @Override
@@ -252,7 +262,7 @@ public class CreateCardActivity extends AppCompatActivity {
     private void addCardPic(Bitmap bitmap){
         cardImages.add(bitmap);
         imgDescriptions.add("");
-        updateView();
+        updateImageContainer();
     }
 
     private ImageView makeAddPhotoImgView(int id) {
@@ -264,6 +274,7 @@ public class CreateCardActivity extends AppCompatActivity {
         imageView.setMinimumWidth(150);
         imageView.setImageResource(R.drawable.ic_add_a_photo_black_24dp);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setBackgroundColor(ContextCompat.getColor(this, R.color.light_gray_bg));
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,21 +302,33 @@ public class CreateCardActivity extends AppCompatActivity {
         RelativeLayout rootView = (RelativeLayout) getLayoutInflater().inflate(
                 R.layout.card_image_fragment, null, false);
 
-        ImageView cardImageView = (ImageView) rootView.findViewById(R.id.cardImageView);
+        rootView.setPadding(0,0,10,0);
+
+        final ImageView cardImageView = (ImageView) rootView.findViewById(R.id.cardImageView);
         ImageButton imageDescBtn = (ImageButton) rootView.findViewById(R.id.imageDescBtn);
 
         // set bitmap
         cardImageView.setImageBitmap(cardImages.get(position));
 
-        final EditText imgDescrEditText = (EditText) getLayoutInflater().inflate(R.layout.edit_descr_view,null);
 
+        cardImageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                cardImages.remove(position);
+                imgDescriptions.remove(position);
+                updateImageContainer();
+                return true;
+            }
+        });
+
+        final EditText imgDescrEditText = (EditText) getLayoutInflater().inflate(R.layout.edit_descr_view,null);
+        imgDescrEditText.setText(imgDescriptions.get(position));
         // set click listener for description button
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new AlertDialog.Builder(CreateCardActivity.this)
                         .setIcon(R.drawable.ic_info_black_24dp)
-                        .setMessage(imgDescriptions.get(position))
                         .setTitle("Beschreibung")
                         .setView(imgDescrEditText)
                         .setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
@@ -315,11 +338,15 @@ public class CreateCardActivity extends AppCompatActivity {
                                 // replace the old description if there was any
                                 imgDescriptions.set(position, newDescr);
                                 dialog.dismiss();
+
+                                updateImageContainer();
                             }
                         })
                         .setNeutralButton("Abbrechen", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
+
+                                updateImageContainer();
                             }
                         })
                         .show();
