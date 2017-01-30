@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -35,6 +36,7 @@ import de.uulm.dbis.quartett42.data.Property;
 public class CreateCardActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE_REQUEST = 2;
+    private static final String TAG = "CreateCardActivity";
 
     private CreateCardItemAdapter itemAdapter;
 
@@ -66,22 +68,37 @@ public class CreateCardActivity extends AppCompatActivity {
         updateViewFromCard();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        // TODO AlertDialog: "deck verwerfen / speichern / abbrechen"
+        return super.onSupportNavigateUp();
+    }
+
     /**
      * called by clicking the "show previous card" button on the left
      * @param view
      */
     public void showPreviousCard(View view) {
+        // try to save the current card
+        if (saveCard()) {
+            if (currentCardIndex > 0){
+                // go to the previous card
+                currentCardIndex--;
+                updateViewFromCard();
+            }
+        }
     }
 
     /**
      * called when user is done adding cards and wants to save the deck
      */
     public void saveNewDeck(View view) {
-        saveCard();
-
-        // TODO redirect to GalleryActivity, but first get rid of the json string
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        // try to save the current card
+        if (saveCard()) {
+            // TODO redirect to GalleryActivity, but first get rid of the json string
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     /**
@@ -90,9 +107,7 @@ public class CreateCardActivity extends AppCompatActivity {
      */
     public void showNextCard(View view) {
         // try to save the current card
-        if (!saveCard()) {
-            Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_SHORT).show();
-        } else {
+        if (saveCard()) {
             // go to the next card
             currentCardIndex++;
             updateViewFromCard();
@@ -102,8 +117,9 @@ public class CreateCardActivity extends AppCompatActivity {
     /**
      * saves the current card into the existing deck, i.e.: <br/>
      * - saves the pictures of the card <br/>
-     * - adds the card in the json file
-     * - empties the imageCard and imgDescriptions lists
+     * - adds the card in the json file<br/>
+     * - empties the imageCard and imgDescriptions lists<br/>
+     * Also shows error messages if something goes wrong (e.g. card name collision)
      */
     private boolean saveCard() {
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
@@ -129,15 +145,33 @@ public class CreateCardActivity extends AppCompatActivity {
 
             String cardName = editTextCardName.getText().toString();
 
+            if (hasCardNameCollision(cardName)) {
+                Toast.makeText(this,
+                        "Kartenname ist im Deck schon vorhanden",
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (cardName.isEmpty()) {
+                Toast.makeText(this,
+                        "Gib einen Namen an",
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
             Card newCard = new Card(cardName, currentCardIndex, imageCards, attributeMap);
             newDeck.getCardList().set(currentCardIndex, newCard);
 
             // save the card in the json file
             jsonHandler.saveCard(newDeck.getName(), newCard);
 
+            // empty the images and descriptions lists
+            cardImages = new ArrayList<>();
+            imgDescriptions = new ArrayList<>();
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
@@ -177,10 +211,44 @@ public class CreateCardActivity extends AppCompatActivity {
         // are we currently viewing the first card?
         if (currentCardIndex == 0) {
             // prevent the user from going back further (or wrapping around to the last card)
-            btnLeft.setEnabled(false);
+            btnLeft.setVisibility(View.INVISIBLE);
+        } else {
+            btnLeft.setVisibility(View.VISIBLE);
         }
 
         Card card = newDeck.getCardList().get(currentCardIndex);
+
+        // TODO put card images and descriptions from the card into the arraylists
+        for (ImageCard imageCard : card.getImageList()) {
+            imgDescriptions.add(imageCard.getDescription());
+
+            Target imageTarget = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    cardImages.add(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            };
+
+            String imageUri = imageCard.getUri();
+            File imgFile = new File(getFilesDir() + "/" + imageUri);
+            Picasso.with(this)
+                    .load(imgFile)
+                    .resize(300, 300)
+                    .centerInside()
+                    .onlyScaleDown()
+                    .placeholder(R.drawable.menu_image)
+                    .into(imageTarget);
+        }
 
         // populate the views:
 
@@ -189,6 +257,7 @@ public class CreateCardActivity extends AppCompatActivity {
 
         // set attribute list
         ArrayList<Property> attrList = Util.buildAttrList(newDeck.getPropertyList(), card);
+
         itemAdapter = new CreateCardItemAdapter(
                 this, R.layout.create_card_attr, attrList);
         createCardAttrListView.setAdapter(itemAdapter);
@@ -389,5 +458,18 @@ public class CreateCardActivity extends AppCompatActivity {
 
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
 
+    }
+
+    /**
+     * checks if the specified card name equals any of the card names in the deck
+     * @return true if there was a collision, false if the name is safe
+     */
+    private boolean hasCardNameCollision(String cardName) {
+        for(Card c : newDeck.getCardList()) {
+            if (cardName.equals(c.getName()) && newDeck.getCardList().indexOf(c) != currentCardIndex) {
+                return true;
+            }
+        }
+        return false;
     }
 }

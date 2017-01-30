@@ -21,7 +21,7 @@
     <EditText
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal|numberSigned"
         android:hint="Wert"
         android:maxLength="25"
         android:id="@+id/editTextcreateCardAttrValue"

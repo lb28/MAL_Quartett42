@@ -24,6 +24,7 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -153,7 +154,39 @@ public class CreateDeckActivity extends AppCompatActivity {
             deckAttrList.set(i, createDeckItemAdapter.getItem(i));
         }
 
-        // TODO maybe check for invalid user input
+        // check for invalid input (name collision, etc...)
+        if (hasDeckNameCollision(newDeckName)) {
+            Toast.makeText(this,
+                    "Kartenname ist im Deck schon vorhanden",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (newDeckName.isEmpty()) {
+            Toast.makeText(this,
+                    "Gib einen Namen an",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (deckAttrList.isEmpty()) {
+            Toast.makeText(this,
+                    "Gib mindestens ein Attribut an",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (hasEmptyName(deckAttrList)) {
+            Toast.makeText(this,
+                    "Jedes Attribut muss einen Namen haben",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (hasDuplicates(deckAttrList)) {
+            Toast.makeText(this,
+                    "Die Attribute müssen eindeutige Namen haben",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // TODO maybe check for further invalid user input
+
 
         String imageUri = newDeckName+"_deckimage.jpg";
 
@@ -225,7 +258,6 @@ public class CreateDeckActivity extends AppCompatActivity {
         intent.setType("image/*");
 
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
-
     }
 
     @Override
@@ -250,5 +282,33 @@ public class CreateDeckActivity extends AppCompatActivity {
                         .into(deckImgBtnTarget);
             }
         }
+    }
+
+    private boolean hasDeckNameCollision(String newDeckName) {
+        LocalJSONHandler localJSONHandler =
+                new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+        for (Deck d : localJSONHandler.getDecksOverview()) {
+            if (d.getName().equals(newDeckName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasDuplicates(ArrayList<Property> deckAttrList) {
+        HashSet<String> attrNames = new HashSet<>();
+        for (Property p : deckAttrList) {
+            attrNames.add(p.getName());
+        }
+        return attrNames.size() < deckAttrList.size();
+    }
+
+    private boolean hasEmptyName(ArrayList<Property> deckAttrList) {
+        for (Property p : deckAttrList) {
+            if (p.getName().isEmpty()) {
+                return true;
+            }
+        }
+        return true;
     }
 }

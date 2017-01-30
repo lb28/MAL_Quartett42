@@ -3,6 +3,7 @@ package de.uulm.dbis.quartett42;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import de.uulm.dbis.quartett42.data.Property;
  * Created by Luis on 11.01.2017.
  */
 public class CreateCardItemAdapter extends ArrayAdapter<Property> {
+    private static final String TAG = "CreateCardItemAdapter";
 
     private List<Property> attrList;
 
@@ -58,6 +60,9 @@ public class CreateCardItemAdapter extends ArrayAdapter<Property> {
                 }
                 textViewAttrName.setText(nameAndMaxWinner);
             }
+
+            editTextAttrValue.setText(String.valueOf(property.getValue()));
+
             if (property.getUnit() != null || property.getUnit().isEmpty()) {
                 textViewAttrUnit.setText(property.getUnit());
             }
@@ -69,6 +74,9 @@ public class CreateCardItemAdapter extends ArrayAdapter<Property> {
                 if (!hasFocus) {
                     try{
                         Property p = attrList.get(position);
+
+                        Log.i(TAG, "onFocusChange: updating attribute \"" + p.getName() + "\"");
+
                         // update the name of the property
                         double newVal = 0;
                         if (!editTextAttrValue.getText().toString().isEmpty()) {

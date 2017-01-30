@@ -105,6 +105,7 @@ public class Property {
     public String toString() {
         return "Property{" +
                 "name='" + name + '\'' +
+                "value='" + value + "'" +
                 ", unit='" + unit + '\'' +
                 ", maxWinner=" + maxWinner +
                 '}';
