@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,7 @@ public class GalleryActivity extends AppCompatActivity {
     GridViewAdapter gridAdapter;
     ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten
     SharedPreferences sharedPref;
+    ProgressDialog barProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,22 +151,9 @@ public class GalleryActivity extends AppCompatActivity {
                                                 startActivity(intent);
                                                 break;
                                             case 1: // upload deck
-                                                // TODO show confirm dialog, then upload deck
-                                                // (with progress similar to download)
-                                                Toast.makeText(GalleryActivity.this,
-                                                        "TODO show confirm dialog, then upload " +
-                                                                "deck (with progress similar to download)",
-                                                        Toast.LENGTH_SHORT).show();
 
-                                                new Thread(new Runnable() {
-                                                    public void run() {
-                                                        ServerUploadJSONHandler suh = new ServerUploadJSONHandler(GalleryActivity.this);
-                                                        suh.uploadDeck(deckName, deck.getSrcMode());
-                                                        //TODO Mode kriegen von Deck
-                                                    }
-                                                }).start();
-
-                                                break;
+                                                showUploadDialog(deckName, deck.getSrcMode());
+                                                 break;
                                             case 2: // delete deck
                                                 showDeleteDialog(deckName);
                                                 break;
@@ -230,8 +219,67 @@ public class GalleryActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         spinner.hide();
+                                        Toast.makeText(getApplicationContext(), "Deck gelöscht", Toast.LENGTH_SHORT).show();
                                     }
                                 });
+                            }
+                        }).start();
+                    }
+
+                })
+                .setNegativeButton("Nein", null)
+                .show();
+
+    }
+
+    private void showUploadDialog(final String deckName, final int source_mode) {
+        // show confirmation dialog before deleting
+        new AlertDialog.Builder(GalleryActivity.this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Deck hochladen")
+                .setMessage("Wollen Sie Deck \"" + deckName + "\" wirklich hochladen?")
+                .setPositiveButton("Ja", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // delete the deck
+                        spinner.show();
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        barProgressDialog = new ProgressDialog(GalleryActivity.this);
+                                        barProgressDialog.setTitle("Deck wird hochgeladen...");
+                                        barProgressDialog.setMessage("Bitte warten");
+                                        barProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); //Progressbar ist glaube ich nicht möglich...
+                                                                                                        //ausser wir kopieren die Methoden in die Activity hier rein...
+                                        barProgressDialog.show();
+                                    }
+                                });
+
+                                ServerUploadJSONHandler suh = new ServerUploadJSONHandler(GalleryActivity.this);
+                                boolean success = suh.uploadDeck(deckName, source_mode);
+                                if(success){
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            barProgressDialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Deck erfolgreich hochgeladen", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            barProgressDialog.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Deck konnte nicht hochgeladen werden, " +
+                                                    "da es inalide oder schon vorhanden ist!", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                }
+
                             }
                         }).start();
                     }

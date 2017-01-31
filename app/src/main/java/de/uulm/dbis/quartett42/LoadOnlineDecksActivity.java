@@ -141,7 +141,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             @Override
             public void run() {
                 barProgressDialog1 = new ProgressDialog(LoadOnlineDecksActivity.this);
-                barProgressDialog1.setTitle("Deck wird heruntergeladen...");
+                barProgressDialog1.setTitle("Deck wird geprüft...");
                 barProgressDialog1.setMessage("Bitte warten");
                 barProgressDialog1.setProgressStyle(barProgressDialog1.STYLE_SPINNER);
                 barProgressDialog1.show();
@@ -169,7 +169,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GalleryActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+            //finish();
             return;
         }
 
@@ -243,7 +243,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, GalleryActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    finish();
+                    //finish();
                     return;
                 }
             }
@@ -272,7 +272,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GalleryActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+            //finish();
             return;
         }
 
@@ -297,7 +297,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GalleryActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-            finish();
+            //finish();
         }
 
         //for testing:

@@ -73,16 +73,30 @@ public class ServerUploadJSONHandler {
      * @param deckname
      */
     public boolean uploadDeck(String deckname, int source_mode){
-
-        //TODO bisher wird nur in den Assets geschaut weil der Konstruktor kein src_mode hat
         LocalJSONHandler ljh = new LocalJSONHandler(context, source_mode);
         deckToUpload = ljh.getDeck(deckname);
         Log.i("deckToUpload", deckToUpload.getName());
 
-        //deckToUpload might be null (if the handler does not find it)
-        if (deckToUpload == null){
+        //deckToUpload might be null or invalid (if the handler does not find it)
+        if (deckToUpload == null
+            || deckToUpload.getCardList().size() < 2
+            || deckToUpload.getPropertyList().size() < 4
+            || deckToUpload.getPropertyList().size() > 10
+            || deckToUpload.getCardList().get(0).getAttributeMap().size() < 4
+            || deckToUpload.getCardList().get(0).getAttributeMap().size() > 10){
+            Log.i("deckToUpload", "Deck invalid");
             return false;
         }
+        //check if Deck is already uploaded
+        ServerJSONHandler serverJsonHandler = new ServerJSONHandler(context);
+        ArrayList<Deck> testList = serverJsonHandler.getDecksOverview(false);
+        for(Deck d : testList){
+            if(d.getName().equals(deckname)){
+                Log.i("deckToUpload", "Deckname bereits hochgeladen");
+                return false;
+            }
+        }
+
         Random r = new Random();
 
         //testen ob hochladen wegen name möglich
@@ -112,7 +126,7 @@ public class ServerUploadJSONHandler {
                 return false;
             }
             Log.i("FILENAME upload", deckImageUrl);
-            postData.put("image_base64", urlToBase64(deckImageUrl));
+            postData.put("image_base64", urlToBase64(deckImageUrl, source_mode));
 
             //connection
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -142,7 +156,7 @@ public class ServerUploadJSONHandler {
 
                 while ((line = in.readLine()) != null){
                     sb.append(line);
-                    break; //Warum break ?
+                    break;
                 }
 
                 in.close();
@@ -351,7 +365,7 @@ public class ServerUploadJSONHandler {
                         //error
                         return false;
                     }
-                    jsonObjectImages.put("image_base64", urlToBase64(cardImageUri)); //TODO base64 string aus uri erstellen
+                    jsonObjectImages.put("image_base64", urlToBase64(cardImageUri, source_mode));
 
 
 
@@ -412,20 +426,22 @@ public class ServerUploadJSONHandler {
 
     }
 
-    public String urlToBase64(String url){
-
-        AssetManager assetManager = context.getAssets();
-
-        InputStream istr;
+    public String urlToBase64(String url, int sourc_mode){
         Bitmap bm = null;
-        try {
-            istr = assetManager.open(url);
-            bm = BitmapFactory.decodeStream(istr);
-        } catch (IOException e) {
-            // handle exception
+
+        if(sourc_mode == Deck.SRC_MODE_ASSETS) {
+            AssetManager assetManager = context.getAssets();
+            InputStream istr;
+            try {
+                istr = assetManager.open(url);
+                bm = BitmapFactory.decodeStream(istr);
+            } catch (IOException e) {
+                // handle exception
+            }
+        }else{
+            bm = BitmapFactory.decodeFile(url);
         }
 
-        //Bitmap bm = BitmapFactory.decodeFile(realUri.toString());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();
