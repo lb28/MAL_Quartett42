@@ -2,6 +2,7 @@ package de.uulm.dbis.quartett42;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,8 +42,7 @@ public class StatisticsActivity extends AppCompatActivity {
     PieDataSet pieDataSet;
     PieData pieData;
 
-    private String[] xValues = {"Gewonnen", "Verloren"};
-    // y values werden später berechnet
+    private final String[] xValues = {"Gewonnen", "Verloren"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,20 +155,27 @@ public class StatisticsActivity extends AppCompatActivity {
         int normalespielegewonnen = sharedPref.getInt("normaleSpieleGewonnen", 0);
         int normalespieleverloren = normalespiele-normalespielegewonnen;
 
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.GREEN);
+        colors.add(Color.RED);
+
         ArrayList<PieEntry> yVals = new ArrayList<>();
-        yVals.add(new PieEntry(normalespielegewonnen, "Gewonnen"));
-        yVals.add(new PieEntry(normalespieleverloren, "Verloren"));
+        yVals.add(new PieEntry(normalespielegewonnen, xValues[0]));
+        yVals.add(new PieEntry(normalespieleverloren, xValues[1]));
 
         //create pieDataSet
         pieDataSet =  new PieDataSet(yVals, "Spiele gewonnen");
         pieDataSet.setSliceSpace(3);
         pieDataSet.setSelectionShift(5);
+        pieDataSet.setColors(colors);
+
 
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData = new PieData(pieDataSet);
 
         pieChart.setData(pieData);
+
 
 
         //legende
