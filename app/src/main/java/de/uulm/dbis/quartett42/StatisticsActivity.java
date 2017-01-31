@@ -11,7 +11,17 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
 
@@ -24,6 +34,15 @@ public class StatisticsActivity extends AppCompatActivity {
     TextView normaleSpielegewonnen;
     TextView insaneSpiele;
     TextView insaneSpielegewonnen;
+    TextView expertSpiele;
+    TextView expertSpielegewonnen;
+
+    PieChart pieChart;
+    PieDataSet pieDataSet;
+    PieData pieData;
+
+    private String[] xValues = {"Gewonnen", "Verloren"};
+    // y values werden später berechnet
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +74,8 @@ public class StatisticsActivity extends AppCompatActivity {
         normaleSpielegewonnen = (TextView) findViewById(R.id.normaleSpielegewonnen);
         insaneSpiele = (TextView) findViewById(R.id.insaneSpiele);
         insaneSpielegewonnen = (TextView) findViewById(R.id.insaneSpielegewonnen);
-
+        expertSpiele = (TextView) findViewById(R.id.expertSpiele);
+        expertSpielegewonnen = (TextView) findViewById(R.id.expertSpielegewonnen);
 
 
         //Werte aus sharedPreferences holen und Texte setzen:
@@ -101,7 +121,66 @@ public class StatisticsActivity extends AppCompatActivity {
         insaneSpiele.setText("" + insanespiele);
         insaneSpielegewonnen.setText("" + insanespielegewonnen + " (" + insaneSpieleGewonnenProzent + " %)");
 
+        //expert Spiele
+        int expertspiele = sharedPref.getInt("expertSpiele", 0);
+        int expertspielegewonnen = sharedPref.getInt("expertSpieleGewonnen", 0);
+        double expertSpieleGewonnenProzent;
+        if (expertspiele <= 0){
+            expertSpieleGewonnenProzent = 0;
+        } else {
+            expertSpieleGewonnenProzent = (double) (expertspielegewonnen*100/expertspiele);
+        }
+
+        expertSpiele.setText("" + expertspiele);
+        expertSpielegewonnen.setText("" + expertspielegewonnen + " (" + expertSpieleGewonnenProzent + " %)");
+
+        //pie chart
+        pieChart = (PieChart) findViewById(R.id.pieChart);
+
+        setDataForPieChart();
+
+        pieChart.invalidate();
+
+
+
+
+
+
+
     }
+
+    public void setDataForPieChart(){
+
+        int normalespiele = sharedPref.getInt("normaleSpiele", 0);
+        int normalespielegewonnen = sharedPref.getInt("normaleSpieleGewonnen", 0);
+        int normalespieleverloren = normalespiele-normalespielegewonnen;
+
+        ArrayList<PieEntry> yVals = new ArrayList<>();
+        yVals.add(new PieEntry(normalespielegewonnen, "Gewonnen"));
+        yVals.add(new PieEntry(normalespieleverloren, "Verloren"));
+
+        //create pieDataSet
+        pieDataSet =  new PieDataSet(yVals, "Spiele gewonnen");
+        pieDataSet.setSliceSpace(3);
+        pieDataSet.setSelectionShift(5);
+
+
+        //create pie data object and set xValues and yValues and set it to the pie chart
+        pieData = new PieData(pieDataSet);
+
+        pieChart.setData(pieData);
+
+
+        //legende
+        Legend l = pieChart.getLegend();
+        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+        l.setXEntrySpace(7);
+        l.setYEntrySpace(5);
+
+    }
+
+
+
 
     public void resetStatistics(View view){
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -115,17 +194,14 @@ public class StatisticsActivity extends AppCompatActivity {
         editor.putInt("insaneSpiele", 0);
         editor.putInt("insaneSpieleGewonnen", 0);
 
+        editor.putInt("expertSpiele", 0);
+        editor.putInt("expertSpieleGewonnen", 0);
+
         editor.commit();
 
         Toast.makeText(getApplicationContext(), "Statistik zurückgesetzt", Toast.LENGTH_SHORT).show();
 
-        //entwerder das, aber lädt die activity neu
-        /*
-        Intent intent = getIntent();
-        finish();
-        startActivity(intent);
-        */
-        //oder das hier (ist besser)
+        //setze alle Felder auf die Defaults
         Spielegesamt.setText("" + 0);
         Spielegesamtgewonnen.setText("" + 0 + " (" + 0 + " %)");
 
@@ -134,6 +210,9 @@ public class StatisticsActivity extends AppCompatActivity {
 
         insaneSpiele.setText("" + 0);
         insaneSpielegewonnen.setText("" + 0 + " (" + 0 + " %)");
+
+        expertSpiele.setText("" + 0);
+        expertSpielegewonnen.setText("" + 0 + " (" + 0 + " %)");
 
         finish();
 
