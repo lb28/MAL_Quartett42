@@ -84,7 +84,7 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
                 break;
             case Deck.SRC_MODE_ASSETS:
                 imageUri = "file:///android_asset/" + singleDeck.getName() + "/" + imageUri;
-                //Log.i(TAG, "------------FILENAME: "+imageUri);
+                Log.i(TAG, "FILENAME gallery: "+imageUri);
                 Picasso.with(getContext())
                         .load(imageUri)
                         .resize(500, 500)

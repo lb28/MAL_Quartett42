@@ -90,7 +90,7 @@ public class CreateCardItemAdapter extends ArrayAdapter<Property> {
                             }
                         }
                         p.setValue(newVal);
-                        editTextAttrValue.setText(String.valueOf(newVal));
+                        //editTextAttrValue.setText(String.valueOf(newVal));
                         attrList.set(position, p);
                     } catch (IndexOutOfBoundsException e) {/* row was already deleted */}
                 }

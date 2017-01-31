@@ -74,6 +74,11 @@ public class CreateCardActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+    @Override
+    public void onBackPressed() {
+        onSupportNavigateUp();
+    }
+
     /**
      * called by clicking the "show previous card" button on the left
      * @param view

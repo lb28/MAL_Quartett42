@@ -1,6 +1,7 @@
 package de.uulm.dbis.quartett42;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -14,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -101,14 +103,15 @@ public class ServerUploadJSONHandler {
             String deckImageUrl = "";
             //Image Uri wie in GridViewAdapter zusammenbauen
             if(source_mode == Deck.SRC_MODE_ASSETS){
-                deckImageUrl = "file:///android_asset/" + deckToUpload.getName() + "/" + deckToUpload.getImage().getUri();
+                //deckImageUrl = "file:///android_asset/" + deckToUpload.getName() + "/" + deckToUpload.getImage().getUri();
+                deckImageUrl = deckToUpload.getName() + "/" + deckToUpload.getImage().getUri();
             }else if(source_mode == Deck.SRC_MODE_INTERNAL_STORAGE){
                 deckImageUrl = context.getFilesDir() + "/" + deckToUpload.getImage().getUri();
             }else{
                 //error
                 return false;
             }
-            Log.i("deck bild", deckImageUrl);
+            Log.i("FILENAME upload", deckImageUrl);
             postData.put("image_base64", urlToBase64(deckImageUrl));
 
             //connection
@@ -340,7 +343,8 @@ public class ServerUploadJSONHandler {
                     String cardImageUri = "";
                     //Image Uri wie in GridViewAdapter zusammenbauen
                     if(source_mode == Deck.SRC_MODE_ASSETS){
-                        cardImageUri = "file:///android_asset/" + deckToUpload.getName() + "/" + imageList.get(i).getUri();
+                        //cardImageUri = "file:///android_asset/" + deckToUpload.getName() + "/" + imageList.get(i).getUri();
+                        cardImageUri = deckToUpload.getName() + "/" + imageList.get(i).getUri();
                     }else if(source_mode == Deck.SRC_MODE_INTERNAL_STORAGE){
                         cardImageUri = context.getFilesDir() + "/" + imageList.get(i).getUri();
                     }else{
@@ -410,7 +414,18 @@ public class ServerUploadJSONHandler {
 
     public String urlToBase64(String url){
 
-        Bitmap bm = BitmapFactory.decodeFile(url);
+        AssetManager assetManager = context.getAssets();
+
+        InputStream istr;
+        Bitmap bm = null;
+        try {
+            istr = assetManager.open(url);
+            bm = BitmapFactory.decodeStream(istr);
+        } catch (IOException e) {
+            // handle exception
+        }
+
+        //Bitmap bm = BitmapFactory.decodeFile(realUri.toString());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
         byte[] byteArrayImage = baos.toByteArray();

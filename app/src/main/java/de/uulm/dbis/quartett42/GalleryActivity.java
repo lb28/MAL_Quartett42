@@ -159,7 +159,7 @@ public class GalleryActivity extends AppCompatActivity {
                                                 new Thread(new Runnable() {
                                                     public void run() {
                                                         ServerUploadJSONHandler suh = new ServerUploadJSONHandler(GalleryActivity.this);
-                                                        suh.uploadDeck(deckName, deck.SRC_MODE_INTERNAL_STORAGE);
+                                                        suh.uploadDeck(deckName, deck.getSrcMode());
                                                         //TODO Mode kriegen von Deck
                                                     }
                                                 }).start();

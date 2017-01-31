@@ -233,9 +233,19 @@ public class HighscoreActivity extends AppCompatActivity {
                 boolean uploadSuccessful = suh.uploadDeck("TestDeckHochladen", Deck.SRC_MODE_ASSETS);
 
                 if (uploadSuccessful == false){
-                    Toast.makeText(getApplicationContext(), "Upload erfolgreich", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Upload erfolgreich", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
-                    Toast.makeText(getApplicationContext(), "Upload fehlgeschlagen", Toast.LENGTH_SHORT).show();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), "Upload fehlgeschlagen", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
             }
         }).start();
