@@ -227,6 +227,10 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("new_online_decks", availableDecks);
                 editor.apply();
+            }else if(availableDecks < sharedPref.getInt("new_online_decks", 0)){
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putInt("new_online_decks", availableDecks);
+                editor.apply();
             }
 
         }catch(Exception e){
