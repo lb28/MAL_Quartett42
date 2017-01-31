@@ -135,6 +135,57 @@
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
 
+    <!-- expert Spiele -->
+    <TextView
+        android:text="Expertmode:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelexpertSpielegesamt"
+        android:layout_below="@+id/labelinsaneSpielegewonnen"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expertSpiele"
+        android:layout_toRightOf="@id/labelexpertSpielegesamt"
+        android:layout_below="@+id/insaneSpielegewonnen"
+        android:gravity="right"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="gewonnen:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/labelexpertSpielegewonnen"
+        android:layout_below="@+id/labelexpertSpielegesamt"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <TextView
+        android:text="5 (20%)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/expertSpielegewonnen"
+        android:layout_below="@id/expertSpiele"
+        android:layout_toRightOf="@id/labelexpertSpielegewonnen"
+        android:gravity="right"
+        android:layout_marginRight="33dp"
+        android:layout_marginEnd="33dp" />
+
+    <!-- pie chart -->
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/labelexpertSpielegewonnen"/>
+
+
 
     <!-- Zurücksetzen Button -->
     <Button

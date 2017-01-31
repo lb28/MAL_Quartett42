@@ -152,10 +152,10 @@ public class GameEndActivity extends AppCompatActivity {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
 
-        //normaleMode/insaneMode? -> Statistik updaten
+        //normaleMode/insaneMode/expertMode? -> Statistik updaten
         Boolean insaneMode = sharedPref.getBoolean("insaneModus", false);
-        //bisher noch nicht gebraucht
-        //Boolean expertMode = sharedPref.getBoolean("expertModus", false);
+
+        Boolean expertMode = sharedPref.getBoolean("expertModus", false);
 
 
         //GesamtSpielzahl immer updaten
@@ -167,14 +167,17 @@ public class GameEndActivity extends AppCompatActivity {
         if (insaneMode){
             int temp2 = sharedPref.getInt("insaneSpiele", 0);
             editor.putInt("insaneSpiele", temp2+1);
-
         }
         //Gesamtspielzahl für normal
         else {
-
             int temp3 = sharedPref.getInt("normaleSpiele", 0);
             editor.putInt("normaleSpiele", temp3+1);
+        }
 
+        //Gesamtspielzahl für expert
+        if (expertMode){
+            int temp4 = sharedPref.getInt("expertSpiele", 0);
+            editor.putInt("expertSpiele", temp4+1);
         }
 
         //nur bei Gewinn wird die gewonnen-Statistik hochgezählt
@@ -183,15 +186,19 @@ public class GameEndActivity extends AppCompatActivity {
             int temp4 = sharedPref.getInt("spieleGesamtGewonnen", 0);
             editor.putInt("spieleGesamtGewonnen", temp4+1);
 
+            //Gewonnenes Spiel für expert
+            if (expertMode){
+                int temp6 = sharedPref.getInt("expertSpieleGewonnen", 0);
+                editor.putInt("expertSpieleGewonnen", temp6+1);
+            }
+
             //GewonnenesSpiel für insane
             if (insaneMode){
                 int temp5 = sharedPref.getInt("insaneSpieleGewonnen", 0);
                 editor.putInt("insaneSpieleGewonnen", temp5+1);
-
             }
             //Gewonnenes Spiel für normal
             else {
-
                 int temp6 = sharedPref.getInt("normaleSpieleGewonnen", 0);
                 editor.putInt("normaleSpieleGewonnen", temp6+1);
 
