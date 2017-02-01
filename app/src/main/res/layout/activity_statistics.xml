@@ -10,7 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.uulm.dbis.quartett42.StatisticsActivity">
 
+
     <!-- Spiele gesamt -->
+    <!--
     <TextView
         android:text="Spiele gesamt:"
         android:layout_width="wrap_content"
@@ -28,6 +30,7 @@
         android:gravity="right"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
+
 
     <TextView
         android:text="gewonnen:"
@@ -48,8 +51,10 @@
         android:gravity="right"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
+        -->
 
     <!-- normale Spiele -->
+    <!--
     <TextView
         android:text="Normalmode:"
         android:layout_width="wrap_content"
@@ -91,8 +96,10 @@
         android:gravity="right"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
+        -->
 
     <!-- insane Spiele -->
+    <!--
     <TextView
         android:text="Insanemode:"
         android:layout_width="wrap_content"
@@ -134,8 +141,10 @@
         android:gravity="right"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
+        -->
 
     <!-- expert Spiele -->
+    <!--
     <TextView
         android:text="Expertmode:"
         android:layout_width="wrap_content"
@@ -177,14 +186,46 @@
         android:gravity="right"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp" />
+        -->
+
 
     <!-- pie chart -->
+
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
+        android:layout_width="200dp"
+        android:layout_height="200dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart2"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_below="@id/pieChart"/>
+
+<!--
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/labelexpertSpielegewonnen"/>
+        android:id="@+id/pieChart1"/>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pieChart2"
+        android:layout_toRightOf="@+id/pieChart1"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pieChart3"
+        android:layout_below="@+id/pieChart1"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pieChart4"
+        android:layout_toRightOf="@+id/pieChart3"/>
+        -->
 
 
     <!-- Zurücksetzen Button -->
@@ -197,6 +238,7 @@
         android:layout_alignStart="@+id/varianteGroup"
         android:id="@+id/resetButton"
         android:onClick="resetStatistics"/>
+
 
 
 </RelativeLayout>

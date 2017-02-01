@@ -1,20 +1,25 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.ComponentBase;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -28,6 +33,8 @@ public class StatisticsActivity extends AppCompatActivity {
 
     SharedPreferences sharedPref;
 
+    Context context;
+
     //Elemente:
     TextView Spielegesamt;
     TextView Spielegesamtgewonnen;
@@ -38,9 +45,11 @@ public class StatisticsActivity extends AppCompatActivity {
     TextView expertSpiele;
     TextView expertSpielegewonnen;
 
-    PieChart pieChart;
-    PieDataSet pieDataSet;
-    PieData pieData;
+    ImageView imageView1;
+
+    PieChart pieChart, pieChart2;
+    PieDataSet pieDataSet, pieDataSet2;
+    PieData pieData, pieData2;
 
     private final String[] xValues = {"Gewonnen", "Verloren"};
 
@@ -68,6 +77,7 @@ public class StatisticsActivity extends AppCompatActivity {
 */
         //--------------------------------------------------
 
+        /*
         Spielegesamt = (TextView) findViewById(R.id.Spielegesamt);
         Spielegesamtgewonnen = (TextView) findViewById(R.id.Spielegesamtgewonnen);
         normaleSpiele = (TextView) findViewById(R.id.normaleSpiele);
@@ -76,6 +86,7 @@ public class StatisticsActivity extends AppCompatActivity {
         insaneSpielegewonnen = (TextView) findViewById(R.id.insaneSpielegewonnen);
         expertSpiele = (TextView) findViewById(R.id.expertSpiele);
         expertSpielegewonnen = (TextView) findViewById(R.id.expertSpielegewonnen);
+
 
 
         //Werte aus sharedPreferences holen und Texte setzen:
@@ -133,23 +144,32 @@ public class StatisticsActivity extends AppCompatActivity {
 
         expertSpiele.setText("" + expertspiele);
         expertSpielegewonnen.setText("" + expertspielegewonnen + " (" + expertSpieleGewonnenProzent + " %)");
+        */
 
         //pie chart
         pieChart = (PieChart) findViewById(R.id.pieChart);
+        pieChart2 = (PieChart) findViewById(R.id.pieChart2);
+
+        //imageView1 = (ImageView) findViewById(R.id.pieChart1);
 
         setDataForPieChart();
 
+        //Uri uri = Uri.parse(context.getFilesDir() + "/Spielegesamt.jpg");
+        //imageView1.setImageURI(uri);
+
         pieChart.invalidate();
-
-
-
-
-
+        pieChart2.invalidate();
 
 
     }
 
     public void setDataForPieChart(){
+
+        context = this.getApplicationContext();
+
+        int spieleGesamt = sharedPref.getInt("spieleGesamt", 0);
+        int spieleGesamtGewonnen = sharedPref.getInt("spieleGesamtGewonnen", 0);
+        int spieleGesamtVerloren = spieleGesamt-spieleGesamtGewonnen;
 
         int normalespiele = sharedPref.getInt("normaleSpiele", 0);
         int normalespielegewonnen = sharedPref.getInt("normaleSpieleGewonnen", 0);
@@ -160,29 +180,50 @@ public class StatisticsActivity extends AppCompatActivity {
         colors.add(Color.RED);
 
         ArrayList<PieEntry> yVals = new ArrayList<>();
-        yVals.add(new PieEntry(normalespielegewonnen, xValues[0]));
-        yVals.add(new PieEntry(normalespieleverloren, xValues[1]));
+        yVals.add(new PieEntry(spieleGesamtGewonnen, xValues[0]));
+        yVals.add(new PieEntry(spieleGesamtVerloren, xValues[1]));
 
         //create pieDataSet
-        pieDataSet =  new PieDataSet(yVals, "Spiele gewonnen");
+        pieDataSet =  new PieDataSet(yVals, "");
         pieDataSet.setSliceSpace(3);
         pieDataSet.setSelectionShift(5);
         pieDataSet.setColors(colors);
-
-
+        pieDataSet.setValueTextSize(12f);
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData = new PieData(pieDataSet);
 
         pieChart.setData(pieData);
+        pieChart.setDescription(null);
+        pieChart.setCenterText("Spiele gesamt: " + spieleGesamt);
+
+        //pieChart.saveToPath("Spielegesamt", context.getFilesDir() + "/");
+
+        //----------------------------
+
+        ArrayList<PieEntry> yVals2 = new ArrayList<>();
+        yVals.add(new PieEntry(normalespielegewonnen, xValues[0]));
+        yVals.add(new PieEntry(normalespieleverloren, xValues[1]));
+
+        //create pieDataSet
+        pieDataSet2 =  new PieDataSet(yVals2, "");
+        pieDataSet2.setSliceSpace(3);
+        pieDataSet2.setSelectionShift(5);
+        pieDataSet2.setColors(colors);
+        pieDataSet2.setValueTextSize(12f);
+
+
+        //create pie data object and set xValues and yValues and set it to the pie chart
+        pieData2 = new PieData(pieDataSet2);
+
+        pieChart2.setData(pieData2);
+        pieChart2.setDescription(null);
+        pieChart2.setCenterText("Normale Spiele: " + normalespiele);
 
 
 
-        //legende
-        Legend l = pieChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
-        l.setXEntrySpace(7);
-        l.setYEntrySpace(5);
+
+
 
     }
 
