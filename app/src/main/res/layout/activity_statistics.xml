@@ -10,6 +10,64 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="de.uulm.dbis.quartett42.StatisticsActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- pie charts -->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_weight="1"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart2"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart3"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_weight="1"/>
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pieChart4"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <!-- Zurücksetzen Button -->
+    <Button
+        android:text="Statistiken zurücksetzen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/varianteGroup"
+        android:layout_alignStart="@+id/varianteGroup"
+        android:id="@+id/resetButton"
+        android:onClick="resetStatistics"/>
+
 
     <!-- Spiele gesamt -->
     <!--
@@ -188,20 +246,6 @@
         android:layout_marginEnd="33dp" />
         -->
 
-
-    <!-- pie chart -->
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart"
-        android:layout_width="200dp"
-        android:layout_height="200dp" />
-
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pieChart2"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_below="@id/pieChart"/>
-
 <!--
     <ImageView
         android:layout_width="match_parent"
@@ -226,19 +270,5 @@
         android:id="@+id/pieChart4"
         android:layout_toRightOf="@+id/pieChart3"/>
         -->
-
-
-    <!-- Zurücksetzen Button -->
-    <Button
-        android:text="Statistiken zurücksetzen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/varianteGroup"
-        android:layout_alignStart="@+id/varianteGroup"
-        android:id="@+id/resetButton"
-        android:onClick="resetStatistics"/>
-
-
 
 </RelativeLayout>
