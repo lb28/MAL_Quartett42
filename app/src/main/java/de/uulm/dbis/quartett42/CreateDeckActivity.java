@@ -136,8 +136,21 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        // TODO AlertDialog: "deck verwerfen / speichern / abbrechen"
-        return super.onSupportNavigateUp();
+        // AlertDialog: "deck verwerfen / speichern / abbrechen"
+        new AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Deck verwerfen")
+                .setMessage("Das Deck hat noch keine Karten. Deck verwerfen?")
+                .setPositiveButton("Verwerfen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // leave without saving
+                        CreateDeckActivity.super.onSupportNavigateUp();
+                    }
+                })
+                .setNeutralButton("Abbrechen", null)
+                .show();
+        return false;
     }
 
     @Override
@@ -147,6 +160,16 @@ public class CreateDeckActivity extends AppCompatActivity {
 
     public void clickAddCardsBtn(View view) {
         String newDeckName = editTextDeckName.getText().toString();
+        if (saveDeck(newDeckName)) {
+            // go to CreateCardActivity (send deck name in intent)
+            Intent intent = new Intent(this, CreateCardActivity.class);
+            intent.putExtra("newDeckName", newDeckName);
+            intent.putExtra("copyFromDeckName", copyFromDeckName);
+            startActivity(intent);
+        }
+    }
+
+    private boolean saveDeck(String newDeckName) {
         String deckDescr = editTextDeckDescr.getText().toString();
 
         // get all the properties from the listview
@@ -157,33 +180,33 @@ public class CreateDeckActivity extends AppCompatActivity {
         // check for invalid input (name collision, etc...)
         if (hasDeckNameCollision(newDeckName)) {
             Toast.makeText(this,
-                    "Kartenname ist im Deck schon vorhanden",
+                    "Ein Deck mit Namen \"" + newDeckName + "\" ist schon vorhanden",
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         if (newDeckName.isEmpty()) {
             Toast.makeText(this,
                     "Gib einen Namen an",
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         if (deckAttrList.isEmpty()) {
             Toast.makeText(this,
                     "Gib mindestens ein Attribut an",
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         if (hasEmptyName(deckAttrList)) {
             Toast.makeText(this,
                     "Jedes Attribut muss einen Namen haben",
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         if (hasDuplicates(deckAttrList)) {
             Toast.makeText(this,
                     "Die Attribute müssen eindeutige Namen haben",
                     Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         // TODO maybe check for further invalid user input
 
@@ -208,18 +231,15 @@ public class CreateDeckActivity extends AppCompatActivity {
                     new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
             localJSONHandler.saveDeck(newDeck);
 
-            // go to CreateCardActivity (send deck name in intent)
-            Intent intent = new Intent(this, CreateCardActivity.class);
-            intent.putExtra("newDeckName", newDeckName);
-            intent.putExtra("copyFromDeckName", copyFromDeckName);
-            startActivity(intent);
+            return true;
 
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Eingaben sind ungültig!", Toast.LENGTH_SHORT).show();
+            return false;
         }
-
     }
+
 
     public void addAttribute(View view) {
         deckAttrList.add(new Property());

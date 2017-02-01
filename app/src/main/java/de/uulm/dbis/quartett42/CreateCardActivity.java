@@ -56,10 +56,6 @@ public class CreateCardActivity extends AppCompatActivity {
         currentCardIndex = 0;
 
         String deckName = getIntent().getStringExtra("newDeckName");
-        // TODO figure out how we can use the attibutes of the old deck if the attributes
-        // were edited in CreateDeckActivity (only relevant for editing existing decks)
-        // (we can reuse the name, imageCards, and those attributes that weren't changed)
-        String copyFromDeckName = getIntent().getStringExtra("copyFromDeckName");
 
         // get the newly created deck which has no cards yet
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
@@ -70,8 +66,44 @@ public class CreateCardActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        // TODO AlertDialog: "deck verwerfen / speichern / abbrechen"
-        return super.onSupportNavigateUp();
+        // AlertDialog: "deck verwerfen / speichern / abbrechen"
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this)
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .setTitle("Neues Deck")
+                .setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // delete the deck and then leave
+                        LocalJSONHandler handler = new LocalJSONHandler(
+                                CreateCardActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
+                        if (handler.removeDeck(newDeck.getName())) {
+                            CreateCardActivity.super.onSupportNavigateUp();
+                        } else {
+                            Toast.makeText(CreateCardActivity.this,
+                                    "Karte konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNeutralButton("Abbrechen", null);
+
+        if (newDeck.getCardList().size() < 2) {
+            builder.setMessage("Deck verwerfen?");
+        } else {
+            builder.setMessage("Deck speichern?");
+            builder.setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if(saveCard()) {
+                        CreateCardActivity.super.onSupportNavigateUp();
+                    }
+                }
+            });
+        }
+
+        // display the dialog
+        builder.show();
+
+        return false;
     }
 
     @Override
@@ -119,12 +151,50 @@ public class CreateCardActivity extends AppCompatActivity {
         }
     }
 
+    public void deleteCurrentCard(View view) {
+        // are we on the first card
+        if (newDeck.getCardList().size() <= 2) {
+            Toast.makeText(this, "Deck muss mindestens zwei Karten enthalten", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        LocalJSONHandler handler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+        int cardIndex = handler.getCardIndex(newDeck.getName(), newDeck.getCardList().get(currentCardIndex).getName());
+
+
+        // if the card is not yet in the json file
+        if (cardIndex == -1) {
+            // remove card from card list and decrement the current card index
+            newDeck.getCardList().remove(currentCardIndex);
+            currentCardIndex--;
+        }
+        // the card is not the last card and has to be deleted
+        else {
+            // delete the card from the json and delete the pictures
+            if(handler.removeCard(newDeck.getName(),
+                    newDeck.getCardList().get(currentCardIndex).getName())) {
+                // delete card from card list
+                newDeck.getCardList().remove(currentCardIndex);
+            } else {
+                Toast.makeText(
+                        this, "Karte konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+        updateViewFromCard();
+
+
+    }
+
     /**
      * saves the current card into the existing deck, i.e.: <br/>
      * - saves the pictures of the card <br/>
      * - adds the card in the json file<br/>
      * - empties the imageCard and imgDescriptions lists<br/>
      * Also shows error messages if something goes wrong (e.g. card name collision)
+     *
+     * @return true if the card was saved successfully
      */
     private boolean saveCard() {
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
@@ -169,10 +239,6 @@ public class CreateCardActivity extends AppCompatActivity {
             // save the card in the json file
             jsonHandler.saveCard(newDeck.getName(), newCard);
 
-            // empty the images and descriptions lists
-            cardImages = new ArrayList<>();
-            imgDescriptions = new ArrayList<>();
-
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -183,7 +249,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
     /**
      * updates the view to show the current content of the model
-     * TODO text from the textfields is lost during the update
      */
     public void updateViewFromCard() {
         // show the spinner
@@ -196,6 +261,7 @@ public class CreateCardActivity extends AppCompatActivity {
         ListView createCardAttrListView = (ListView) findViewById(R.id.createCardAttrListView);
         ImageButton btnRight = (ImageButton) findViewById(R.id.createCardButtonRight);
         ImageButton btnLeft = (ImageButton) findViewById(R.id.createCardButtonLeft);
+        ImageButton btnDelete = (ImageButton) findViewById(R.id.deletCardBtn);
 
         // are we behind the last card?
         if (currentCardIndex == newDeck.getCardList().size()) {
@@ -221,9 +287,18 @@ public class CreateCardActivity extends AppCompatActivity {
             btnLeft.setVisibility(View.VISIBLE);
         }
 
+        if (newDeck.getCardList().size() <= 2) {
+            btnDelete.setVisibility(View.GONE);
+        } else {
+            btnDelete.setVisibility(View.VISIBLE);
+        }
+
+        // empty the images and descriptions lists
+        cardImages = new ArrayList<>();
+        imgDescriptions = new ArrayList<>();
+
         Card card = newDeck.getCardList().get(currentCardIndex);
 
-        // TODO put card images and descriptions from the card into the arraylists
         for (ImageCard imageCard : card.getImageList()) {
             imgDescriptions.add(imageCard.getDescription());
 
@@ -231,6 +306,7 @@ public class CreateCardActivity extends AppCompatActivity {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                     cardImages.add(bitmap);
+                    updateImageContainer();
                 }
 
                 @Override

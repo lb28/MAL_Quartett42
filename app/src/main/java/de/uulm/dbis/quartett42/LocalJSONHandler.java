@@ -342,11 +342,92 @@ public class LocalJSONHandler {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         return success;
     }
 
+
+    /**
+     * removes a card from a deck (also deletes the images from internal storage)
+     * @param deckName the name of the deck containing the card
+     * @param cardName the name of the card to be deleted
+     * @return true if the deletion was successful
+     */
+    public boolean removeCard(String deckName, String cardName) {
+        JSONObject jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+        if (jsonObj == null) { return false; }
+        try {
+            // find the deck
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                if (deck.get("name").equals(deckName)) {
+                    // find the card to delete
+                    JSONArray cards = deck.getJSONArray("cards");
+                    JSONArray newCards = new JSONArray();
+                    for (int j = 0; j < cards.length(); j++) {
+                        JSONObject card = cards.getJSONObject(j);
+                        if (card.get("name").equals(cardName)) {
+                            // delete the card images
+                            JSONArray imageArray = card.getJSONArray("images");
+                            for(int k = 0; k < imageArray.length(); k++){
+                                JSONObject image = imageArray.getJSONObject(k);
+                                if(!deleteImage(image.getString("URI"))) {
+                                    return false;
+                                }
+                            }
+                        } else {
+                            // put the card into the copied cards array
+                            newCards.put(card);
+                        }
+                    }
+                    deck.remove("cards");
+                    deck.put("cards", newCards);
+                    saveJSONToFile(jsonObj);
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // we did not find the card (or deck)
+        return false;
+    }
+
+    /**
+     * checks if a deck contains the specified card name
+     * @param deckName
+     * @param cardName
+     * @return the index of the card in the deck, or -1 if there is no card with that name
+     */
+    public int getCardIndex(String deckName, String cardName) {
+        JSONObject jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+        if (jsonObj == null) { return -1; }
+        try {
+            // find the dec to delete
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                if (deck.get("name").equals(deckName)) {
+                    // find the card
+                    JSONArray cards = deck.getJSONArray("cards");
+                    for (int j = 0; j < cards.length(); j++) {
+                        JSONObject card = cards.getJSONObject(j);
+                        if (card.get("name").equals(cardName)) {
+                            return j;
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return -1;
+        }
+
+        // we did not find the card (or deck)
+        return -1;
+    }
 
     /**
      * adds a deck to the internal storage json file (without overwriting)
@@ -570,5 +651,4 @@ public class LocalJSONHandler {
         File file = new File(dir, imageUri);
         return file.delete();
     }
-
 }
