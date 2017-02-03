@@ -255,6 +255,7 @@ public class HighscoreActivity extends AppCompatActivity {
         fuenfterPunkteZeit = sharedPref.getInt("fuenfterPunkteZeit", DEFAULT_POINTS_INT);
     }
 
+    /*
     public void clickUploadButtonFunction(View view){
 
         final ServerUploadJSONHandler suh = new ServerUploadJSONHandler(this);
@@ -282,10 +283,8 @@ public class HighscoreActivity extends AppCompatActivity {
             }
         }).start();
 
-
-
-
     }
+    */
 
 
 }

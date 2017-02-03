@@ -38,7 +38,9 @@ tools:context="de.uulm.dbis.quartett42.CreateCardActivity">
                 android:layout_height="match_parent"
                 android:id="@+id/deletCardBtn"
                 android:onClick="deleteCurrentCard"
-                android:src="@drawable/ic_delete_black_24dp" />
+                android:src="@drawable/ic_delete_black_24dp"
+                android:visibility="gone"
+                />
 
         </LinearLayout>
 

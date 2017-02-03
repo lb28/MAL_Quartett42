@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -382,6 +383,111 @@ public class LocalJSONHandler {
                     }
                     deck.remove("cards");
                     deck.put("cards", newCards);
+                    saveJSONToFile(jsonObj);
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // we did not find the card (or deck)
+        return false;
+    }
+
+    /**
+     * removes a card from a deck (also deletes the images from internal storage)
+     * @param deckName the name of the deck containing the card
+     * @param cardIndex the index (in the deck's card list) of the card to be deleted
+     * @return true if the deletion was successful
+     */
+    public boolean removeCard(String deckName, int cardIndex) {
+        JSONObject jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+        if (jsonObj == null) { return false; }
+        try {
+            // find the deck
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                if (deck.get("name").equals(deckName)) {
+                    // find the card to delete
+                    JSONArray cards = deck.getJSONArray("cards");
+                    JSONArray newCards = new JSONArray();
+                    for (int j = 0; j < cards.length(); j++) {
+                        JSONObject card = cards.getJSONObject(j);
+                        if (j == cardIndex) {
+                            // delete the card images
+                            JSONArray imageArray = card.getJSONArray("images");
+                            for(int k = 0; k < imageArray.length(); k++){
+                                JSONObject image = imageArray.getJSONObject(k);
+                                if(!deleteImage(image.getString("URI"))) {
+                                    return false;
+                                }
+                            }
+                        } else {
+                            // put the card into the copied cards array
+                            newCards.put(card);
+                        }
+                    }
+                    deck.remove("cards");
+                    deck.put("cards", newCards);
+                    saveJSONToFile(jsonObj);
+                    return true;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        // we did not find the card (or deck)
+        return false;
+    }
+
+    /**
+     * replaces a card in a deck
+     * (also deletes the old images from internal storage and saves the new ones)
+     * @param deckName the name of the deck containing the card
+     * @param cardIndex the index (in the deck's card list) of the card to be deleted
+     * @param newCard the new card that replaces the old one
+     * @return true if the replacement was successful
+     */
+    public boolean replaceCard(String deckName, int cardIndex, Card newCard) {
+        JSONObject newJsonCard = newCard.toJSON();
+
+        JSONObject jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+        if (jsonObj == null) { return false; }
+        try {
+            // find the deck
+            JSONArray decks = jsonObj.getJSONArray("decks");
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                if (deck.get("name").equals(deckName)) {
+                    // find the card to delete
+                    JSONArray cards = deck.getJSONArray("cards");
+                    JSONObject card = cards.getJSONObject(cardIndex);
+
+                    // delete the card's images
+                    HashSet<String> newImgUris = new HashSet<>();
+                    for (ImageCard ic : newCard.getImageList()) {
+                        newImgUris.add(ic.getUri());
+                    }
+                    JSONArray imageArray = card.getJSONArray("images");
+                    for(int k = 0; k < imageArray.length(); k++){
+                        // delete the image IF the filename is not the same as any of the new images
+                        // e.g. if nothing changed we do not want to delete the image
+                        JSONObject image = imageArray.getJSONObject(k);
+                        if (!newImgUris.contains(image.getString("URI"))) {
+                            if(!deleteImage(image.getString("URI"))) {
+                                return false;
+                            }
+                        }
+                    }
+
+                    // replace the json card with the new one
+                    cards.put(cardIndex, newJsonCard);
+
                     saveJSONToFile(jsonObj);
                     return true;
                 }
