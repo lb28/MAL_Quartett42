@@ -1,9 +1,14 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -11,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.uulm.dbis.quartett42.data.Card;
+import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
 
@@ -133,6 +139,41 @@ public class Util {
                 || inputString.indexOf('"') == -1
                 || inputString.indexOf('\'') == -1
                 || inputString.indexOf('=') == -1;
+    }
+
+
+    /** Builds an Base 64 String ouf of an Image.
+     *
+     * @param url URI of image in Either internal Storage or Assets
+     * @param sourc_mode source_mode
+     * @param context Activity
+     * @return Base64-String of image
+     */
+    public static String urlToBase64(String url, int sourc_mode, Context context){
+        Bitmap bm = null;
+
+        if(sourc_mode == Deck.SRC_MODE_ASSETS) {
+            AssetManager assetManager = context.getAssets();
+            InputStream istr;
+            try {
+                istr = assetManager.open(url);
+                bm = BitmapFactory.decodeStream(istr);
+            } catch (IOException e) {
+                // handle exception
+            }
+        }else{
+            bm = BitmapFactory.decodeFile(url);
+        }
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
+        byte[] byteArrayImage = baos.toByteArray();
+
+
+
+        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
+
+        return encodedImage;
     }
 
 }
