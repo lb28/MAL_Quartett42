@@ -1,12 +1,16 @@
 package de.uulm.dbis.quartett42;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +27,10 @@ public class HighscoreActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;
 
+    Context context;
+
+    LinearLayout linearLayout;
+
     TextView ersterName, ersterPunkte, zweiterName, zweiterPunkte, dritterName, dritterPunkte;
     TextView vierterName, vierterPunkte, fuenfterName, fuenfterPunkte;
 
@@ -36,10 +44,32 @@ public class HighscoreActivity extends AppCompatActivity {
     int ersterPunktePunkte, zweiterPunktePunkte, dritterPunktePunkte, vierterPunktePunkte, fuenfterPunktePunkte;
     int ersterPunkteZeit, zweiterPunkteZeit, dritterPunkteZeit, vierterPunkteZeit, fuenfterPunkteZeit;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_highscore);
+
+        punkteButton = (Button) findViewById(R.id.pointsButton);
+
+        context = this;
+
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutSwipe);
+
+        linearLayout.setOnTouchListener(new OnSwipeTouchListener(context) {
+            @Override
+            public void onSwipeLeft() {
+                if (punkteButton.isPressed()){
+                    clickTimeButtonHighscoreFunction(null);
+                }
+            }
+            @Override
+            public void onSwipeRight() {
+                if (punkteButton.isPressed()){
+                    clickRoundsButtonHighscoreFunction(null);
+                }
+            }
+        });
 
         updateGUI();
 
@@ -53,6 +83,8 @@ public class HighscoreActivity extends AppCompatActivity {
         punkteButton.setBackgroundColor(Color.GRAY);
         rundenButton.setBackgroundColor(Color.WHITE);
         zeitButton.setBackgroundColor(Color.WHITE);
+
+
 
         ersterName.setText(ersterNamePunkte);
         zweiterName.setText(zweiterNamePunkte);
@@ -256,4 +288,48 @@ public class HighscoreActivity extends AppCompatActivity {
     }
 
 
+}
+
+class OnSwipeTouchListener implements View.OnTouchListener {
+
+    private final GestureDetector gestureDetector;
+
+    public OnSwipeTouchListener(Context context) {
+        gestureDetector = new GestureDetector(context, new GestureListener());
+    }
+
+    public void onSwipeLeft() {
+    }
+
+    public void onSwipeRight() {
+    }
+
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float distanceX = e2.getX() - e1.getX();
+            float distanceY = e2.getY() - e1.getY();
+            if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (distanceX > 0)
+                    onSwipeRight();
+                else
+                    onSwipeLeft();
+                return true;
+            }
+            return false;
+        }
+    }
 }
