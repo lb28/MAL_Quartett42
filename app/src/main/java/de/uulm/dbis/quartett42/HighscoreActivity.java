@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HighscoreActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
+public class HighscoreActivity extends AppCompatActivity{
 
     // the default string to display when there is no entry (both for name and points)
     private static final String DEFAULT_NAME_STRING = "";
@@ -26,6 +28,8 @@ public class HighscoreActivity extends AppCompatActivity implements GestureDetec
 
     LinearLayout linearLayout;
 
+    GestureDetector gestureDetector;
+
     TextView ersterName, ersterPunkte, zweiterName, zweiterPunkte, dritterName, dritterPunkte;
     TextView vierterName, vierterPunkte, fuenfterName, fuenfterPunkte;
 
@@ -39,8 +43,6 @@ public class HighscoreActivity extends AppCompatActivity implements GestureDetec
     int ersterPunktePunkte, zweiterPunktePunkte, dritterPunktePunkte, vierterPunktePunkte, fuenfterPunktePunkte;
     int ersterPunkteZeit, zweiterPunkteZeit, dritterPunkteZeit, vierterPunkteZeit, fuenfterPunkteZeit;
 
-    GestureDetector gestureDetector;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,75 +52,22 @@ public class HighscoreActivity extends AppCompatActivity implements GestureDetec
 
         context = this;
 
-        gestureDetector = new GestureDetector(HighscoreActivity.this, HighscoreActivity.this);
+        /*
+        gestureDetector = new GestureDetector(context, new GestureListener());
 
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutSwipe);
+        linearLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                gestureDetector.onTouchEvent(motionEvent);
+                return false;
+            }
+        });
+        */
 
         updateGUI();
 
         // show rounds highscore first
         clickRoundsButtonHighscoreFunction(null);
-    }
-
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float X, float Y) {
-
-        if(motionEvent1.getY() - motionEvent2.getY() > 50){
-
-            Toast.makeText(HighscoreActivity.this , " Swipe Up " , Toast.LENGTH_LONG).show();
-
-            return true;
-        }
-
-        if(motionEvent2.getY() - motionEvent1.getY() > 50){
-
-            Toast.makeText(HighscoreActivity.this , " Swipe Down " , Toast.LENGTH_LONG).show();
-
-            return true;
-        }
-
-        if(motionEvent1.getX() - motionEvent2.getX() > 50){
-
-            Toast.makeText(HighscoreActivity.this , " Swipe Left " , Toast.LENGTH_LONG).show();
-
-            return true;
-        }
-
-        if(motionEvent2.getX() - motionEvent1.getX() > 50) {
-
-            Toast.makeText(HighscoreActivity.this, " Swipe Right ", Toast.LENGTH_LONG).show();
-
-            return true;
-        }
-        else {
-
-            return true ;
-        }
     }
 
     //Button Methoden
@@ -129,12 +78,12 @@ public class HighscoreActivity extends AppCompatActivity implements GestureDetec
         zeitButton.setBackgroundColor(Color.WHITE);
 
 
-
         ersterName.setText(ersterNamePunkte);
         zweiterName.setText(zweiterNamePunkte);
         dritterName.setText(dritterNamePunkte);
         vierterName.setText(vierterNamePunkte);
         fuenfterName.setText(fuenfterNamePunkte);
+
 
         ersterPunkte.setText(ersterPunktePunkte == DEFAULT_POINTS_INT ?
                 DEFAULT_NAME_STRING : "" + ersterPunktePunkte);
@@ -329,6 +278,46 @@ public class HighscoreActivity extends AppCompatActivity implements GestureDetec
 
     }
     */
+
+    public void onSwipeLeft() {
+
+        if (punkteButton.isPressed()){
+            clickTimeButtonHighscoreFunction(null);
+        }
+
+    }
+
+    public void onSwipeRight() {
+    }
+
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        private static final int SWIPE_DISTANCE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float distanceX = e2.getX() - e1.getX();
+            float distanceY = e2.getY() - e1.getY();
+            if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_DISTANCE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                if (distanceX > 0)
+                    onSwipeRight();
+                else
+                    onSwipeLeft();
+                return true;
+            }
+            return false;
+        }
+    }
 
 
 }
