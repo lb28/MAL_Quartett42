@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class HighscoreActivity extends AppCompatActivity {
+public class HighscoreActivity extends AppCompatActivity implements GestureDetector.OnGestureListener{
 
     // the default string to display when there is no entry (both for name and points)
     private static final String DEFAULT_NAME_STRING = "";
@@ -39,6 +39,7 @@ public class HighscoreActivity extends AppCompatActivity {
     int ersterPunktePunkte, zweiterPunktePunkte, dritterPunktePunkte, vierterPunktePunkte, fuenfterPunktePunkte;
     int ersterPunkteZeit, zweiterPunkteZeit, dritterPunkteZeit, vierterPunkteZeit, fuenfterPunkteZeit;
 
+    GestureDetector gestureDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,27 +50,75 @@ public class HighscoreActivity extends AppCompatActivity {
 
         context = this;
 
-        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutSwipe);
+        gestureDetector = new GestureDetector(HighscoreActivity.this, HighscoreActivity.this);
 
-        linearLayout.setOnTouchListener(new OnSwipeTouchListener(context) {
-            @Override
-            public void onSwipeLeft() {
-                if (punkteButton.isPressed()){
-                    clickTimeButtonHighscoreFunction(null);
-                }
-            }
-            @Override
-            public void onSwipeRight() {
-                if (punkteButton.isPressed()){
-                    clickRoundsButtonHighscoreFunction(null);
-                }
-            }
-        });
+        linearLayout = (LinearLayout) findViewById(R.id.linearLayoutSwipe);
 
         updateGUI();
 
         // show rounds highscore first
         clickRoundsButtonHighscoreFunction(null);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent1, MotionEvent motionEvent2, float X, float Y) {
+
+        if(motionEvent1.getY() - motionEvent2.getY() > 50){
+
+            Toast.makeText(HighscoreActivity.this , " Swipe Up " , Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        if(motionEvent2.getY() - motionEvent1.getY() > 50){
+
+            Toast.makeText(HighscoreActivity.this , " Swipe Down " , Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        if(motionEvent1.getX() - motionEvent2.getX() > 50){
+
+            Toast.makeText(HighscoreActivity.this , " Swipe Left " , Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+
+        if(motionEvent2.getX() - motionEvent1.getX() > 50) {
+
+            Toast.makeText(HighscoreActivity.this, " Swipe Right ", Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+        else {
+
+            return true ;
+        }
     }
 
     //Button Methoden

@@ -170,6 +170,7 @@ public class StatisticsActivity extends AppCompatActivity {
         colors.add(Color.rgb(20,205,50));
         colors.add(Color.rgb(255, 20, 0));
 
+
         //----------------- spiele gesamt -------------------------
 
         ArrayList<PieEntry> yVals = new ArrayList<>();
@@ -186,6 +187,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData = new PieData(pieDataSet);
+        pieData.setValueFormatter(new PercentFormatter());
 
         pieChart.setData(pieData);
         pieChart.setDescription(null);
@@ -195,6 +197,7 @@ public class StatisticsActivity extends AppCompatActivity {
             Legend l = pieChart.getLegend();
             l.setEnabled(false);
         }
+
 
         //----------------- normale spiele -------------------------
 
@@ -212,6 +215,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData2 = new PieData(pieDataSet2);
+        pieData2.setValueFormatter(new PercentFormatter());
 
         pieChart2.setData(pieData2);
         pieChart2.setDescription(null);
@@ -221,6 +225,7 @@ public class StatisticsActivity extends AppCompatActivity {
             Legend l = pieChart2.getLegend();
             l.setEnabled(false);
         }
+
 
         //----------------- insane spiele -------------------------
 
@@ -238,6 +243,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData3 = new PieData(pieDataSet3);
+        pieData3.setValueFormatter(new PercentFormatter());
 
         pieChart3.setData(pieData3);
         pieChart3.setDescription(null);
@@ -247,6 +253,7 @@ public class StatisticsActivity extends AppCompatActivity {
             Legend l = pieChart3.getLegend();
             l.setEnabled(false);
         }
+
 
         //----------------- expert spiele -------------------------
 
@@ -261,10 +268,9 @@ public class StatisticsActivity extends AppCompatActivity {
         pieDataSet4.setColors(colors);
         pieDataSet4.setValueTextSize(12f);
 
-
-
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData4 = new PieData(pieDataSet4);
+        pieData4.setValueFormatter(new PercentFormatter());
 
         pieChart4.setData(pieData4);
         pieChart4.setDescription(null);
@@ -328,6 +334,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //create pie data object and set xValues and yValues and set it to the pie chart
         pieData5 = new PieData(pieDataSet5);
+        pieData5.setValueFormatter(new PercentFormatter());
 
         pieChart.setData(pieData5);
         pieChart.setDescription(null);
