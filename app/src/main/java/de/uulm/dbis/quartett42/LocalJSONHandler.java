@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
@@ -421,7 +420,7 @@ public class LocalJSONHandler {
                             JSONArray imageArray = card.getJSONArray("images");
                             for(int k = 0; k < imageArray.length(); k++){
                                 JSONObject image = imageArray.getJSONObject(k);
-                                if(!deleteImage(image.getString("URI"))) {
+                                if(!context.deleteFile(image.getString("URI"))) {
                                     return false;
                                 }
                             }
@@ -468,20 +467,13 @@ public class LocalJSONHandler {
                     JSONArray cards = deck.getJSONArray("cards");
                     JSONObject card = cards.getJSONObject(cardIndex);
 
-                    // delete the card's images
-                    HashSet<String> newImgUris = new HashSet<>();
-                    for (ImageCard ic : newCard.getImageList()) {
-                        newImgUris.add(ic.getUri());
-                    }
+                    // delete the card's images:
                     JSONArray imageArray = card.getJSONArray("images");
                     for(int k = 0; k < imageArray.length(); k++){
-                        // delete the image IF the filename is not the same as any of the new images
-                        // e.g. if nothing changed we do not want to delete the image
+                        // delete the image
                         JSONObject image = imageArray.getJSONObject(k);
-                        if (!newImgUris.contains(image.getString("URI"))) {
-                            if(!deleteImage(image.getString("URI"))) {
-                                return false;
-                            }
+                        if(!context.deleteFile(image.getString("URI"))) {
+                            return false;
                         }
                     }
 
@@ -608,25 +600,39 @@ public class LocalJSONHandler {
      */
     public ImageCard createImageCard(String fileName, Bitmap bitmap, String descr) {
         String imageUri = "NO_DECK_IMAGE"; // inconsistency --> TODO put this into constant
-        if (bitmap != null) {
+        if (saveBitmap(fileName, bitmap)) {
             imageUri = fileName;
-            FileOutputStream fos;
-            try {
-                fos = context.openFileOutput(imageUri, Context.MODE_PRIVATE);
-                // Writing the bitmap to the output stream
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
-
         return new ImageCard(imageUri, descr);
     }
 
     ///////////////////
     // FILE HANDLING //
     ///////////////////
+
+    /**
+     * writes a bitmap to internal storage under the specified file name
+     * @param fileName the name of the file (e.g. deckName0_1)
+     * @param bitmap
+     * @return
+     */
+    public boolean saveBitmap(String fileName, Bitmap bitmap) {
+        if (bitmap != null) {
+            FileOutputStream fos;
+            try {
+                fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+                // Writing the bitmap to the output stream
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                fos.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * reads the json object from internal storage or from assets (depending on jsonMode)

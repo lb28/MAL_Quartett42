@@ -21,10 +21,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -46,10 +48,14 @@ public class CreateCardActivity extends AppCompatActivity {
     private Deck newDeck;
     private int currentCardIndex;
 
+    private Target imageTarget;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
+
+        Picasso.with(this).setLoggingEnabled(true); // picasso logging
 
         cardImages = new ArrayList<>();
         imgDescriptions = new ArrayList<>();
@@ -155,8 +161,7 @@ public class CreateCardActivity extends AppCompatActivity {
                     .show();
 
         } else if (saveCard()) {
-            // TODO redirect to GalleryActivity, but first get rid of the json string
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, GalleryActivity.class);
             startActivity(intent);
         }
     }
@@ -224,12 +229,17 @@ public class CreateCardActivity extends AppCompatActivity {
         ArrayList<ImageCard> imageCards = new ArrayList<>();
         EditText editTextCardName = (EditText) findViewById(R.id.editTextCardName);
 
+        if (cardImages.isEmpty()) { // test
+            int a = 3;
+            a = 5;
+            System.out.println("saveCard(): no images in list");
+        }
+
         try {
-            // save each picture with corresponding description
+            // make imagecards with the URIs (internal storage)
             for (int i = 0; i < cardImages.size(); i++) {
-                String imageUri = newDeck.getName() + currentCardIndex + "_" + i + ".jpg";
-                ImageCard imageCard = jsonHandler.createImageCard(
-                        imageUri, cardImages.get(i), imgDescriptions.get(i));
+                String imageUri = newDeck.getName() + "_" + currentCardIndex + "_" + i + ".jpg";
+                ImageCard imageCard = new ImageCard(imageUri, imgDescriptions.get(i));
                 imageCards.add(imageCard);
             }
 
@@ -238,6 +248,12 @@ public class CreateCardActivity extends AppCompatActivity {
             // put all the values of the properties into a hashmap with the name as key
             for (int i = 0; i < newDeck.getPropertyList().size(); i++) {
                 Property p = itemAdapter.getItem(i);
+                if (p == null) {
+                    Toast.makeText(this,
+                            "Attribut " + i+1 + " fehlerhaft",
+                            Toast.LENGTH_SHORT).show();
+                    return false;
+                }
                 attributeMap.put(p.getName(), p.getValue());
             }
 
@@ -263,10 +279,26 @@ public class CreateCardActivity extends AppCompatActivity {
             // do we have a new card that is not already stored? and are we on the last card?
             if (storedDeck.getCardList().size() < newDeck.getCardList().size()
                     && currentCardIndex == newDeck.getCardList().size()-1) {
-                return jsonHandler.saveCard(newDeck.getName(), newCard);
+                if (!jsonHandler.saveCard(newDeck.getName(), newCard)) {
+                    return false;
+                }
             } else {
-                return jsonHandler.replaceCard(newDeck.getName(), currentCardIndex, newCard);
+                if (!jsonHandler.replaceCard(newDeck.getName(), currentCardIndex, newCard)) {
+                    return false;
+                }
             }
+
+            // finally save the image files into internal storage
+            for (int i = 0; i < cardImages.size(); i++) {
+                String uri = imageCards.get(i).getUri();
+                if (!jsonHandler.saveBitmap(uri, cardImages.get(i))) {
+                    return false;
+                }
+            }
+
+            // we are done
+            return true;
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_SHORT).show();
@@ -275,34 +307,11 @@ public class CreateCardActivity extends AppCompatActivity {
     }
 
     /**
-     * changes an existing card: inserts the values from the user input into
-     * the card at the specified position
-     * @return true if the change was successful, false otherwise (or if the card was not found)
-     */
-    private boolean saveChangedCurrentCard() {
-        LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
-        Deck storedDeck = jsonHandler.getDeck(newDeck.getName());
-        // do we have a new card that is not already stored? and are we on the last card?
-        if (storedDeck.getCardList().size() < newDeck.getCardList().size()
-                && currentCardIndex == newDeck.getCardList().size()-1) {
-            boolean test = saveCard();
-            return test;
-        } else {
-            if (jsonHandler.removeCard(newDeck.getName(), currentCardIndex)) {
-                return saveCard();
-            }
-        }
-
-        // failed:
-        return false;
-    }
-
-    /**
      * updates the view to show the current content of the model
      */
     public void updateViewFromCard() {
         // show the spinner
-        ContentLoadingProgressBar spinner =
+        final ContentLoadingProgressBar spinner =
                 (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
         spinner.show();
 
@@ -311,7 +320,7 @@ public class CreateCardActivity extends AppCompatActivity {
         ListView createCardAttrListView = (ListView) findViewById(R.id.createCardAttrListView);
         ImageButton btnRight = (ImageButton) findViewById(R.id.createCardButtonRight);
         ImageButton btnLeft = (ImageButton) findViewById(R.id.createCardButtonLeft);
-        ImageButton btnDelete = (ImageButton) findViewById(R.id.deletCardBtn);
+//        ImageButton btnDelete = (ImageButton) findViewById(R.id.deletCardBtn);
 
         // are we behind the last card?
         if (currentCardIndex == newDeck.getCardList().size()) {
@@ -348,21 +357,64 @@ public class CreateCardActivity extends AppCompatActivity {
         cardImages = new ArrayList<>();
         imgDescriptions = new ArrayList<>();
 
-        Card card = newDeck.getCardList().get(currentCardIndex);
+        final Card card = newDeck.getCardList().get(currentCardIndex);
 
-        for (ImageCard imageCard : card.getImageList()) {
-            imgDescriptions.add(imageCard.getDescription());
+        if (card.getImageList().isEmpty()) { // test: not empty yet
+            int a = 3;
+            a = 5;
+            System.out.println("updateViewFromCard(): no imageCards in list");
+        }
 
-            Target imageTarget = new Target() {
+        System.out.println("bla");
+
+        spinner.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (final ImageCard imageCard : card.getImageList()) {
+
+                    try {
+                        String imageUri = imageCard.getUri();
+                        File imgFile = new File(getFilesDir() + "/" + imageUri);
+
+                        Bitmap bitmap = Picasso.with(CreateCardActivity.this)
+                                .load(imgFile)
+                                .resize(300, 300)
+                                .centerInside()
+                                .onlyScaleDown()
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .get();
+
+                        cardImages.add(bitmap);
+                        imgDescriptions.add(imageCard.getDescription());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateImageContainer();
+                        spinner.hide();
+                    }
+                });
+            }
+        }).start();
+
+        /*for (final ImageCard imageCard : card.getImageList()) {
+            imageTarget = new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    System.out.println("picasso: adding bitmap");
                     cardImages.add(bitmap);
-                    updateImageContainer();
+                    imgDescriptions.add(imageCard.getDescription());
                 }
 
                 @Override
                 public void onBitmapFailed(Drawable errorDrawable) {
-
+                    System.out.println("picasso: bitmap failed (1)");
                 }
 
                 @Override
@@ -373,14 +425,17 @@ public class CreateCardActivity extends AppCompatActivity {
 
             String imageUri = imageCard.getUri();
             File imgFile = new File(getFilesDir() + "/" + imageUri);
+
+            System.out.println("calling picasso");
             Picasso.with(this)
                     .load(imgFile)
                     .resize(300, 300)
                     .centerInside()
                     .onlyScaleDown()
-                    .placeholder(R.drawable.menu_image)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(imageTarget);
         }
+        updateImageContainer();*/
 
         // populate the views:
 
@@ -394,7 +449,6 @@ public class CreateCardActivity extends AppCompatActivity {
                 this, R.layout.create_card_attr, attrList);
         createCardAttrListView.setAdapter(itemAdapter);
 
-        updateImageContainer();
 
         // hide the spinner when done
         spinner.hide();
@@ -421,21 +475,21 @@ public class CreateCardActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE) {
             if (resultCode == RESULT_OK) {
                 Bundle extras = data.getExtras();
-                addCardPic((Bitmap) extras.get("data"));
+                addCardPic((Bitmap) extras.get("data"), "");
             }
         } else if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
 
-                Target deckImgBtnTarget = new Target() {
+                imageTarget = new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        addCardPic(bitmap);
+                        addCardPic(bitmap, "");
                     }
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-
+                        System.out.println("picasso: bitmap failed (2)");
                     }
 
                     @Override
@@ -444,13 +498,13 @@ public class CreateCardActivity extends AppCompatActivity {
                     }
                 };
 
-                // load image into imageBtn
+                // load image into target
                 Picasso.with(this)
                         .load(uri)
                         .resize(300,300)
                         .onlyScaleDown()
                         .centerInside()
-                        .into(deckImgBtnTarget);
+                        .into(imageTarget);
 
             }
         }
@@ -460,9 +514,9 @@ public class CreateCardActivity extends AppCompatActivity {
      * adds a bitmap to the list of pictures, adds an empty description to the list of descriptions,
      * then updates the view
      */
-    private void addCardPic(Bitmap bitmap){
+    private void addCardPic(Bitmap bitmap, String description){
         cardImages.add(bitmap);
-        imgDescriptions.add("");
+        imgDescriptions.add(description);
         updateImageContainer();
     }
 

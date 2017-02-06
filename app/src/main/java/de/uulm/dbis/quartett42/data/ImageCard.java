@@ -52,8 +52,7 @@ public class ImageCard {
     public String toString() {
         return "ImageCard{" +
                 "uri='" + uri + '\'' +
-                ", description='" + description + '\'' +
-                '}';
+                ", description='" + description + "\'}";
     }
 
     public JSONObject toJSON() {

@@ -27,7 +27,6 @@ import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
 public class NewGameActivity extends AppCompatActivity {
     private static final String TAG = "NewGameActivity";
 
-    String jsonString = "";
     String chosenDeck = "";
     int srcMode = -1;
     ArrayList<Deck> deckList;
@@ -59,9 +58,7 @@ public class NewGameActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //JSON-String auslesen:
         intent = getIntent();
-        jsonString = intent.getStringExtra("json_string");
 
         deckGameText = (TextView)findViewById(R.id.deckGameText);
         modeGameText = (TextView)findViewById(R.id.modusGameText);

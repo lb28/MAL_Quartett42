@@ -2,7 +2,6 @@ package de.uulm.dbis.quartett42;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,7 +47,7 @@ import static de.uulm.dbis.quartett42.data.Deck.SRC_MODE_INTERNAL_STORAGE;
 public class GalleryActivity extends AppCompatActivity {
     private static final String TAG = "GalleryActivity";
 
-    String jsonString = "";
+ //   String jsonString = "";
     ArrayList<Deck> deckList;
     GridView gridView;
     GridViewAdapter gridAdapter;
@@ -68,7 +67,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         //JSON-String auslesen:
         Intent intent = getIntent();
-        jsonString = intent.getStringExtra("json_string");
+   //     jsonString = intent.getStringExtra("json_string");
 
         //Decks laden:
         new Thread(new Runnable() {
@@ -143,7 +142,6 @@ public class GalleryActivity extends AppCompatActivity {
                         Intent intent = new Intent(GalleryActivity.this, ViewDeckActivity.class);
                         intent.putExtra("chosen_deck", item.getName());
                         intent.putExtra("srcMode", item.getSrcMode());
-                        intent.putExtra("json_string", jsonString);
                         ((FloatingActionMenu) findViewById(R.id.createDecksFAM)).close(true);
                         startActivity(intent);
 

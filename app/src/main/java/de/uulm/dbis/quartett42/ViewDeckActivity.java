@@ -25,7 +25,6 @@ import de.uulm.dbis.quartett42.data.Property;
 public class ViewDeckActivity extends AppCompatActivity {
     public static final String TAG = "ViewDeckActivity";
 
-    String jsonString = "";
     String chosenDeck = "";
     int srcMode = -1;
     int currentCardIndex = 0;
@@ -47,7 +46,6 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         //JSON-String auslesen:
         Intent intent = getIntent();
-        jsonString = intent.getStringExtra("json_string");
         chosenDeck = intent.getStringExtra("chosen_deck");
         srcMode = intent.getIntExtra("srcMode", -1);
 
@@ -130,7 +128,7 @@ public class ViewDeckActivity extends AppCompatActivity {
         ArrayAdapter<Property> attrListAdapter = new AttributeItemAdapter(
                 false,
                 false,
-                false, // TODO consider insaneMode in Gallery Deck View (when not playing)?
+                false,
                 this,
                 R.layout.attr_list_item,
                 attrList
@@ -179,7 +177,6 @@ public class ViewDeckActivity extends AppCompatActivity {
     public void startNewGame(){
         Intent intent = new Intent(this, NewGameActivity.class);
         intent.putExtra("chosen_deck", chosenDeck);
-        intent.putExtra("json_string", jsonString);
         intent.putExtra("srcMode", srcMode);
         intent.putExtra("new_game_source", "view_deck_activity");
         startActivity(intent);
@@ -190,7 +187,6 @@ public class ViewDeckActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
         intent.putExtra("srcMode", sharedPref.getInt("srcMode", -1));
-        intent.putExtra("json_string", jsonString);
         startActivity(intent);
     }
 

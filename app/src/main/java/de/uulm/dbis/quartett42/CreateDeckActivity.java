@@ -213,7 +213,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
         String imageUri = newDeckName+"_deckimage.jpg";
 
-        // create the ImageCard
+        // create the ImageCard (this saves the new picture)
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
         ImageCard deckImageCard = jsonHandler.createImageCard(imageUri, deckImage, deckDescr);
 
@@ -247,10 +247,10 @@ public class CreateDeckActivity extends AppCompatActivity {
     }
 
     public void changeDecPic(View view) {
-        String[] options = {"Take Photo", "Choose From Gallery"};
+        String[] options = {"Foto aufnehmen", "Aus Galerie wählen"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Change Thumbnail")
+        AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+        builder.setTitle("Bild ändern")
                 .setItems(options, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == 0) {
