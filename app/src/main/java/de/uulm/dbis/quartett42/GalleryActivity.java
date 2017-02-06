@@ -65,10 +65,6 @@ public class GalleryActivity extends AppCompatActivity {
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        //JSON-String auslesen:
-        Intent intent = getIntent();
-   //     jsonString = intent.getStringExtra("json_string");
-
         //Decks laden:
         new Thread(new Runnable() {
             public void run() {

@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             if(availableDecks > sharedPref.getInt("new_online_decks", 0)){
                 int newDecks = availableDecks - sharedPref.getInt("new_online_decks", 0);
 
-                Intent notificationIntent = new Intent(this, MainActivity.class);
+                Intent notificationIntent = new Intent(this, GalleryActivity.class);
                 notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 

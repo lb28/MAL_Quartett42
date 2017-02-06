@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
@@ -229,12 +229,6 @@ public class CreateCardActivity extends AppCompatActivity {
         ArrayList<ImageCard> imageCards = new ArrayList<>();
         EditText editTextCardName = (EditText) findViewById(R.id.editTextCardName);
 
-        if (cardImages.isEmpty()) { // test
-            int a = 3;
-            a = 5;
-            System.out.println("saveCard(): no images in list");
-        }
-
         try {
             // make imagecards with the URIs (internal storage)
             for (int i = 0; i < cardImages.size(); i++) {
@@ -359,14 +353,6 @@ public class CreateCardActivity extends AppCompatActivity {
 
         final Card card = newDeck.getCardList().get(currentCardIndex);
 
-        if (card.getImageList().isEmpty()) { // test: not empty yet
-            int a = 3;
-            a = 5;
-            System.out.println("updateViewFromCard(): no imageCards in list");
-        }
-
-        System.out.println("bla");
-
         spinner.show();
 
         new Thread(new Runnable() {
@@ -403,42 +389,7 @@ public class CreateCardActivity extends AppCompatActivity {
             }
         }).start();
 
-        /*for (final ImageCard imageCard : card.getImageList()) {
-            imageTarget = new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    System.out.println("picasso: adding bitmap");
-                    cardImages.add(bitmap);
-                    imgDescriptions.add(imageCard.getDescription());
-                }
-
-                @Override
-                public void onBitmapFailed(Drawable errorDrawable) {
-                    System.out.println("picasso: bitmap failed (1)");
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            };
-
-            String imageUri = imageCard.getUri();
-            File imgFile = new File(getFilesDir() + "/" + imageUri);
-
-            System.out.println("calling picasso");
-            Picasso.with(this)
-                    .load(imgFile)
-                    .resize(300, 300)
-                    .centerInside()
-                    .onlyScaleDown()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(imageTarget);
-        }
-        updateImageContainer();*/
-
         // populate the views:
-
         // set card name
         editTextCardName.setText(card.getName());
 
@@ -479,8 +430,39 @@ public class CreateCardActivity extends AppCompatActivity {
             }
         } else if (requestCode == PICK_IMAGE_REQUEST) {
             if (resultCode == RESULT_OK) {
-                Uri uri = data.getData();
+                final Uri uri = data.getData();
+                final ContentLoadingProgressBar spinner =
+                        (ContentLoadingProgressBar) findViewById(R.id.progressBar1);
+                spinner.show();
 
+                new AsyncTask<Void, Void, Bitmap>() {
+
+                    @Override
+                    protected Bitmap doInBackground(Void... voids) {
+                        try {
+                            return Picasso.with(CreateCardActivity.this)
+                                    .load(uri)
+                                    .resize(300, 300)
+                                    .centerInside()
+                                    .onlyScaleDown()
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                    .get();
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap bitmap) {
+                        addCardPic(bitmap, "");
+                        spinner.hide();
+                    }
+                }.execute();
+
+
+               /*
                 imageTarget = new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -505,7 +487,7 @@ public class CreateCardActivity extends AppCompatActivity {
                         .onlyScaleDown()
                         .centerInside()
                         .into(imageTarget);
-
+*/
             }
         }
     }

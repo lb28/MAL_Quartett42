@@ -141,8 +141,9 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         viewPager.setAdapter(pagerAdapter);
 
-        // set card name
-        cardTitleTextView.setText(card.getName());
+        // set title with number and name, e.g. "(1/32) Cool Car 42"
+        cardTitleTextView.setText("[" + (currentCardIndex+1) + "/" + deck.getCardList().size() + "] "
+                + card.getName());
 
     }
 
