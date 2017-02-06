@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
+    public final static int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 42;
+
     public String jsonString = "";
     SharedPreferences sharedPref;
     ContentLoadingProgressBar spinner; //Spinner fuer Ladezeiten

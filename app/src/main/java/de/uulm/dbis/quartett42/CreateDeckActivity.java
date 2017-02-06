@@ -1,9 +1,11 @@
 package de.uulm.dbis.quartett42;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +34,8 @@ import de.uulm.dbis.quartett42.data.Card;
 import de.uulm.dbis.quartett42.data.Deck;
 import de.uulm.dbis.quartett42.data.ImageCard;
 import de.uulm.dbis.quartett42.data.Property;
+
+import static de.uulm.dbis.quartett42.MainActivity.PERMISSION_REQUEST_READ_EXTERNAL_STORAGE;
 
 public class CreateDeckActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -272,6 +278,31 @@ public class CreateDeckActivity extends AppCompatActivity {
     }
 
     public void pickImage() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user
+                Toast.makeText(this, "Berechtigung zum Lesen der Bilder benötigt",
+                        Toast.LENGTH_SHORT).show();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        PERMISSION_REQUEST_READ_EXTERNAL_STORAGE);
+
+            }
+
+            return;
+        }
+
         Intent intent;
         intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -330,5 +361,28 @@ public class CreateDeckActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MainActivity.PERMISSION_REQUEST_READ_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted
+                    Intent intent;
+                    intent = new Intent();
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+
+                    startActivityForResult(intent, PICK_IMAGE_REQUEST);
+
+
+                }
+            }
+        }
     }
 }
