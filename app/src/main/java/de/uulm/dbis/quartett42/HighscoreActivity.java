@@ -16,10 +16,10 @@ import android.widget.TextView;
 public class HighscoreActivity extends AppCompatActivity{
 
     // the default string to display when there is no entry (both for name and points)
-    private static final String DEFAULT_NAME_STRING = "";
+    public static final String DEFAULT_NAME_STRING = "";
 
     // the default points stored in sharedPreferences
-    private static final int DEFAULT_POINTS_INT = -1;
+    public static final int DEFAULT_POINTS_INT = -1;
 
     SharedPreferences sharedPref;
     SharedPreferences.Editor editor;

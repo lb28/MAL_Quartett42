@@ -151,26 +151,26 @@ public class GalleryActivity extends AppCompatActivity {
                         final Deck deck = (Deck) parent.getItemAtPosition(position);
                         final String deckName = deck.getName();
 
-                        String[] menuOptions = {"Kopie bearbeiten", "Hochladen", "Löschen"};
+                        String[] menuOptions = {"Hochladen", "Löschen"};
                         android.app.AlertDialog.Builder builder =
                                 new android.app.AlertDialog.Builder(GalleryActivity.this);
                         builder.setTitle("Deck \"" + deckName +"\"")
                                 .setItems(menuOptions, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
-                                            case 0: // edit a copy of the deck
+                                            case 0: // upload deck
+                                                showUploadDialog(deckName, deck.getSrcMode());
+                                                break;
+                                            case 1: // delete deck
+                                                showDeleteDialog(deckName);
+                                                break;
+/*                                            case 3: // edit a copy of the deck
                                                 Intent intent = new Intent(GalleryActivity.this,
                                                         CreateDeckActivity.class);
                                                 intent.putExtra("deckName", deckName);
                                                 startActivity(intent);
                                                 break;
-                                            case 1: // upload deck
-
-                                                showUploadDialog(deckName, deck.getSrcMode());
-                                                 break;
-                                            case 2: // delete deck
-                                                showDeleteDialog(deckName);
-                                                break;
+*/
                                         }
                                     }
                                 });

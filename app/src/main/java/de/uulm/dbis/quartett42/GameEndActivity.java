@@ -280,11 +280,11 @@ public class GameEndActivity extends AppCompatActivity {
             erreichtePunkteSpieler = sharedPref.getInt("roundsLeft", 1) * pointsPlayer * schwierigkeit * expert;
 
             //alle highscorewerte und -namen holen und in zwei listen schreiben
-            highscorenamen.add(sharedPref.getString("ersterNameRunden", "Default Name"));
-            highscorenamen.add(sharedPref.getString("zweiterNameRunden", "Default Name"));
-            highscorenamen.add(sharedPref.getString("dritterNameRunden", "Default Name"));
-            highscorenamen.add(sharedPref.getString("vierterNameRunden", "Default Name"));
-            highscorenamen.add(sharedPref.getString("fuenfterNameRunden", "Default Name"));
+            highscorenamen.add(sharedPref.getString("ersterNameRunden", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("zweiterNameRunden", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("dritterNameRunden", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("vierterNameRunden", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("fuenfterNameRunden", HighscoreActivity.DEFAULT_NAME_STRING));
 
             highscorepunkte.add(sharedPref.getInt("ersterPunkteRunden", -1));
             highscorepunkte.add(sharedPref.getInt("zweiterPunkteRunden", -1));
@@ -354,11 +354,11 @@ public class GameEndActivity extends AppCompatActivity {
             erreichtePunkteSpieler = sharedPref.getInt("roundsLeft", 1) * pointsPlayer * schwierigkeit * expert;
 
             //alle highscorewerte und -namen holen und in zwei listen schreiben
-            highscorenamen.add(sharedPref.getString("ersterNameZeit", "Default Name"));
-            highscorenamen.add(sharedPref.getString("zweiterNameZeit", "Default Name"));
-            highscorenamen.add(sharedPref.getString("dritterNameZeit", "Default Name"));
-            highscorenamen.add(sharedPref.getString("vierterNameZeit", "Default Name"));
-            highscorenamen.add(sharedPref.getString("fuenfterNameZeit", "Default Name"));
+            highscorenamen.add(sharedPref.getString("ersterNameZeit", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("zweiterNameZeit", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("dritterNameZeit", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("vierterNameZeit", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(sharedPref.getString("fuenfterNameZeit", HighscoreActivity.DEFAULT_NAME_STRING));
 
             highscorepunkte.add(sharedPref.getInt("ersterPunkteZeit", -1));
             highscorepunkte.add(sharedPref.getInt("zweiterPunkteZeit", -1));
@@ -427,11 +427,11 @@ public class GameEndActivity extends AppCompatActivity {
             erreichtePunkteSpieler = sharedPref.getInt("pointsLeft", 1) * pointsPlayer * schwierigkeit * expert;
 
             //alle highscorewerte und -namen holen und in zwei listen schreiben
-            highscorenamen.add(0,sharedPref.getString("ersterNamePunkte", "Default Name"));
-            highscorenamen.add(1,sharedPref.getString("zweiterNamePunkte", "Default Name"));
-            highscorenamen.add(2,sharedPref.getString("dritterNamePunkte", "Default Name"));
-            highscorenamen.add(3,sharedPref.getString("vierterNamePunkte", "Default Name"));
-            highscorenamen.add(4,sharedPref.getString("fuenfterNamePunkte", "Default Name"));
+            highscorenamen.add(0,sharedPref.getString("ersterNamePunkte", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(1,sharedPref.getString("zweiterNamePunkte", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(2,sharedPref.getString("dritterNamePunkte", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(3,sharedPref.getString("vierterNamePunkte", HighscoreActivity.DEFAULT_NAME_STRING));
+            highscorenamen.add(4,sharedPref.getString("fuenfterNamePunkte", HighscoreActivity.DEFAULT_NAME_STRING));
 
             highscorepunkte.add(0,sharedPref.getInt("ersterPunktePunkte", -1));
             highscorepunkte.add(1,sharedPref.getInt("zweiterPunktePunkte", -1));
