@@ -280,7 +280,9 @@ public class GalleryActivity extends AppCompatActivity {
                                         @Override
                                         public void run() {
                                             barProgressDialog.dismiss();
-                                            Toast.makeText(getApplicationContext(), "Deck erfolgreich hochgeladen", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(),
+                                                    "Deck erfolgreich hochgeladen",
+                                                    Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }else{
@@ -353,24 +355,50 @@ public class GalleryActivity extends AppCompatActivity {
         Log.i("deckToUpload", deckToUpload.getName());
 
         //deckToUpload might be null or invalid (if the handler does not find it)
-        if (deckToUpload == null
-                || deckToUpload.getCardList().size() < 2
-                || deckToUpload.getPropertyList().size() < 4
-                || deckToUpload.getPropertyList().size() > 10
-                || deckToUpload.getCardList().get(0).getAttributeMap().size() < 4
-                || deckToUpload.getCardList().get(0).getAttributeMap().size() > 10){
-            Log.i("deckToUpload", "Deck invalid");
+        if (deckToUpload == null){
+            Log.i("uploadDeck", "Deck invalid");
 
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     barProgressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Deck konnte nicht hochgeladen werden, " +
-                            "da es invalide ist!", Toast.LENGTH_LONG).show();
+                            "da es ungültig ist.", Toast.LENGTH_LONG).show();
                 }
             });
             return false;
         }
+        else if (deckToUpload.getCardList().size() < 2) {
+            Log.i("uploadDeck", "Too few cards");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    barProgressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Deck konnte nicht hochgeladen werden, " +
+                            "da es weniger als 2 Karten hat.", Toast.LENGTH_LONG).show();
+                }
+            });
+            return false;
+        }
+        else if (deckToUpload.getPropertyList().size() < 4
+                || deckToUpload.getPropertyList().size() > 10
+                || deckToUpload.getCardList().get(0).getAttributeMap().size() < 4
+                || deckToUpload.getCardList().get(0).getAttributeMap().size() > 10) {
+            Log.i("uploadDeck", "Too few / too many attributes");
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    barProgressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), "Deck konnte nicht hochgeladen werden, " +
+                            "die Anzahl der Attribute muss zwischen 4 und 10 liegen.",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+            return false;
+        }
+
         //check if Deck is already uploaded
         ServerJSONHandler serverJsonHandler = new ServerJSONHandler(GalleryActivity.this);
         ArrayList<Deck> testList = serverJsonHandler.getDecksOverview(false);

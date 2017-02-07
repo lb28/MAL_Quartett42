@@ -101,7 +101,10 @@ public class CardImageFragment extends Fragment {
             }
         });
 
-
+        // hide the description button if there is no description
+        if (imageDesc == null || imageDesc.isEmpty()) {
+            imageDescBtn.setVisibility(View.GONE);
+        }
 
         return rootView;
     }

@@ -60,7 +60,7 @@ public class CreateCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_card);
 
-        Picasso.with(this).setLoggingEnabled(true); // picasso logging
+        //Picasso.with(this).setLoggingEnabled(true); // picasso logging
 
         cardImages = new ArrayList<>();
         imgDescriptions = new ArrayList<>();

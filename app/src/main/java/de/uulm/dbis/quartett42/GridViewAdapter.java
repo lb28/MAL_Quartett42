@@ -66,6 +66,11 @@ public class GridViewAdapter extends ArrayAdapter<Deck> {
             }
         });
 
+        if (singleDeck.getImage().getDescription() == null
+                || singleDeck.getImage().getDescription().isEmpty()) {
+            holder.descButtonView.setVisibility(View.GONE);
+        }
+
         String imageUri = singleDeck.getImage().getUri();
         // call one of three different tasks for the three srcModes
 

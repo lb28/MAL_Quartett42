@@ -93,7 +93,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     new AlertDialog.Builder(LoadOnlineDecksActivity.this)
                             .setIcon(R.drawable.ic_warning_black_24dp)
                             .setTitle("Deck Herunterladen")
-                            .setMessage("Wollen Sie Deck " + deck.getName() + " herunterladen?")
+                            .setMessage("Wollen Sie das Deck \"" + deck.getName() + "\" herunterladen?")
                             .setPositiveButton("Ja", new DialogInterface.OnClickListener()
                             {
                                 @Override
@@ -135,6 +135,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
      * @param deckID deckID
      */
     private void downloadDeck(int deckID) {
+        boolean imagesLost = false;
+
         Log.v(TAG, "starting download...");
 
         runOnUiThread(new Runnable() {
@@ -162,7 +164,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Download abgebroechen, " +
+                            "Deck ist nicht gültig!", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -220,13 +223,19 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     String cardImgUrl = deck.getCardList().get(i).getImageList().get(j).getUri();
                     Bitmap cardImageBitmap = Util.downloadBitmap(cardImgUrl);
 
-                    fos = openFileOutput(deck.getName()+i+"_"+j+".jpg", Context.MODE_PRIVATE);
+                    fos = openFileOutput(deck.getName() + i + "_" + j + ".jpg", Context.MODE_PRIVATE);
                     // Writing the bitmap to the output stream
                     cardImageBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
                     fos.close();
 
                     // replace the image uri with the local uri
-                    deck.getCardList().get(i).getImageList().get(j).setUri(deck.getName()+i+"_"+j+".jpg");
+                    deck.getCardList().get(i).getImageList().get(j).setUri(deck.getName() + i + "_" + j + ".jpg");
+
+                } catch (NullPointerException npe) {
+                    npe.printStackTrace();
+                    Log.e(TAG, "Deck image null");
+                    deck.getCardList().get(i).getImageList().remove(j);
+                    imagesLost = true;
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -236,7 +245,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Download abgebrochen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Download abgebrochen, " +
+                                    "einige Bilder sind nicht gültig!", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -252,29 +262,6 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
 
         }
 
-        //if deck has no image use the one from the first card:
-        try{
-            if(deck.getImage().getUri().equals("NO_DECK_IMAGE")){
-                deck.getImage().setUri(deck.getCardList().get(0).getImageList().get(0).getUri());
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-
-            Log.e(TAG, "Deck Download fehlgeschlagen ");
-            barProgressDialog2.dismiss();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            Intent intent = new Intent(this, GalleryActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            //finish();
-            return;
-        }
 
         // save the deck as json
         LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, SRC_MODE_INTERNAL_STORAGE );
@@ -290,7 +277,8 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "Download abgebroechen, Deck ist nicht valide!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Download abgebroechen, " +
+                            "Deck ist nicht gültig!", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -311,12 +299,20 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
         editor.apply();
 
         barProgressDialog2.setProgress(100);
-
+        final String successString;
+        if (imagesLost) {
+            successString = "Deck erfolgreich heruntergeladen, aber " +
+                    "einige Bilder wurden nicht gespeichert";
+        } else {
+            successString = "Deck erfolgreich heruntergeladen. ";
+        }
         Log.i(TAG, "Deck Download erfolgreich ");
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Deck erfolgreich herunter geladen", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getApplicationContext(), successString,
+                        Toast.LENGTH_LONG).show();
             }
         });
 
