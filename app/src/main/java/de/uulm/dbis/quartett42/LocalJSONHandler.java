@@ -39,9 +39,12 @@ public class LocalJSONHandler {
     private Context context;
     private int jsonMode;
 
+    /**
+     * default constructor using internal storage
+     * @param context
+     */
     public LocalJSONHandler(Context context) {
-        // default constructor is for assets (may be changed later)
-        this(context, SRC_MODE_ASSETS);
+        this(context, SRC_MODE_INTERNAL_STORAGE);
     }
 
     public LocalJSONHandler(Context context, int jsonMode) {
@@ -305,11 +308,6 @@ public class LocalJSONHandler {
 
     public boolean removeDeck(String deleteDeckName) {
         boolean success = false;
-
-        //TODO ggf. spaeter bessere Abfrage oder am besten ganz weglassen wenn alle Decks auf dem Server sind
-        if(deleteDeckName.equals("Sesamstrasse") || deleteDeckName.equals("Bikes")){
-            return false;
-        }
 
         JSONObject oldJsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
         JSONObject newJsonObj = new JSONObject();
@@ -604,6 +602,62 @@ public class LocalJSONHandler {
             imageUri = fileName;
         }
         return new ImageCard(imageUri, descr);
+    }
+
+    /**
+     * Renames a deck (internal storage only)
+     * @param oldDeckName the current name
+     * @param newDeckName the new deck name
+     */
+    public boolean renameDeck(String oldDeckName, String newDeckName) {
+        JSONObject jsonObj;
+        JSONArray decks;
+
+        try {
+            jsonObj = readJSONFromFile(SRC_MODE_INTERNAL_STORAGE);
+
+            // if json was empty, return the empty deck list
+            if (jsonObj == null) return false;
+
+            decks = jsonObj.getJSONArray("decks");
+
+            // first go through the decks and add all the names to a list
+            int deckIndex = -1;
+            for (int i = 0; i < decks.length(); i++) {
+                JSONObject deck = decks.getJSONObject(i);
+                String dName = deck.getString("name");
+                if (dName.equals(newDeckName)) {
+                    return false; // deckname already exists
+                }
+                if (dName.equals(oldDeckName)) {
+                    deckIndex = i;
+                }
+            }
+
+            if (deckIndex == -1) {
+                return false; // deck not found
+            }
+
+            JSONObject deck = decks.getJSONObject(deckIndex);
+            deck.remove("name");
+            deck.put("name", newDeckName);
+
+            saveJSONToFile(jsonObj);
+            return true;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean hasDeckNameCollision(String newDeckName) {
+        for (Deck d : getDecksOverview()) {
+            if (d.getName().equals(newDeckName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     ///////////////////

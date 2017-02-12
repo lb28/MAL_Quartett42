@@ -16,10 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
     public final static int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 42;
@@ -39,19 +35,13 @@ public class MainActivity extends AppCompatActivity {
         spinner.bringToFront();
         spinner.show();
 
-        //Daten laden, runOnUiThread weil UI angepasst wird, keine Ahnung ob es was besseres gibt
-        runOnUiThread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
-                loadData();
+                makeNotification();
+            }
+        }).start();
 
-                new Thread(new Runnable() {
-                    public void run() {
-                        makeNotification();
-                    }
-                }).start();
-
-            }});
     }
 
     //add menu
@@ -156,36 +146,10 @@ public class MainActivity extends AppCompatActivity {
 
     //Methoden der Activity:
 
-    //Lade-Methode fuer Start-Daten und JSON-Datei:
-    public void loadData(){
-
-        //JSON-String lesesn, damit er nicht jedes mal neu gelesen werden muss:
-        try {
-            InputStream in = getAssets().open("jsonexample.json");
-            int size = in.available();
-            byte[] buffer = new byte[size];
-            in.read(buffer);
-            in.close();
-            jsonString = new String(buffer, "UTF-8");
-            //System.out.println(jsonString);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        //For testing only:
-        /*
-        LocalJSONHandler localJsonHandler = new LocalJSONHandler(this, JSON_MODE_INTERNAL_STORAGE );
-        localJsonHandler.deleteJSONFile();
-        */
-
-    }
-
     //Neues Spiel starten:
     public void startNewGame(){
         spinner.show();
         Intent intent = new Intent(this, NewGameActivity.class);
-        intent.putExtra("json_string", jsonString);
         intent.putExtra("new_game_source", "main_activity");
         startActivity(intent);
     }
@@ -195,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("chosen_deck", sharedPref.getString("currentChosenDeck", "Sesamstrasse"));
         intent.putExtra("srcMode", sharedPref.getInt("srcMode", -1));
-        intent.putExtra("json_string", jsonString);
         startActivity(intent);
     }
 
@@ -203,32 +166,38 @@ public class MainActivity extends AppCompatActivity {
     public void makeNotification(){
         try{
             ServerJSONHandler serverJsonHandler = new ServerJSONHandler(this);
-            int availableDecks = serverJsonHandler.getDecksOverview(true).size();
+            final int availableDecks = serverJsonHandler.getDecksOverview(true).size();
             if(availableDecks > sharedPref.getInt("new_online_decks", 0)){
-                int newDecks = availableDecks - sharedPref.getInt("new_online_decks", 0);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int newDecks = availableDecks - sharedPref.getInt("new_online_decks", 0);
 
-                Intent notificationIntent = new Intent(this, LoadOnlineDecksActivity.class);
-                notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        Intent notificationIntent = new Intent(MainActivity.this,
+                                LoadOnlineDecksActivity.class);
+                        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                PendingIntent intent = PendingIntent.getActivity(this, 0,
-                        notificationIntent, 0);
+                        PendingIntent intent = PendingIntent.getActivity(MainActivity.this, 0,
+                                notificationIntent, 0);
 
-                NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                Notification notify=new Notification.Builder
-                        (getApplicationContext()).setContentTitle("Quartett42").setContentText("Es " +
-                        "sind "+newDecks+" neue Decks im Store erhältlich").
-                        setContentTitle("Quartett42").setSmallIcon(R.drawable.menu_image_cut)
-                        .setContentIntent(intent)
-                        .build();
+                        NotificationManager notif=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                        Notification notify=new Notification.Builder
+                                (getApplicationContext()).setContentTitle("Quartett42").setContentText("Es " +
+                                "sind "+newDecks+" neue Decks im Store erhältlich").
+                                setContentTitle("Quartett42").setSmallIcon(R.drawable.menu_image_cut)
+                                .setContentIntent(intent)
+                                .build();
 
 
-                notify.flags |= Notification.FLAG_AUTO_CANCEL;
-                notif.notify(0, notify);
+                        notify.flags |= Notification.FLAG_AUTO_CANCEL;
+                        notif.notify(0, notify);
 
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putInt("new_online_decks", availableDecks);
-                editor.apply();
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putInt("new_online_decks", availableDecks);
+                        editor.apply();
+                    }
+                });
             }else if(availableDecks < sharedPref.getInt("new_online_decks", 0)){
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt("new_online_decks", availableDecks);

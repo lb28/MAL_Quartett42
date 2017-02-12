@@ -167,9 +167,9 @@ public class CreateDeckActivity extends AppCompatActivity {
     public void clickAddCardsBtn(View view) {
         String newDeckName = editTextDeckName.getText().toString();
         if (saveDeck(newDeckName)) {
-            // go to CreateCardActivity (send deck name in intent)
-            Intent intent = new Intent(this, CreateCardActivity.class);
-            intent.putExtra("newDeckName", newDeckName);
+            // go to EditCardsActivity (send deck name in intent)
+            Intent intent = new Intent(this, EditCardsActivity.class);
+            intent.putExtra("deckName", newDeckName);
             intent.putExtra("copyFromDeckName", copyFromDeckName);
             startActivity(intent);
         }
@@ -184,7 +184,8 @@ public class CreateDeckActivity extends AppCompatActivity {
         }
 
         // check for invalid input (name collision, etc...)
-        if (hasDeckNameCollision(newDeckName)) {
+        LocalJSONHandler handler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
+        if (handler.hasDeckNameCollision(newDeckName)) {
             Toast.makeText(this,
                     "Ein Deck mit Namen \"" + newDeckName + "\" ist schon vorhanden",
                     Toast.LENGTH_SHORT).show();
@@ -192,7 +193,7 @@ public class CreateDeckActivity extends AppCompatActivity {
         }
         if (newDeckName.isEmpty()) {
             Toast.makeText(this,
-                    "Gib einen Namen an",
+                    "Deckname darf nicht leer sein",
                     Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -333,17 +334,6 @@ public class CreateDeckActivity extends AppCompatActivity {
                         .into(deckImgBtnTarget);
             }
         }
-    }
-
-    private boolean hasDeckNameCollision(String newDeckName) {
-        LocalJSONHandler localJSONHandler =
-                new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
-        for (Deck d : localJSONHandler.getDecksOverview()) {
-            if (d.getName().equals(newDeckName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean hasDuplicates(ArrayList<Property> deckAttrList) {

@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -151,26 +152,32 @@ public class GalleryActivity extends AppCompatActivity {
                         final Deck deck = (Deck) parent.getItemAtPosition(position);
                         final String deckName = deck.getName();
 
-                        String[] menuOptions = {"Hochladen", "Löschen"};
+                        String[] menuOptions = {
+                                "Deck umbenennen",
+                                "Deck bearbeiten",
+                                "Deck hochladen",
+                                "Deck löschen"};
                         android.app.AlertDialog.Builder builder =
                                 new android.app.AlertDialog.Builder(GalleryActivity.this);
                         builder.setTitle("Deck \"" + deckName +"\"")
                                 .setItems(menuOptions, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         switch (which) {
-                                            case 0: // upload deck
-                                                showUploadDialog(deckName, deck.getSrcMode());
+                                            case 0:
+                                                showRenameDeckDialog(deckName);
                                                 break;
-                                            case 1: // delete deck
-                                                showDeleteDialog(deckName);
-                                                break;
-/*                                            case 3: // edit a copy of the deck
+                                            case 1:
                                                 Intent intent = new Intent(GalleryActivity.this,
-                                                        CreateDeckActivity.class);
+                                                        EditCardsActivity.class);
                                                 intent.putExtra("deckName", deckName);
                                                 startActivity(intent);
                                                 break;
-*/
+                                            case 2:
+                                                showUploadDialog(deckName, deck.getSrcMode());
+                                                break;
+                                           case 3:
+                                               showDeleteDialog(deckName);
+                                               break;
                                         }
                                     }
                                 });
@@ -185,6 +192,49 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void showRenameDeckDialog(final String oldDeckName) {
+        final EditText imgDescrEditText = (EditText) getLayoutInflater().inflate(
+                R.layout.edit_descr_view,null);
+        imgDescrEditText.setText(oldDeckName);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Deck Umbenennen")
+                .setView(imgDescrEditText)
+                .setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get the new deckName
+                        String newDeckName = imgDescrEditText.getText().toString();
+                        LocalJSONHandler handler = new LocalJSONHandler(
+                                GalleryActivity.this, SRC_MODE_INTERNAL_STORAGE);
+                        if (handler.hasDeckNameCollision(newDeckName)) {
+                            Toast.makeText(GalleryActivity.this,
+                                    "Ein Deck mit Namen \"" + newDeckName + "\" ist schon vorhanden",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        if (newDeckName.isEmpty()) {
+                            Toast.makeText(GalleryActivity.this,
+                                    "Deckname darf nicht leer sein",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (handler.renameDeck(oldDeckName, newDeckName)) {
+                            // refresh the activity
+                            Intent intent = getIntent();
+                            finish();
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(GalleryActivity.this,
+                                    "Deck konnte nicht umbenannt werden",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNeutralButton("Abbrechen", null)
+                .show();
     }
 
     private void showDeleteDialog(final String deckName) {
@@ -210,6 +260,10 @@ public class GalleryActivity extends AppCompatActivity {
                                 if (!localJSONHandler.removeDeck(deckName)) {
                                     System.err.println("Deck " + deckName
                                             + " could not be removed!");
+                                    Toast.makeText(GalleryActivity.this,
+                                            "Deck konnte nicht gelöscht werden",
+                                            Toast.LENGTH_SHORT);
+                                    return;
                                 }else{
                                     //Laufende Spielvariable auf 0 setzen, falls dieses Deck gerade in der Pause ist
                                     if(sharedPref.getInt("runningGame", 0) == 1){

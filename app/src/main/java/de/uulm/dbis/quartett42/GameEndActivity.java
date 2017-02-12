@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,6 +67,9 @@ public class GameEndActivity extends AppCompatActivity {
 
         highscorenamen = new ArrayList<>();
         highscorepunkte = new ArrayList<>();
+
+        schwierigkeit = sharedPref.getInt("difficulty", 0);
+        schwierigkeit++; // so that it will be 1 2 or 3
 
         //Vibrating
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -213,15 +217,11 @@ public class GameEndActivity extends AppCompatActivity {
     //true -> ja
     //false -> nein
     public boolean newHighscore(int pointsPlayer, int gamemode){
-
         int punktevergleich;
         int vergleich;
-        int expert = 1;
         boolean tmp = sharedPref.getBoolean("expertModus", false);
 
-        if (tmp == true){
-            expert = 2;
-        }
+        int expert = tmp ? 2 : 1;
 
         if (gamemode == 1){
 
@@ -247,6 +247,7 @@ public class GameEndActivity extends AppCompatActivity {
 
         //die erreichten Punkte des Spielers sind kleiner als der unterste Wert in den Highscores
         // -> in die rangliste eintragen nicht möglich
+        Log.i("newHighscore", String.valueOf(punktevergleich));
         if (vergleich > punktevergleich){
             inDieTop5.setVisibility(View.INVISIBLE);
             rangliste.setVisibility(View.INVISIBLE);
@@ -263,7 +264,6 @@ public class GameEndActivity extends AppCompatActivity {
     public void clickInsertHighscoreFunction(View view){
 
         int spielmodus = sharedPref.getInt("mode", 0);
-        schwierigkeit = sharedPref.getInt("difficulty", 0);
         boolean tmp = sharedPref.getBoolean("expertModus", false);
         int expert = 1;
         if (tmp == true){

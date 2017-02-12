@@ -134,7 +134,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="de.uulm.dbis.quartett42.GalleryActivity" />
         </activity>
-        <activity android:name=".CreateCardActivity"
+        <activity android:name=".EditCardsActivity"
             android:label="Quartett42 Neue Karte"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">

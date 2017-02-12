@@ -491,7 +491,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     /**
-     * (method name sucks... any idea?)
      * calls game.playCards() and makes the redirect to CompareCardsActivity.
      * Basically acts as the GUI counterpart to game.playCards()
      * @param chosenAttribute the name of the chosen property/attribute

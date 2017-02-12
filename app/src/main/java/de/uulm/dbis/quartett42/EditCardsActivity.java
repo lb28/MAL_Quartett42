@@ -26,7 +26,6 @@ import android.widget.Toast;
 
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,10 +39,10 @@ import de.uulm.dbis.quartett42.data.Property;
 
 import static de.uulm.dbis.quartett42.MainActivity.PERMISSION_REQUEST_READ_EXTERNAL_STORAGE;
 
-public class CreateCardActivity extends AppCompatActivity {
+public class EditCardsActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int PICK_IMAGE_REQUEST = 2;
-    private static final String TAG = "CreateCardActivity";
+    private static final String TAG = "EditCardsActivity";
 
     private CreateCardItemAdapter itemAdapter;
 
@@ -53,24 +52,25 @@ public class CreateCardActivity extends AppCompatActivity {
     private Deck newDeck;
     private int currentCardIndex;
 
-    private Target imageTarget;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_card);
+        setContentView(R.layout.activity_edit_cards);
 
         //Picasso.with(this).setLoggingEnabled(true); // picasso logging
 
         cardImages = new ArrayList<>();
         imgDescriptions = new ArrayList<>();
-        currentCardIndex = 0;
 
-        String deckName = getIntent().getStringExtra("newDeckName");
+        String deckName = getIntent().getStringExtra("deckName");
 
         // get the newly created deck which has no cards yet
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
         newDeck = jsonHandler.getDeck(deckName);
+        currentCardIndex = 0;
+        if (newDeck.getCardList().size() > 0) {
+            currentCardIndex = newDeck.getCardList().size()-1;
+        }
 
         updateViewFromCard();
     }
@@ -86,11 +86,11 @@ public class CreateCardActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // delete the deck and then leave
                         LocalJSONHandler handler = new LocalJSONHandler(
-                                CreateCardActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
+                                EditCardsActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
                         if (handler.removeDeck(newDeck.getName())) {
-                            CreateCardActivity.super.onSupportNavigateUp();
+                            EditCardsActivity.super.onSupportNavigateUp();
                         } else {
-                            Toast.makeText(CreateCardActivity.this,
+                            Toast.makeText(EditCardsActivity.this,
                                     "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -105,7 +105,7 @@ public class CreateCardActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if(saveCard()) {
-                        CreateCardActivity.super.onSupportNavigateUp();
+                        EditCardsActivity.super.onSupportNavigateUp();
                     }
                 }
             });
@@ -153,11 +153,11 @@ public class CreateCardActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             // delete the deck and then leave
                             LocalJSONHandler handler = new LocalJSONHandler(
-                                    CreateCardActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
+                                    EditCardsActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
                             if (handler.removeDeck(newDeck.getName())) {
-                                CreateCardActivity.super.onSupportNavigateUp();
+                                EditCardsActivity.super.onSupportNavigateUp();
                             } else {
-                                Toast.makeText(CreateCardActivity.this,
+                                Toast.makeText(EditCardsActivity.this,
                                         "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -237,7 +237,8 @@ public class CreateCardActivity extends AppCompatActivity {
         try {
             // make imagecards with the URIs (internal storage)
             for (int i = 0; i < cardImages.size(); i++) {
-                String imageUri = newDeck.getName() + "_" + currentCardIndex + "_" + i + ".jpg";
+                String imageUri = newDeck.getName() + "_" + currentCardIndex + "_" + i
+                        + "_" + System.currentTimeMillis() + ".jpg";
                 ImageCard imageCard = new ImageCard(imageUri, imgDescriptions.get(i));
                 imageCards.add(imageCard);
             }
@@ -319,7 +320,7 @@ public class CreateCardActivity extends AppCompatActivity {
         ListView createCardAttrListView = (ListView) findViewById(R.id.createCardAttrListView);
         ImageButton btnRight = (ImageButton) findViewById(R.id.createCardButtonRight);
         ImageButton btnLeft = (ImageButton) findViewById(R.id.createCardButtonLeft);
-//        ImageButton btnDelete = (ImageButton) findViewById(R.id.deletCardBtn);
+        ImageButton btnDelete = (ImageButton) findViewById(R.id.deletCardBtn);
 
         // are we behind the last card?
         if (currentCardIndex == newDeck.getCardList().size()) {
@@ -345,13 +346,13 @@ public class CreateCardActivity extends AppCompatActivity {
             btnLeft.setVisibility(View.VISIBLE);
         }
 
-/*
+
         if (newDeck.getCardList().size() <= 2) {
             btnDelete.setVisibility(View.GONE);
         } else {
             btnDelete.setVisibility(View.VISIBLE);
         }
-*/
+
         // empty the images and descriptions lists
         cardImages = new ArrayList<>();
         imgDescriptions = new ArrayList<>();
@@ -369,7 +370,7 @@ public class CreateCardActivity extends AppCompatActivity {
                         String imageUri = imageCard.getUri();
                         File imgFile = new File(getFilesDir() + "/" + imageUri);
 
-                        Bitmap bitmap = Picasso.with(CreateCardActivity.this)
+                        Bitmap bitmap = Picasso.with(EditCardsActivity.this)
                                 .load(imgFile)
                                 .resize(300, 300)
                                 .centerInside()
@@ -445,7 +446,7 @@ public class CreateCardActivity extends AppCompatActivity {
                     @Override
                     protected Bitmap doInBackground(Void... voids) {
                         try {
-                            return Picasso.with(CreateCardActivity.this)
+                            return Picasso.with(EditCardsActivity.this)
                                     .load(uri)
                                     .resize(300, 300)
                                     .centerInside()
@@ -556,7 +557,7 @@ public class CreateCardActivity extends AppCompatActivity {
         cardImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                new AlertDialog.Builder(CreateCardActivity.this)
+                new AlertDialog.Builder(EditCardsActivity.this)
                         .setIcon(R.drawable.ic_warning_black_24dp)
                         .setTitle("Bild löschen")
                         .setMessage("Wollen Sie das Bild löschen?")
@@ -582,7 +583,7 @@ public class CreateCardActivity extends AppCompatActivity {
         imageDescBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AlertDialog.Builder(CreateCardActivity.this)
+                new AlertDialog.Builder(EditCardsActivity.this)
                         .setIcon(R.drawable.ic_info_black_24dp)
                         .setTitle("Beschreibung")
                         .setView(imgDescrEditText)

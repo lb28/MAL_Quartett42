@@ -293,95 +293,50 @@ public class Game {
         }
 
         // TODO i think we could do it like this, and then omit the following "if (tmpMaxwinner)"
-//        Double valPlayer = cardPlayer.getAttributeMap().get(chosenAttribute);
-//        Double valComputer = cardComputer.getAttributeMap().get(chosenAttribute);
-//        if (!tmpMaxwinner) {
-//            // invert both values so in case they were equal they still are
-//            valPlayer = -valPlayer;
-//            valComputer = -valComputer;
-//        }
+        Double valPlayer = cardPlayer.getAttributeMap().get(chosenAttribute);
+        Double valComputer = cardComputer.getAttributeMap().get(chosenAttribute);
+        if (!tmpMaxwinner) {
+            // invert both values so in case they were equal they still are
+            valPlayer = -valPlayer;
+            valComputer = -valComputer;
+        }
 
-        if (tmpMaxwinner) {
-            if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
-                //Player gewinnt:
-                winner = WINNER_PLAYER;
-                nextPlayer = true;
-                //Punkte behandlen:
-                pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
-                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
-                }
-                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsPlayer.add(cardComputer.getId());
-                cardsPlayer.add(cardPlayer.getId());
-            }else if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
-                //Computer gewinnt:
-                winner = WINNER_COMPUTER;
-                nextPlayer = false;
-                //Punkte behandeln:
-                pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
-                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
-                }
-                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsComputer.add(cardPlayer.getId());
-                cardsComputer.add(cardComputer.getId());
-            }else{
-                //unentschieden:
-                winner = WINNER_DRAW;
-                //Jeder haengt seine Karte hinten an:
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsPlayer.add(cardPlayer.getId());
-                cardsComputer.add(cardComputer.getId());
-            }
+        if(valPlayer > valComputer){
+            //Player gewinnt:
+            winner = WINNER_PLAYER;
+            nextPlayer = true;
+            //Punkte behandlen:
+            pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute);
+            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsPlayer.add(cardComputer.getId());
+            cardsPlayer.add(cardPlayer.getId());
+        }else if(valPlayer < valComputer){
+            //Computer gewinnt:
+            winner = WINNER_COMPUTER;
+            nextPlayer = false;
+            //Punkte behandeln:
+            pointsComputer = pointsComputer + calculatePoints(chosenAttribute);
+            //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsComputer.add(cardPlayer.getId());
+            cardsComputer.add(cardComputer.getId());
         }else{
-            if(cardPlayer.getAttributeMap().get(chosenAttribute) < cardComputer.getAttributeMap().get(chosenAttribute)){
-                //Player gewinnt:
-                winner = WINNER_PLAYER;
-                nextPlayer = true;
-                //Punkte behandlen:
-                pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute, winner);
-                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
-                }
-                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsPlayer.add(cardComputer.getId());
-                cardsPlayer.add(cardPlayer.getId());
-            }else if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
-                //Computer gewinnt:
-                //Player gewinnt:
-                winner = WINNER_COMPUTER;
-                nextPlayer = false;
-                //Punkte behandeln:
-                pointsComputer = pointsComputer + calculatePoints(chosenAttribute, winner);
-                //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-                if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                    roundsLeft = roundsLeft - calculatePoints(chosenAttribute, winner);
-                }
-                //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsComputer.add(cardPlayer.getId());
-                cardsComputer.add(cardComputer.getId());
-            }else{
-                //unentschieden:
-                winner = WINNER_DRAW;
-                //Jeder haengt seine Karte hinten an:
-                cardsPlayer.remove(0);
-                cardsComputer.remove(0);
-                cardsPlayer.add(cardPlayer.getId());
-                cardsComputer.add(cardComputer.getId());
-            }
+            //unentschieden:
+            winner = WINNER_DRAW;
+            //Jeder haengt seine Karte hinten an:
+            cardsPlayer.remove(0);
+            cardsComputer.remove(0);
+            cardsPlayer.add(cardPlayer.getId());
+            cardsComputer.add(cardComputer.getId());
+        }
+
+        // Bei runden- oder punkte-basiert die Anzahl runter zaehlen
+        // auch bei unentschieden um endlos-loops zu verhindern
+        if(mode == MODE_ROUNDS || mode == MODE_POINTS){
+            roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
         }
 
         // check if the game is over
@@ -398,10 +353,9 @@ public class Game {
     /** Methode berechnet Punkte, die der Gewinner bekommt
      *
      * @param chosenAttribute
-     * @param winner
      * @return int points
      */
-    private int calculatePoints(String chosenAttribute, int winner){
+    private int calculatePoints(String chosenAttribute){
         if(mode == MODE_ROUNDS || mode == MODE_TIME){
             //Falls Runden oder Zeitbasiert, einfach 1 zurueck geben:
             return 1;
