@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -95,6 +96,7 @@ public class CompareCardsActivity extends AppCompatActivity {
                 (TextView) computerParent.findViewById(R.id.cardTitleTextView);
         ListView listViewComputer =
                 (ListView) computerParent.findViewById(R.id.cardAttributeListView);
+        TabLayout tabLayoutComputer = (TabLayout) findViewById(R.id.tabDots);
 
         ViewPager viewPagerPlayer =
                 (ViewPager) playerParent.findViewById(R.id.cardImageViewPager2);
@@ -102,6 +104,7 @@ public class CompareCardsActivity extends AppCompatActivity {
                 (TextView) playerParent.findViewById(R.id.cardTitleTextView);
         ListView listViewPlayer =
                 (ListView) playerParent.findViewById(R.id.cardAttributeListView);
+        TabLayout tabLayoutPlayer = (TabLayout) findViewById(R.id.tabDots2);
 
 
         // get all the stuff from the intent
@@ -170,7 +173,7 @@ public class CompareCardsActivity extends AppCompatActivity {
                 deckName,
                 srcMode
         ));
-
+        tabLayoutPlayer.setupWithViewPager(viewPagerPlayer, true);
 
         // computer card
         ArrayAdapter<Property> attrListComputerAdapter = new AttributeItemAdapter(
@@ -189,6 +192,7 @@ public class CompareCardsActivity extends AppCompatActivity {
                 deckName,
                 srcMode
         ));
+        tabLayoutComputer.setupWithViewPager(viewPagerComputer, true);
 
         // round winner
         TextView roundWinnerTextView = (TextView) findViewById(R.id.roundWinnerTextView);

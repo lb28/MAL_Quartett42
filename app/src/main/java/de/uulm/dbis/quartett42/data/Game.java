@@ -307,6 +307,10 @@ public class Game {
             nextPlayer = true;
             //Punkte behandlen:
             pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute);
+            //Bei runden- oder punkte-basiert die Anzahl runter zaehlen
+            if(mode == MODE_ROUNDS || mode == MODE_POINTS){
+                roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
+            }
             //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
             cardsPlayer.remove(0);
             cardsComputer.remove(0);
@@ -318,6 +322,10 @@ public class Game {
             nextPlayer = false;
             //Punkte behandeln:
             pointsComputer = pointsComputer + calculatePoints(chosenAttribute);
+            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
+            if(mode == MODE_ROUNDS || mode == MODE_POINTS){
+                roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
+            }
             //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
             cardsPlayer.remove(0);
             cardsComputer.remove(0);
@@ -333,8 +341,8 @@ public class Game {
             cardsComputer.add(cardComputer.getId());
         }
 
-        // Bei runden- oder punkte-basiert die Anzahl runter zaehlen
-        // auch bei unentschieden um endlos-loops zu verhindern
+        //Bei runden- oder punkte-basiert die Anzahl runter zaehlen
+        // auch bei un
         if(mode == MODE_ROUNDS || mode == MODE_POINTS){
             roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
         }

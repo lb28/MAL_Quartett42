@@ -207,6 +207,7 @@ public class EditCardsActivity extends AppCompatActivity {
                     newDeck.getCardList().get(currentCardIndex).getName())) {
                 // delete card from card list
                 newDeck.getCardList().remove(currentCardIndex);
+                currentCardIndex--;
             } else {
                 Toast.makeText(
                         this, "Karte konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();

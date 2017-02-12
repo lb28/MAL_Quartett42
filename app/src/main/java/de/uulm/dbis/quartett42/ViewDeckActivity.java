@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
@@ -119,7 +120,8 @@ public class ViewDeckActivity extends AppCompatActivity {
         TextView cardTitleTextView = (TextView) findViewById(R.id.cardTitleTextView);
         ListView cardAttributeListView = (ListView) findViewById(R.id.cardAttributeListView);
         viewPager = (ViewPager) findViewById(R.id.cardImageViewPager);
-
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabDots);
+        tabLayout.setupWithViewPager(viewPager, true);
         // get the current card
         Card card = deck.getCardList().get(currentCardIndex);
 
@@ -141,7 +143,7 @@ public class ViewDeckActivity extends AppCompatActivity {
 
         viewPager.setAdapter(pagerAdapter);
 
-        // set title with number and name, e.g. "(1/32) Cool Car 42"
+        // set title with number and name, e.g. "(1/32) cardName"
         cardTitleTextView.setText("[" + (currentCardIndex+1) + "/" + deck.getCardList().size() + "] "
                 + card.getName());
 
