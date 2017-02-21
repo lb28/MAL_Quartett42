@@ -74,8 +74,8 @@ public class HighscoreActivity extends AppCompatActivity{
     public void clickPointsButtonHighscoreFunction(View view){
 
         punkteButton.setBackgroundColor(Color.GRAY);
-        rundenButton.setBackgroundColor(Color.WHITE);
-        zeitButton.setBackgroundColor(Color.WHITE);
+        rundenButton.setBackgroundColor(Color.rgb(34, 118, 139));
+        zeitButton.setBackgroundColor(Color.rgb(34, 118, 139));
 
 
         ersterName.setText(ersterNamePunkte);
@@ -100,9 +100,9 @@ public class HighscoreActivity extends AppCompatActivity{
 
     public void clickRoundsButtonHighscoreFunction(View view){
 
-        punkteButton.setBackgroundColor(Color.WHITE);
+        punkteButton.setBackgroundColor(Color.rgb(34, 118, 139));
         rundenButton.setBackgroundColor(Color.GRAY);
-        zeitButton.setBackgroundColor(Color.WHITE);
+        zeitButton.setBackgroundColor(Color.rgb(34, 118, 139));
 
         ersterName.setText(ersterNameRunden);
         zweiterName.setText(zweiterNameRunden);
@@ -125,8 +125,8 @@ public class HighscoreActivity extends AppCompatActivity{
 
     public void clickTimeButtonHighscoreFunction(View view){
 
-        punkteButton.setBackgroundColor(Color.WHITE);
-        rundenButton.setBackgroundColor(Color.WHITE);
+        punkteButton.setBackgroundColor(Color.rgb(34, 118, 139));
+        rundenButton.setBackgroundColor(Color.rgb(34, 118, 139));
         zeitButton.setBackgroundColor(Color.GRAY);
 
         ersterName.setText(ersterNameZeit);
