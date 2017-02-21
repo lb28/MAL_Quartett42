@@ -170,6 +170,7 @@ public class GalleryActivity extends AppCompatActivity {
                                                 Intent intent = new Intent(GalleryActivity.this,
                                                         EditCardsActivity.class);
                                                 intent.putExtra("deckName", deckName);
+                                                intent.putExtra("editMode", "editDeck");
                                                 startActivity(intent);
                                                 break;
                                             case 2:

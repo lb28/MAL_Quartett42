@@ -171,6 +171,7 @@ public class CreateDeckActivity extends AppCompatActivity {
             Intent intent = new Intent(this, EditCardsActivity.class);
             intent.putExtra("deckName", newDeckName);
             intent.putExtra("copyFromDeckName", copyFromDeckName);
+            intent.putExtra("editMode", "createDeck");
             startActivity(intent);
         }
     }

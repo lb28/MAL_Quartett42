@@ -11,14 +11,7 @@
     tools:context="de.uulm.dbis.quartett42.GuideActivity">
 
     <TextView
-        android:text="
-Varianten: \n\n
-auf Runden: Wer nach festgelegter Anzahl an Runden mehr Karten hat gewinnt das Spiel. \n\n
-auf Zeit: Wer nach festgelegter Anzahl an Minuten mehr Karten hat gewinnt das Spiel. \n\n
-auf Punkte: Wer zuerst die festgelegte Anzahl an Punkten erreicht gewinnt das Spiel. \n\n
-Zudem gewinnt ein Spieler immer dann, wenn der Gegner keine Karten mehr hat. \n\n
-Insane-Modus: Alles ist vertauscht! Statt hohen Werten gewinnen nun niedrige Werte und umgekehrt. \n\n
-Experten Modus: Hier sind Kenner gefragt! Die Werte der einzelnen Karten werden nicht mehr angezeigt. \n\n "
+        android:text="@string/guide_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
@@ -26,5 +19,5 @@ Experten Modus: Hier sind Kenner gefragt! Die Werte der einzelnen Karten werden 
         android:layout_alignParentStart="true"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
-        android:id="@+id/textView4" />
+        android:id="@+id/guideTextView" />
 </RelativeLayout>

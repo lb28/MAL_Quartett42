@@ -708,7 +708,7 @@ public class LocalJSONHandler {
                     if (jsonString.isEmpty()) return null;
                     return new JSONObject(jsonString);
                 } catch (IOException | JSONException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
                     return null;
                 }
 

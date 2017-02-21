@@ -52,6 +52,8 @@ public class EditCardsActivity extends AppCompatActivity {
     private Deck newDeck;
     private int currentCardIndex;
 
+    private String editMode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +65,7 @@ public class EditCardsActivity extends AppCompatActivity {
         imgDescriptions = new ArrayList<>();
 
         String deckName = getIntent().getStringExtra("deckName");
+        editMode = getIntent().getStringExtra("editMode");
 
         // get the newly created deck which has no cards yet
         LocalJSONHandler jsonHandler = new LocalJSONHandler(this, Deck.SRC_MODE_INTERNAL_STORAGE);
@@ -81,21 +84,24 @@ public class EditCardsActivity extends AppCompatActivity {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this)
                 .setIcon(R.drawable.ic_warning_black_24dp)
                 .setTitle("Neues Deck")
-                .setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // delete the deck and then leave
-                        LocalJSONHandler handler = new LocalJSONHandler(
-                                EditCardsActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
-                        if (handler.removeDeck(newDeck.getName())) {
-                            EditCardsActivity.super.onSupportNavigateUp();
-                        } else {
-                            Toast.makeText(EditCardsActivity.this,
-                                    "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
                 .setNeutralButton("Abbrechen", null);
+
+        if(editMode.equals("createDeck")){
+            builder.setNegativeButton("Verwerfen", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // delete the deck and then leave
+                    LocalJSONHandler handler = new LocalJSONHandler(
+                            EditCardsActivity.this, Deck.SRC_MODE_INTERNAL_STORAGE);
+                    if (handler.removeDeck(newDeck.getName())) {
+                        EditCardsActivity.super.onSupportNavigateUp();
+                    } else {
+                        Toast.makeText(EditCardsActivity.this,
+                                "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
 
         if (newDeck.getCardList().size() < 2) {
             builder.setMessage("Das Deck hat weniger als 2 Karten. Deck verwerfen?");

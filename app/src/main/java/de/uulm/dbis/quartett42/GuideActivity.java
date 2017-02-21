@@ -2,7 +2,8 @@ package de.uulm.dbis.quartett42;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 public class GuideActivity extends AppCompatActivity {
 
@@ -11,6 +12,7 @@ public class GuideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guide);
 
-        Toast.makeText(getApplicationContext(), "TODO: Gute Anleitung schreiben", Toast.LENGTH_SHORT).show();
+        TextView guideTextView = (TextView) findViewById(R.id.guideTextView);
+        guideTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

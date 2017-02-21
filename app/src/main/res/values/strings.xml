@@ -2,4 +2,12 @@
     <string name="app_name">Quartett42</string>
     <string name="title_activity_highscore_activiy">HighscoreActiviy</string>
     <string name="title_activity_info">InfoActivity</string>
+    <string name="guide_text">Varianten: \n\n
+- auf Runden: Wer nach festgelegter Anzahl an Runden mehr Karten hat gewinnt das Spiel. \n\n
+- auf Zeit: Wer nach festgelegter Anzahl an Minuten mehr Karten hat gewinnt das Spiel. \n\n
+- auf Punkte: Wer nach festgelegter Anzahl an Punkten mehr Punkte hat gewinnt das Spiel. \n\n
+- Zudem gewinnt ein Spieler immer dann, wenn der Gegner keine Karten mehr hat. \n\n
+- Insane-Modus: Alles ist vertauscht! Statt hohen Werten gewinnen nun niedrige Werte und umgekehrt. \n\n
+- Experten Modus: Hier sind Kenner gefragt! Die Werte der einzelnen Karten werden nicht mehr angezeigt. \n\n
+<a href="https://de.wikipedia.org/wiki/Supertrumpf#Die_Spielregeln">Eine genaue Spielanleitung gibt es hier</a></string>
 </resources>

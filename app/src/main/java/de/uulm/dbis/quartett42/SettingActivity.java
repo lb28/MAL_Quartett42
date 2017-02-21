@@ -43,7 +43,7 @@ public class SettingActivity extends AppCompatActivity {
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder info = new AlertDialog.Builder(this);
             info.setTitle("Hinweis");
-            info.setMessage("Einstellungen ändern nicht möglich waehrend eines laufenden Spiels!")
+            info.setMessage("Einstellungen ändern nicht möglich während eines laufenden Spiels!")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             finish();
