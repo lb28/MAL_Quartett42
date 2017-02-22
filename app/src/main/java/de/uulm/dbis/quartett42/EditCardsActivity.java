@@ -97,7 +97,7 @@ public class EditCardsActivity extends AppCompatActivity {
                         EditCardsActivity.super.onSupportNavigateUp();
                     } else {
                         Toast.makeText(EditCardsActivity.this,
-                                "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+                                "Deck konnte nicht entfernt werden", Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -164,7 +164,7 @@ public class EditCardsActivity extends AppCompatActivity {
                                 EditCardsActivity.super.onSupportNavigateUp();
                             } else {
                                 Toast.makeText(EditCardsActivity.this,
-                                        "Deck konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+                                        "Deck konnte nicht entfernt werden", Toast.LENGTH_LONG).show();
                             }
                         }
                     })
@@ -193,7 +193,7 @@ public class EditCardsActivity extends AppCompatActivity {
     public void deleteCurrentCard(View view) {
         // are we on the first card
         if (newDeck.getCardList().size() <= 2) {
-            Toast.makeText(this, "Deck muss mindestens zwei Karten enthalten", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Deck muss mindestens zwei Karten enthalten", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -216,7 +216,7 @@ public class EditCardsActivity extends AppCompatActivity {
                 currentCardIndex--;
             } else {
                 Toast.makeText(
-                        this, "Karte konnte nicht entfernt werden", Toast.LENGTH_SHORT).show();
+                        this, "Karte konnte nicht entfernt werden", Toast.LENGTH_LONG).show();
             }
 
         }
@@ -258,7 +258,7 @@ public class EditCardsActivity extends AppCompatActivity {
                 if (p == null) {
                     Toast.makeText(this,
                             "Attribut " + i+1 + " fehlerhaft",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_LONG).show();
                     return false;
                 }
                 attributeMap.put(p.getName(), p.getValue());
@@ -269,13 +269,13 @@ public class EditCardsActivity extends AppCompatActivity {
             if (hasCardNameCollision(cardName)) {
                 Toast.makeText(this,
                         "Kartenname ist im Deck schon vorhanden",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
                 return false;
             }
             if (cardName.isEmpty()) {
                 Toast.makeText(this,
                         "Gib einen Namen an",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -308,7 +308,7 @@ public class EditCardsActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Karte konnte nicht gespeichert werden", Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -656,7 +656,7 @@ public class EditCardsActivity extends AppCompatActivity {
 
                 // Show an explanation to the user
                 Toast.makeText(this, "Berechtigung zum Lesen der Bilder benötigt",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
 
             } else {
 

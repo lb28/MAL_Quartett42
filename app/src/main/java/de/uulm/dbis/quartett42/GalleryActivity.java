@@ -212,13 +212,13 @@ public class GalleryActivity extends AppCompatActivity {
                         if (handler.hasDeckNameCollision(newDeckName)) {
                             Toast.makeText(GalleryActivity.this,
                                     "Ein Deck mit Namen \"" + newDeckName + "\" ist schon vorhanden",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (newDeckName.isEmpty()) {
                             Toast.makeText(GalleryActivity.this,
                                     "Deckname darf nicht leer sein",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -230,7 +230,7 @@ public class GalleryActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(GalleryActivity.this,
                                     "Deck konnte nicht umbenannt werden",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 })
@@ -263,7 +263,7 @@ public class GalleryActivity extends AppCompatActivity {
                                             + " could not be removed!");
                                     Toast.makeText(GalleryActivity.this,
                                             "Deck konnte nicht gelöscht werden",
-                                            Toast.LENGTH_SHORT);
+                                            Toast.LENGTH_LONG);
                                     return;
                                 }else{
                                     //Laufende Spielvariable auf 0 setzen, falls dieses Deck gerade in der Pause ist
@@ -288,7 +288,7 @@ public class GalleryActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         spinner.hide();
-                                        Toast.makeText(getApplicationContext(), "Deck gelöscht", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Deck gelöscht", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
@@ -337,7 +337,7 @@ public class GalleryActivity extends AppCompatActivity {
                                             barProgressDialog.dismiss();
                                             Toast.makeText(getApplicationContext(),
                                                     "Deck erfolgreich hochgeladen",
-                                                    Toast.LENGTH_SHORT).show();
+                                                    Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 }else{

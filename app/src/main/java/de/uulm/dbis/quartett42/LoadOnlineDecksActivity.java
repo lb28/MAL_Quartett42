@@ -165,7 +165,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "Download abgebroechen, " +
-                            "Deck ist nicht gültig!", Toast.LENGTH_SHORT).show();
+                            "Deck ist nicht gültig!", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -246,7 +246,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             Toast.makeText(getApplicationContext(), "Download abgebrochen, " +
-                                    "einige Bilder sind nicht gültig!", Toast.LENGTH_SHORT).show();
+                                    "einige Bilder sind nicht gültig!", Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -278,7 +278,7 @@ public class LoadOnlineDecksActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "Download abgebroechen, " +
-                            "Deck ist nicht gültig!", Toast.LENGTH_SHORT).show();
+                            "Deck ist nicht gültig!", Toast.LENGTH_LONG).show();
                 }
             });
 

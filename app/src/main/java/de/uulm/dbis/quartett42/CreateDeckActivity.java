@@ -189,31 +189,31 @@ public class CreateDeckActivity extends AppCompatActivity {
         if (handler.hasDeckNameCollision(newDeckName)) {
             Toast.makeText(this,
                     "Ein Deck mit Namen \"" + newDeckName + "\" ist schon vorhanden",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         if (newDeckName.isEmpty()) {
             Toast.makeText(this,
                     "Deckname darf nicht leer sein",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         if (deckAttrList.isEmpty()) {
             Toast.makeText(this,
                     "Gib mindestens ein Attribut an",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         if (hasEmptyName(deckAttrList)) {
             Toast.makeText(this,
                     "Jedes Attribut muss einen Namen haben",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         if (hasDuplicates(deckAttrList)) {
             Toast.makeText(this,
                     "Die Attribute müssen eindeutige Namen haben",
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_LONG).show();
             return false;
         }
         // TODO maybe check for further invalid user input
@@ -243,7 +243,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Eingaben sind ungültig!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Eingaben sind ungültig!", Toast.LENGTH_LONG).show();
             return false;
         }
     }
@@ -290,7 +290,7 @@ public class CreateDeckActivity extends AppCompatActivity {
 
                 // Show an explanation to the user
                 Toast.makeText(this, "Berechtigung zum Lesen der Bilder benötigt",
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_LONG).show();
 
             } else {
 
