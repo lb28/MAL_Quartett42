@@ -301,16 +301,19 @@ public class Game {
             valComputer = -valComputer;
         }
 
+        //Bei runden- oder punkte-basiert die Anzahl runter zaehlen
+        // auch bei unentschieden
+        if(mode == MODE_ROUNDS || mode == MODE_POINTS){
+            roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
+        }
+
         if(valPlayer > valComputer){
             //Player gewinnt:
             winner = WINNER_PLAYER;
             nextPlayer = true;
             //Punkte behandlen:
             pointsPlayer = pointsPlayer + calculatePoints(chosenAttribute);
-            //Bei runden- oder punkte-basiert die Anzahl runter zaehlen
-            if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
-            }
+
             //Beide Karten vorne wegnehmen und hinten auf den Stapel des Players legen
             cardsPlayer.remove(0);
             cardsComputer.remove(0);
@@ -322,10 +325,7 @@ public class Game {
             nextPlayer = false;
             //Punkte behandeln:
             pointsComputer = pointsComputer + calculatePoints(chosenAttribute);
-            //Bei runden- oder punkte-basiert die Azahl runter zaehlen
-            if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-                roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
-            }
+
             //Beide Karten vorne wegnehmen und hinten auf den Stapel des Computers legen
             cardsPlayer.remove(0);
             cardsComputer.remove(0);
@@ -339,12 +339,6 @@ public class Game {
             cardsComputer.remove(0);
             cardsPlayer.add(cardPlayer.getId());
             cardsComputer.add(cardComputer.getId());
-        }
-
-        //Bei runden- oder punkte-basiert die Anzahl runter zaehlen
-        // auch bei un
-        if(mode == MODE_ROUNDS || mode == MODE_POINTS){
-            roundsLeft = roundsLeft - calculatePoints(chosenAttribute);
         }
 
         // check if the game is over
@@ -370,6 +364,8 @@ public class Game {
         }else{
             //Bei Punktebasiert irgendeinen fancy Algorithmus entwickeln, der Punkte aufsummiert
             //bisher als Erastz: Differenz beider Punkte mal 10
+            //System.out.println("------------ player: "+cardsPlayer.size()+" , computer: "+cardsComputer.size());
+
             Card cardPlayer = returnCardOfID(cardsPlayer.get(0));
             Card cardComputer = returnCardOfID(cardsComputer.get(0));
             if(cardPlayer.getAttributeMap().get(chosenAttribute) > cardComputer.getAttributeMap().get(chosenAttribute)){
