@@ -1,0 +1,59 @@
+Einleitung
+- Motivation (1 Seite)
+	- Zum einen unser Anwendungsfach (Beteiligte nennen)
+	- Zum anderen, dass es keine gute Quartett-App auf dem Markt gibt
+	(Markt beschreiben) und wir das ändern wollen.
+- Ziel (0,5 - 1 Seite)
+	- App mit unseren Funktionen entwickeln (Funktionen erklären oder später?)
+	- Den Umgang mit dem Entwickeln von mobilen Apps und deren Techniken im speziellen
+	was Android angeht erlernen und beherrschen können
+- Aufbau (0,5 Seiten)
+	2 bis 3 Sätze?
+
+Grundlagen
+- Quartettspiel (1 Seite)
+	- Regeln erklären...
+	- verschiedene Modi erklären
+- Mobile Plattform (? Seiten)
+	- Android erklären, keine Ahnung wie aussführlich
+	- auf jeden Fall die verschiedenen States erw�hnen
+	- ggf. auch wieder Vor- und Nachteile?
+- Frameworks (1 - 2 Seiten)
+	gleich wie in Präsentation mit Erklärungen dazu
+
+Anforderungsanalyse (so viel Seiten wie vorhanden)
+- Funktionale- und Nicht-Funktionale Anforderungen
+	- einfach aus Datei kopieren
+
+Konzept & Entwurf
+- Mockups, etc. (so viel Seiten, wie Bilder reichen)
+	- Mockups einfach aus Präsentation kopieren
+	- möglicherweise gleich auch Vergleich mit Screenshots
+Implementierung (? Seiten)
+- Ausgewählte Implementierungsdetails
+	- keine Ahnung was da am besten bei uns erklärt werden kann
+	- Algorithmen: möglichwerweise die "KI" oder die Punkteberechnung
+	- vielleicht Galerie-Darstellung durch Grid-Layout-Adapter?
+	- ...?
+- Architektur`(? Seiten)
+	- ein paar Einleitungssätze
+	- Datenmodell aus Präsentation kopieren und erlüutern, was besonders ist
+	(auf Speicherung mit JSON eingehen)
+	- Klassen-/Activity-Modell aus Präsentation kopieren
+	- Download- und Upload-Verlauf-Modell
+	- vielleicht ein paar Sätze zu allgemeinem Vorgehen und Aufteilung??
+- Besonderheiten (? Seiten)
+	- Deckcreator und -editor vorstellen
+	- Up- und Download von Decks
+	- ...?
+- möglicherweise auf Schwierigkeiten während der Implementierung und deren Lösungen eingehen? (1 - 2 Seiten)
+
+Anforderungsabgleich (1- 2 Seiten)
+- Anforderungen erfüllt?
+	- kann auch wieder in Tabellenform gemacht werden
+
+Zusammenfassung & Ausblick (1 - 2 Seiten)
+	- Zusammenfassung: gute App geworden und wir haben viel gelernt ...
+	- Ausblick was die App angeht: App eigentlich fertig aber könnte an manchen Stellen
+	noch optimiert werden (Design, weitere Funktionen,...)
+	- Ausblick was das Team angeht: erlerntes Wissen in das Entwickeln neuer Apps umsetzen
