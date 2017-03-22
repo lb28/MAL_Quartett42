@@ -16,7 +16,7 @@ Grundlagen
 	- verschiedene Modi erklären
 - Mobile Plattform (? Seiten)
 	- Android erklären, keine Ahnung wie aussführlich
-	- auf jeden Fall die verschiedenen States erw�hnen
+	- auf jeden Fall die verschiedenen States erwähnen
 	- ggf. auch wieder Vor- und Nachteile?
 - Frameworks (1 - 2 Seiten)
 	gleich wie in Präsentation mit Erklärungen dazu

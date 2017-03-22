@@ -1,0 +1,91 @@
+\documentclass[numbers=noenddot]{thesis}
+
+% hier namen etc. einsetzen
+\fullname{Fabian Fischbach, Luis Beaucamp und Tim Stenzel}
+%\email{vorname.nachname@uni-ulm.de}
+\headline{Mobile Application Lab}
+\titel{Thema}
+\jahr{2017}
+\matnr{Matrikel-Nr}
+\gutachterA{Marc Schickler}
+%\gutachterB{Gutachter 2}
+\betreuer{Marc Schickler}
+\typ{Ausarbeitung zur App }
+\fakultaet{Ingenieurwissenschaften, Informatik und \\Psychologie}
+\institut{Institut für Datenbanken und Informationssysteme}
+
+% Falls keine Lizenz gewünscht wird bitte den folgenden Text entfernen.
+% Die Lizenz erlaubt es zu nichtkommerziellen Zwecken die Arbeit zu
+% vervielfältigen und Kopien zu machen. Dabei muss aber immer der Autor
+% angegeben werden. Eine kommerzielle Verwertung ist für den Autor
+% weiter möglich.
+\license{
+This work is licensed under the Creative Commons.
+Attribution-NonCommercial-ShareAlike 3.0 License. To view a copy of this
+license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/de/ or send a
+letter to Creative Commons, 543 Howard Street, 5th Floor, San Francisco,
+California, 94105, USA. \\ Satz: PDF-\LaTeXe
+}
+
+\hypersetup{%
+	pdftitle=\pdfescapestring{\thetitel},
+	pdfauthor={\thefullname},
+ 	pdfsubject={\thetyp},
+}
+
+
+% trennungsregeln
+\hyphenation{Sil-ben-trenn-ung}
+
+\begin{document}
+\frontmatter
+\maketitle
+% impressum
+\clearpage
+\impressum
+
+\cleardoublepage
+% ab hier zeilenabstand 1,4 fach 10pt/14pt
+\setstretch{1.4}
+
+%\input{abstract}
+%\cleardoublepage
+%\input{danksagung}
+
+% inhaltsverzeichnis einfügen
+\tableofcontents
+
+\mainmatter
+% hier kommen die kapitel der arbeit
+\input{einleitung}
+\input{grundlagen}
+\input{anforderungsanalyse}
+\input{konzeptUndEntwurf}
+\input{implementierung}
+\input{anforderungsabgleich}
+\input{zusammenfassungUndAusblick}
+
+% Bibliograhpy
+\bibliographystyle{splncs}
+\begingroup
+\interlinepenalty 10000
+\sloppy
+\bibliography{literature}
+\endgroup
+
+% anhänge
+\appendix
+% hier kommen die anhänge
+\input{sources}
+
+\backmatter			% abtrennung für verzeichnisse
+
+% hier die verzeichnisse
+\listoffigures
+%\listoftables
+
+
+\clearpage
+%\erklaerung
+
+\end{document}

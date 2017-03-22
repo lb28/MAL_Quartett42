@@ -1,0 +1,29 @@
+% WICHTIG 
+% ---------------------------------------------------------
+
+% Wörter (insbesondere der TITEL) sollten im Literaturverzeichnis NICHT getrennt werden!
+% Um eine Wort-Trennung im Literatur-Verzeichnis zu verhindern, müssen diese Wörter, die
+% LATEX automatisch trennt, mit einem \mbox{} umschlossen werden. Siehe zB Zitat zu "Gamma95".
+
+% Titel MÜSSEN so geschrieben werden, wie sie auch tatsächlich abgedruckt wurden. Dabei
+% ist besonders auf die Groß/Kleinschreibung zu achten!
+% Da LATEX gerne mal die Groß/Kleinschreibung (insbesondere bei Eigenworten und Akronymen)
+% missachtet, kann der Titel in 2 {{ }} geschrieben werden! Das zwingt LATEX dann zur 
+% wortwörtlichen Übernahme des Titels wie er angegeben wurde!
+
+@BOOK{Gamma95,
+	author= {Gamma, Erich and Helm, Richard and Johnson, Ralph and Vlissides, John},
+	title= {\mbox{Design} Patterns: Elements of Reusable Object-Oriented Software},
+	year= {1994},
+	publisher= {Pearson \mbox{Education}}
+}
+
+@inproceedings{Kolb14,
+	author = {Kolb, Jens and Zimoch, Michael and Weber, Barbara and Reichert, Manfred},
+	booktitle = {Proc 29th Symposium on Applied Computing (SAC'14)},
+	title = {{How Social Distance of Process Designers Affects the Process of Process Modeling: Insights from a Controlled Experiment}},
+	year = {2014},
+	pages = {{1364--1370}},
+	address = {Gyeongju, South Korea},
+	publisher = {ACM},
+}
