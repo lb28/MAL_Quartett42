@@ -1,11 +1,53 @@
+\newcommand{\reqtable}[3]{
+    \begin{center}
+    \begin{tabular}{ | l | p{13cm} |}
+    \hline
+    \textbf{ID:} & \textbf{#1} \\ \hline
+    TITEL: & #2 \\ \hline
+    BES: & #3 \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
+
 \chapter{Anforderungsanalyse}	
 \label{cha:anforderungsanalyse}
+In diesem Kapitel werden die ursprünglich definierten funktionalen und nichtfunktionalen Anforderungen tabellarisch dargestellt. Jede der Anforderungen hat einen eindeutigen Identifikator (ID), einen Titel (TITEL), und eine Beschreibung (BES).
 
 % Abschnitt: Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsanalyse:funktional}
 
+\reqtable{FA1}{Startmenü}{Nach dem Start der Anwendung sieht der Benutzer ein Startmenü mit den Einträgen „Spiel starten“, „Einstellungen“, „Spielregeln“, „Deckübersicht“ („Rangliste“), („Infos“)}
+\reqtable{FA2}{Einstellungen}{Es gibt eine Möglichkeit, die Spieleinstellungen zu ändern. Diese umfassen Schwierigkeitsgrad, Soundeffekte (an/aus) und Spielmodus (rundenbasiert/zeitbasiert/Kartenbasiert)}
+\reqtable{FA3}{Spielregeln}{Es gibt eine Möglichkeit, die Spielregeln anzuzeigen.}
+\reqtable{FA4}{Infoseite}{Es gibt eine Möglichkeit, eine Infoseite (mit Copyright- und weiteren Informationen) anzuzeigen}
+\reqtable{FA5}{Deckübersicht}{Der Benutzer hat die Möglichkeit eine Liste mit allen verfügbaren Decks anzuzeigen. Beim Auswählen eines Decks kann der Benutzer durch die Karten des Decks scrollen. Dabei sieht er bei jeder Karte das Bild und die Attribute. Außerdem kann der Benutzer auf der Deckübersichts-Seite neue Decks hinzufügen. Diese Decks dienen als „Erweiterung“ und der Benutzer kann sie sich herunterladen.}
+\reqtable{FA6}{Spiel starten}{Der Benutzer hat vom Startmenü aus die Möglichkeit, das Spiel zu starten. Dafür öffnet sich ein Dialog, auf dem der Benutzer das Deck auswählt und festlegt, ob er gegen einen anderen Spieler oder gegen einen Computer spielen will. Danach werden die Karten auf die beiden Spieler verteilt und es wird zufällig bestimmt, welcher Spieler beginnt.}
+\reqtable{FA7}{Spielablauf}{Während des Spiels sieht der Spieler pro Runde nur seine „oberste Karte im Stapel“. In einer Runde werden die Werte des erstgewählten Attributs verglichen. Nach Auswahl eines Attributs vom ersten Spieler werden die zu vergleichenden Werte beider Spieler angezeigt und das gewinnende Attribut markiert. Bei einem Gleichstand werden die Karten beider Spieler unter den jeweils eigenen Stapel gelegt.}
+\reqtable{FA8}{Spielstand anzeigen}{Während des Spiels wird dauerhaft der Spielstand (Anzahl Karten Spieler 1 : Anzahl Karten Spieler 2) angezeigt.}
+\reqtable{FA9}{Spielzeit anzeigen}{Beim zeitbasierten Modus wird neben dem Spielstand auch die verbleibende Rundenzeit und die verbleibende Gesamt-Spielzeit angezeigt.}
+\reqtable{FA10}{Spielende}{Das Spiel ist vorbei, wenn
+\begin{itemize}
+\item {[alle Modi]} ein Spieler alle Karten hat (Dieser Spieler hat gewonnen)
+\item {[Zeitbasiert]} die Zeit abgelaufen ist (Der Spieler mit den meisten Karten hat gewonnen)
+\item {[Rundenbasiert]} die vorher ausgewählte Anzahl an Runden gespielt worden sind (Spieler mit den meisten Karten hat gewonnen)
+\end{itemize}
+}
+\reqtable{FA11}{Speicherung der Daten}{Die Daten des Spiels (Decks, Karten und ihre Attribute) werden in einer Datenbank gespeichert. Dabei gilt für jedes Deck:
+\begin{itemize}
+\item Die Anzahl an Karten soll eine gerade Zahl zwischen 16 und 64 sein.
+\item Die Anzahl an Attributen soll eine Zahl zwischen 5 und 10 sein.
+\item Für jedes Attribut wird spezifiziert, ob ein höherer Wert oder ein niedriger Wert gewinnt.
+\end{itemize}
+}
 
-% Abschnitt: Nicht Funktionale Anforderungen
-\section{Nicht Funktionale Anforderungen}
+% Abschnitt: Nichtfunktionale Anforderungen
+\section{Nichtfunktionale Anforderungen}
 \label{sec:anforderungsanalyse:nichtfunktional}
+
+\reqtable{NFA1}{Entwicklungssprache und -Umgebung}{Die Anwendung wird in Java mit der Entwicklungsumgebung „Android Studio“ entwickelt und soll auf Geräten mit Betriebssystemen ab Android [4.1] funktionieren.}
+\reqtable{NFA2}{Reaktionszeit}{Die Reaktionszeit der Anwendung soll zu jeder Zeit maximal 1,5 Sekunden betragen}
+\reqtable{NFA3}{Persistenter Spielzustand}{Während eines Spiels soll die App minimiert werden können (z.B. durch den Home Button), ohne dass der Spielzustand verloren geht. D.h., ein Spiel soll bei erneutem Öffnen fortgesetzt werden können.}
+\reqtable{NFA4}{Benutzbarkeit}{Die Anwendung soll intuitiv bedienbar sein. D.h., die Buttons und andere Auswahlmöglichkeiten sollen eine ausreichende Größe haben und wie erwartet reagieren.}
+\reqtable{NFA5}{Offline-Modus}{Die Anwendung soll stets auch das Spielen ohne Internetanbindung ermöglichen.}
