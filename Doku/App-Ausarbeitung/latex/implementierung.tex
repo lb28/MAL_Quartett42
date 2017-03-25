@@ -1,76 +1,156 @@
-\chapter{Implementierung}
+\chapter{Konzept, Entwurf und Implementierung}
 \label{cha:implementierung}
+
+Wir erklären in diesem Kapitel die einzelnen Funktionen unserer App genauer, unterstützen sie an Hand von Screenshots und zeigen Vergleichend auch die Mockups die zu Beginn des Projekts erstellt wurden, um dem Kunden seine Vorstellungen visualisiert präsentieren zu können.
 
 % Abschnitt: Implementierungsdetails
 \section{Implementierungsdetails}
 \label{sec:implementierung:implementierungsdetails}
 
-In diesem Abschnitt möchten wir ein wenig genauer auf unsere Quartett App und ihre Funktionen eingehen. Dies machen wir ausgehend vom Hauptmenü aus, welches in Abbildung \ref{figure:implementierungmenue} zu sehen ist. Für das Hauptmenü wir, wie auch für die gesamte App, haben wir ein ansprechendes Farbklima gewählt.
+Nach dem öffnen der App befindet man sich zu Beginn im Hauptmenü, welches in Abbildung \ref{figure:implementierungmenue} zu sehen ist. Für das Hauptmenü wir, wie auch für die gesamte App, haben wir ein ansprechendes Farbklima gewählt.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_main_screen.png}
-	\caption{Das Hauptmenü der Quartett42 App}
-	\label{figure:implementierungmenue}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_main_screen.png}
+        \caption{Hauptmenü der App}
+		\label{figure:implementierungmenue}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/main_screen.png}
+        \caption{Mockup Hauptmenü}
+    \end{minipage}
 \end{figure}
 
-Durch den Menüpunkt "SPIELEN" landet der Spieler auf einem Bildschirm, in welchem er ein Deck wählen kann und bei Bedarf die Einstellungen anpassen kann, wie in Abbildung \ref{figure:implementierungeinstellungen} zu sehen ist. Diese sind frei wählbar und alle Kombinationen sind möglich. Die Einstellungen werden lokal auf dem Smartphone gespeichert und können beim nächstmaligen Starten direkt übernommen werden, ohne sie jedes mal neu zu ändern. Das ermöglicht einen schnellen Start ins Spiel.
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_settings.png}
-	\caption{Das Einstellungsmenü der Quartett42 App}
-	\label{figure:implementierungeinstellungen}
+Durch den Menüpunkt 'SPIELEN' landet der Spieler auf einem Bildschirm, in welchem er ein Deck wählen kann und bei Bedarf die Einstellungen anpassen kann, wie in Abbildung \ref{figure:implementierungeinstellungen} zu sehen ist. Diese sind frei wählbar und alle Kombinationen sind möglich. Die Einstellungen werden lokal auf dem Smartphone gespeichert und können beim nächstmaligen Starten direkt übernommen werden, ohne sie jedes mal neu zu ändern. Das ermöglicht einen schnellen Start ins Spiel.\\
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_settings.png}
+		\caption{Einstellungsmenü der App}
+		\label{figure:implementierungeinstellungen}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/einstellungen.png}
+        \caption{Mockup Einstellungen}
+    \end{minipage}
 \end{figure}
 
-Nun ist das eigentliche Spiel gestartet. Der Spieler sieht jeweils nur seine erste oberste Karte, wie in Abbildung \ref{figure:implementierungspiel1} abgebildet ist. Für jedes Attribut wird neben dem Wert (beziehungsweise einem Fragezeichen im "Expertenmodus") auch die jeweilige Einheit und die Siegesvariante (höher oder niedriger gewinnt) angegeben. Zwischen den Bildern einer Karte kann durch Swipe-Gesten gewechselt werden und zu jedem Bild kann, falls vorhanden, die passende Information durch drücken auf den Info-Buttonn angezeigt werden. Wenn der Spieler am Zug ist, sind seine Attribute aktiv und er kann ein Attribut für den Vergleich auswählen. Für seinen Zug hat der Spieler unbegrenzt Zeit, außer im Zeitmodus, in welchem die Zeit für einen Zug auf 30 Sekunden beschränkt ist, damit der Spieler sich nicht auf seinen bisherigen Erfolgen ausruhen kann. Die Zeit für seinen Zug wird ihm angezeigt und zudem werden die letzten 10 Sekunden durch ein akustisches Signal verdeutlicht, sofern in den Einstellungen die Sounds aktiviert sind. In allen Spielvarianten wird dem Spieler während des Spiels der aktuelle Zwischenstand (durch Punkte oder Karten) und die verbliebende Spielzeit(verbleibende Karten/Punkte/Zeit) angezeigt.
+Nun ist das eigentliche Spiel gestartet. Der Spieler sieht jeweils nur seine erste oberste Karte, wie in Abbildung \ref{figure:implementierungspiel1} abgebildet ist. Für jedes Attribut wird neben dem Wert (beziehungsweise einem Fragezeichen im "Expertenmodus") auch die jeweilige Einheit und die Siegesvariante (höher oder niedriger gewinnt) angegeben. Zwischen den Bildern einer Karte kann durch Swipe-Gesten gewechselt werden und zu jedem Bild kann, falls vorhanden, die passende Information durch drücken auf den Info-Buttonn angezeigt werden. Wenn der Spieler am Zug ist, sind seine Attribute aktiv und er kann ein Attribut für den Vergleich auswählen. Für seinen Zug hat der Spieler unbegrenzt Zeit, außer im Zeitmodus, in welchem die Zeit für einen Zug auf 30 Sekunden beschränkt ist, damit der Spieler sich nicht auf seinen bisherigen Erfolgen ausruhen kann. Die Zeit für seinen Zug wird ihm angezeigt und zudem werden die letzten 10 Sekunden durch ein akustisches Signal verdeutlicht, sofern in den Einstellungen die Sounds aktiviert sind. In allen Spielvarianten wird dem Spieler während des Spiels der aktuelle Zwischenstand (durch Punkte oder Karten) und die verbliebende Spielzeit(verbleibende Karten/Punkte/Zeit) angezeigt.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_select_attr.png}
-	\caption{Kartenansicht während eines laufenden Spiels}
-	\label{figure:implementierungspiel1}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_select_attr.png}
+		\caption{Kartenansicht im Spiels}
+		\label{figure:implementierungspiel1}
+    \end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/spiel_attributauswahl.png}
+        \caption{Mockup Karte im Spiel}
+    \end{minipage}
 \end{figure}
+
 
 Ist der Gegner am Zug, sieht die Kartenansicht des Spielers gleich aus, aber seine Attribute sind inaktiv und nicht auswählbar. Nun muss der Spieler eine gewisse Zeit warten, bis der Computer sein Attribut für den Vergleich ausgewählt hat. Diese Zeit kann er nutzen, um seine Karte zu betrachten. Im Schwierigkeitsgrad "leicht" wählt der Computer ein zufälliges Attribut für den Vergleich aus. Im Schwierigkeidsgrad "mittel" wählt er unter einer zufälligen Menge an Attributen, welche ungefähr die Mächtigkeit der Hälfte aller Attribute hat, den besten Wert aus. Im Schwierigkeitsgrad "schwer" wählt der Computer unter allen Attributen zu einer gewissen Wahrscheinlichkeit den besten Wert aus. Diese Schwierigkeitsgrade sorgen dafür, dass der Spieler zwar einen Anstieg der Schwierigkeit des Computers spürt, jedoch immer eine Chance zu gewinnen hat. Zudem bliebt durch die Zufallswerte der Zug des Computergegners unvorhersehbar.
 
-Nach jedem gespielten Zug sieht der Spieler den Vergleichsbildschirm mit seiner Karte und der Karte seines Gegners, wie in Abbildung \ref{figure:implementierungspiel2}  dargestellt. Dort kann wieder bei beiden Karten zwischen den Bildern durch Swipe-Bewegungen gewechselt werden und die jeweiligen Informationen durch Drücken des Info-Buttons angesehen werden. Der gewählte Wert beider Spieler wird angezeigt und der Gewinner hervorgehoben. Der Gewinner bekommt beide Karten, bei einem Unentschieden behält jeder Spieler seine Karte. Zudem wird der Punktestand aktualisiert. Im Kartenmodus und im Zeitmodus ist jede Karte genau ein Punkt wert. Im Punktemodus berechnen sich die Punkte für den Gewinner durch den prozentualen Unterschied beider Werte. So kann der Spieler mit ein und dem selben Attribut einer Karte unterschiedlich viele Punkte machen, je nachdem welche Karte der Gegner gerade besitzt. Außerdem ist es dadurch möglich, dss ein Spieler mit weniger Karten als der Gegner gewinnt, weil er durch geschickte Spielzüge mehr Punkte gesammelt hat.
+Nach jedem gespielten Zug sieht der Spieler den Vergleichsbildschirm mit seiner Karte und der Karte seines Gegners, wie in Abbildung \ref{figure:implementierungspiel2}  dargestellt (Wir sind hier insofern vom Mockup abgewichen, dass das Bild einer Karte mit dem gewählten Attribut angezeigt wird, statt nur alle Attibute anzuzeigen, da es so attraktiver aussieht). Dort kann wieder bei beiden Karten zwischen den Bildern durch Swipe-Bewegungen gewechselt werden und die jeweiligen Informationen durch Drücken des Info-Buttons angesehen werden. Der gewählte Wert beider Spieler wird angezeigt und der Gewinner hervorgehoben. Der Gewinner bekommt beide Karten, bei einem Unentschieden behält jeder Spieler seine Karte. Zudem wird der Punktestand aktualisiert. Im Kartenmodus und im Zeitmodus ist jede Karte genau ein Punkt wert. Im Punktemodus berechnen sich die Punkte für den Gewinner durch den prozentualen Unterschied beider Werte. So kann der Spieler mit ein und dem selben Attribut einer Karte unterschiedlich viele Punkte machen, je nachdem welche Karte der Gegner gerade besitzt. Außerdem ist es dadurch möglich, dss ein Spieler mit weniger Karten als der Gegner gewinnt, weil er durch geschickte Spielzüge mehr Punkte gesammelt hat.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_comparison.png}
-	\caption{Kartenvergleich nach jedem Zug}
-	\label{figure:implementierungspiel2}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_comparison.png}
+		\caption{Kartenvergleich}
+		\label{figure:implementierungspiel2}    
+	\end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/spiel_vergleich.png}
+        \caption{Mockup Kartenvergleich}
+    \end{minipage}
 \end{figure}
+
 
 Der Spieler hat jederzeit die Möglichkeit, das laufende Spiel zu unterbrechen. Dazu wird ein Spiel automatisch zwischengespeichert, wenn der Spieler das laufende Spiel oder die App verlässt. Dieses kann der Spieler zu einem späteren Zeitpunkt fortsetzen. Wenn er ein neues Spiel beginnen möchte wird er gefragt, ob er lieber das alte Spiel fortsetzen will oder ein neues beginnen und das alte überschreiben möchte.
 
-Steht ein Gewinner fest, wird der Spielend-Bildschirm angezeigt. Auf diesem steht der Gewinner, der Endstand und die gesammelten Punkte des Gewinners. Ist der Spieler der Gewinner, wird anhand dieser Punkte entschieden, ob der Spieler es in die Rangliste geschafft hat, und falls ja, auf welche Position. Die Punkte berechnen sich durch eine Kombination aus den gesammelten Punkten im Spiel, dem Schwierigkeitsgrad des Spiels, dem Spielmodus (normal, Insanemodus oder Expertenmodus) und der Anzahl der eingestellten Runden/Zeit/Punkte. Dadurch bleibt die Rangliste immer fair und kann nicht durch vereinfachte Einstellungen oder eine erhöhte Anzahl an Spielrunden beeinflusst werden. Der Spieler kann sich hier direkt mit seinem Namen in die Rangliste eintragen, wobei der jeweils letzte Name gespeichert wird. Außerdem kann er von diesem Bildschirm direkt die Ranglisten (Abbildung \ref{figure:implementierungrangliste}) einsehen oder eine Revanche starten, welche ein Spiel mit dem gleichen Deck und den gleichen Einstellungen startet.
+Steht ein Gewinner fest, wird der Spielend-Bildschirm angezeigt. Auf diesem steht der Gewinner, der Endstand und die gesammelten Punkte des Gewinners, wie in Abbildung \ref{figure:implementierungspielende} zu sehen.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_high_scores.png}
-	\caption{Die Rangliste der Quartett42 App}
-	\label{figure:implementierungrangliste}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_game_end.png}
+		\caption{Endscreen der App}
+		\label{figure:implementierungspielende}   
+	\end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/spiel_ende.png}
+        \caption{Mockup Endscreen}
+    \end{minipage}
 \end{figure}
 
-Neben dem Spiel ansich befinden sich die meisten Implementierungsdetails unserer Anwendung im Menüpunkt "GALERIE". Dort hat der Spieler eine Übersicht aller Decks, die auf dem Smartphone vorhanden sind. Dieses Menü wurde durch ein Grid-Layout-Adapter erstellt und findet sich an vielen Stellen in unserer App wieder. Es erlaubt neben einer einfachen und immer gleich großen und gleich formartierten Darstellung der Bilder auch ein einfaches Scrollen und Anzeigen von Deckinformationen durch drücken auf den Info-Button. Ein Bild davon gibt es in Abbildung \ref{figure:implementierunggalerie} Im Menü kann der Spieler die Karten eines Decks angucken, was ungefähr ähnlich ausieht wie die Kartenansicht während eines Spiels in Abbildung \ref{figure:implementierungspiel1}. Zudem kann er hier die Namen der Decks umbenennen, die einzelnen Werte und Bilder mit dazugehörigen Beschreibungen einzelner Karten der Decks ändern sowie neue Karten zu Decks hinzufügen oder Karten löschen. Außerdem kann ein Deck auch gelöscht werden oder über den Deckcreator ein völlig neues Deck mit neuen Attributen erstellt werden. Neue Decks können dann auf den Deckstore hochgeladen werden, sodass es für andere Nutzer zur Verfügung steht. Über diesen können wiederum auch neue Decks von anderen Nutzern auf das Smartphone herunter geladen werden. Auf diese zuletzt genannten Funktionen werden wir in den Besonderheiten genauer eingehen. 
+Ist der Spieler der Gewinner, wird anhand dieser Punkte entschieden, ob der Spieler es in die Rangliste geschafft hat, und falls ja, auf welche Position. Die Punkte berechnen sich durch eine Kombination aus den gesammelten Punkten im Spiel, dem Schwierigkeitsgrad des Spiels, dem Spielmodus (normal, Insanemodus oder Expertenmodus) und der Anzahl der eingestellten Runden/Zeit/Punkte. Dadurch bleibt die Rangliste immer fair und kann nicht durch vereinfachte Einstellungen oder eine erhöhte Anzahl an Spielrunden beeinflusst werden. Der Spieler kann sich hier direkt mit seinem Namen in die Rangliste eintragen, wobei der jeweils letzte Name gespeichert wird. Außerdem kann er von diesem Bildschirm direkt die Ranglisten (Abbildung \ref{figure:implementierungrangliste}) einsehen oder eine Revanche starten, welche ein Spiel mit dem gleichen Deck und den gleichen Einstellungen startet.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_gallery.png}
-	\caption{Die Galerie mit allen heruntergeladenen Decks und ein Teil ihrer Funktionen}
-	\label{figure:implementierunggalerie}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_high_scores.png}
+		\caption{Rangliste der App}
+		\label{figure:implementierungrangliste}   
+	\end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/rangliste.png}
+        \caption{Mockup Rangliste}
+    \end{minipage}
 \end{figure}
 
-Neben der Rangliste gibt es auch noch einige Statistiken in unserer App, wie zum Beispiel die Anzahl der gepsielten Spiele und die dabei gewonnen und verlorenen Spiele für die verschiedenen Spielmodi. Diese werden mit Hilfe der Bibliothek MPAndroidCharts als Piechart dargestellt und werden nach jedem bis zum Ende durchgespielten Spiel aktualisiert. Ein Bild davon gibt es in Abbildung \ref{figure:implementierungstatistiken}.
+Neben dem Spiel ansich befinden sich die meisten Implementierungsdetails unserer Anwendung im Menüpunkt 'GALERIE'. Dort hat der Spieler eine Übersicht aller Decks, die auf dem Smartphone vorhanden sind. Dieses Menü wurde durch ein Grid-Layout-Adapter erstellt und findet sich an vielen Stellen in unserer App wieder. Es erlaubt neben einer einfachen und immer gleich großen und gleich formartierten Darstellung der Bilder auch ein einfaches Scrollen und Anzeigen von Deckinformationen durch drücken auf den Info-Button. Ein Bild davon gibt es in Abbildung \ref{figure:implementierunggalerie} Im Menü kann der Spieler die Karten eines Decks angucken, was ungefähr ähnlich ausieht wie die Kartenansicht während eines Spiels in Abbildung \ref{figure:implementierungspiel1}. Zudem kann er hier die Namen der Decks umbenennen, die einzelnen Werte und Bilder mit dazugehörigen Beschreibungen einzelner Karten der Decks ändern sowie neue Karten zu Decks hinzufügen oder Karten löschen. Außerdem kann ein Deck auch gelöscht werden oder über den Deckcreator ein völlig neues Deck mit neuen Attributen erstellt werden. Neue Decks können dann auf den Deckstore hochgeladen werden, sodass es für andere Nutzer zur Verfügung steht. Über diesen können wiederum auch neue Decks von anderen Nutzern auf das Smartphone herunter geladen werden. Auf diese zuletzt genannten Funktionen werden wir in den Besonderheiten genauer eingehen.\\
 
-\begin{figure}[htp]
-	\centering
-  	\includegraphics[width=0.3\textwidth]{img/screenshots/device_statistics.png}
-	\caption{Die Ansicht der Statistiken}
-	\label{figure:implementierungstatistiken}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_gallery.png}
+		\caption{Die Galerie der App}
+		\label{figure:implementierunggalerie} 
+	\end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/galerie_uebersicht.png}
+        \caption{Mockup Galerie}
+    \end{minipage}
 \end{figure}
+
+Neben der Rangliste gibt es auch noch einige Statistiken in unserer App, wie zum Beispiel die Anzahl der gespielten Spiele und die dabei gewonnen und verlorenen Spiele für die verschiedenen Spielmodi. Diese werden mit Hilfe der Bibliothek MPAndroidCharts als Piechart dargestellt und werden nach jedem bis zum Ende durchgespielten Spiel aktualisiert. Ein Bild davon gibt es in Abbildung \ref{figure:implementierungstatistiken}.\\
+
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/screenshots/device_statistics.png}
+		\caption{Die Statistiken der App}
+		\label{figure:implementierungstatistiken}
+	\end{minipage}
+    \begin{minipage}{0.49\textwidth}
+        \centering
+        \includegraphics[width=0.4\textwidth]{img/mockups/statistiken.png}
+        \caption{Mockup Statistiken}
+    \end{minipage}
+\end{figure}
+
+
 
 % Abschnitt: Architektur
 \section{Architektur}
