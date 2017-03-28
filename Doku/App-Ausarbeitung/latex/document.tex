@@ -41,7 +41,24 @@ California, 94105, USA. \\ Satz: PDF-\LaTeXe
 \usepackage{mwe}
 \renewcaptionname{ngerman}{\figurename}{Abb.}
 
+%----------Eigene commands---------------
+% tabelle für anforderungsanalyse
+\newcommand{\reqtable}[3]{
+    \begin{center}
+    \begin{tabular}{ | l | p{13cm} |}
+    \hline
+    \textbf{ID:} & \textbf{#1} \\ \hline
+    TITEL: & #2 \\ \hline
+    BES: & #3 \\
+    \hline
+    \end{tabular}
+    \end{center}
+}
 
+% tabellenzeile dreispaltig
+\newcommand{\td}[3]{
+    #1 & #2 & #3 \\ \hline
+}
 %------------------------------------------
 
 \begin{document}

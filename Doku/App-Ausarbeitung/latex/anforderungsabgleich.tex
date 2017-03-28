@@ -1,11 +1,45 @@
 \chapter{Anforderungsabgleich}
 \label{cha:anforderungsabgleich}
 
+Es folgt ein tabellarischer Vergleich zwischen den spezifizierten Anforderungen (vgl. Kapitel 3) und den implementierten Funktionen. Es wird bei jeder Anforderung aus Kapitel 3 beurteilt, inwieweit diese in der Implementierung erfüllt ist (Ja/Teilweise/Nein). Eine Zuordnung zu den Einträgen aus Kapitel 3 ist anhand der ID möglich.
+
+Die Funktionen, die implementiert wurden, jedoch nicht im Voraus als Anforderungen spezifiziert wurden,  (Statistiken, Deckeditor, etc.), werden in diesem Vergleich nicht berücksichtigt.
+
 % Abschnitt: Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsabgleich:funktional}
 
+\begin{center}
+    \begin{tabular}{ | l | l | p{11.5cm} |}
+    %TODO Breite automatisch die Seite füllen lassen? (\textwidth ist zu lang)
+        \hline
+        \textbf{ID} & \textbf{Erfüllt} & \textbf{Kommentar} \\ \hline
+        \td{FA1}{Ja}{-}
+        \td{FA2}{Ja}{-}
+        \td{FA3}{Ja}{-}
+        \td{FA4}{Ja}{-}
+        \td{FA5}{Ja}{Bei der Galerieansicht der Karten eines Decks war geplant, dass der Benutzer per Swipe nach links / rechts zur vorherigen / nächsten Karte wechselt. Jedoch war die Swipe-Funktionalität schon für das ansehen der verschiedenen Kartenbilder implementiert, was zu Konflikten hätte führen können. Das Wechseln der Karte wurde daraufhin über einfache ``Links''- und ``Rechts''-Buttons umgesetzt.}
+        \td{FA6}{Teilw.}{Wir entschlossen uns früh, keinen Spieler-vs.-Spieler-Modus umzusetzen, und konzentrierten uns stattdessen auf Funktionalitäten wie das Erstellen, Ändern, oder Teilen von Decks. Der Rest der beschriebenen Funktionen wurde implementiert.}
+        \td{FA7}{Ja}{Statt der direkten Hervorhebung des Attributs befindet sich beim Vergleichs-Bildschirm die eigene Karte immer unten (also auf der ``Seite'' des Benutzers), und die Karte des Gegners immer oben. In der Mitte erscheint ein farbiger Text, der den Gewinner der Runde bekanntgibt. (vgl. Abb. \ref{figure:implementierungspiel2})}
+        \td{FA8}{Ja}{-}
+        \td{FA9}{Ja}{-}
+        \td{FA10}{Ja}{-}
+        \td{FA11}{Teilw.}{Wir entschieden uns nach einiger Recherche dazu, eine JSON-Datei zum Persistieren der Daten zu benutzen. Auf Anwenderebene ändert dies nichts. Um dem Benutzer mehr Freiheiten zu lassen, entschieden wir uns zudem bewusst gegen eine Beschränkung der Karten- / Attributanzahl. Beim Hochladen eines Decks in den Deckstore werden die Decks hinsichtlich dieser Beschränkungen geprüft.}
+    \end{tabular}
+\end{center}
 
-% Abschnitt: Nicht Funktionale Anforderungen
-\section{Nicht Funktionale Anforderungen}
+% Abschnitt: Nichtfunktionale Anforderungen
+\section{Nichtfunktionale Anforderungen}
 \label{sec:anforderungsabgleich:nichtfunktional}
+
+\begin{center}
+    \begin{tabular}{ | l | l | p{11.5cm} |}
+        \hline
+        \textbf{ID} & \textbf{Erfüllt} & \textbf{Kommentar} \\ \hline
+        \td{NFA1}{Ja}{-}
+        \td{NFA2}{Ja}{die maximale Reaktionszeit wurde nicht genau gemessen, liegt jedoch weit unter dem gewählten Wert von 1,5 Sekunden.}
+        \td{NFA3}{Ja}{Der Spielstand kann außerdem (über den ``Zurück''-Button) explizit gespeichert werden, wodurch die Anwendung auch komplett beendet werden kann, ohne dass der Spielstand verloren geht.}
+        \td{NFA4}{Ja}{Diese Anforderung ist schwer beurteilbar, jedoch hielten wir uns stets möglichst an die Android-Richtlinien für Benutzeroberflächen, und alle Bereiche der Anwendung sind leicht bedienbar.}
+        \td{NFA5}{Ja}{Die Anwendung benötigt nur bei Benutzung des Deckstores (Upload / Download) eine Internetanbindung.}
+    \end{tabular}
+\end{center}
