@@ -42,6 +42,18 @@ California, 94105, USA. \\ Satz: PDF-\LaTeXe
 \renewcaptionname{ngerman}{\figurename}{Abb.}
 
 %----------Eigene commands---------------
+% margin fix deckblatt
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+\setlength{\topsep}{0pt}%
+\setlength{\leftmargin}{#1}%
+\setlength{\rightmargin}{#2}%
+\setlength{\listparindent}{\parindent}%
+\setlength{\itemindent}{\parindent}%
+\setlength{\parsep}{\parskip}%
+}%
+\item[]}{\end{list}}
+
 % tabelle für anforderungsanalyse
 \newcommand{\reqtable}[3]{
     \begin{center}
@@ -63,7 +75,9 @@ California, 94105, USA. \\ Satz: PDF-\LaTeXe
 
 \begin{document}
 \frontmatter
+\begin{changemargin}{-1.5cm}{1.5cm} % fix für deckblatt margins
 \maketitle
+\end{changemargin}
 % impressum
 \clearpage
 \impressum
