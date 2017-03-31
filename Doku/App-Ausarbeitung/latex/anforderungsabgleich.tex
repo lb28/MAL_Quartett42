@@ -5,11 +5,14 @@ Es folgt ein tabellarischer Vergleich zwischen den spezifizierten Anforderungen 
 
 Die Funktionen, die implementiert wurden, jedoch nicht im Voraus als Anforderungen spezifiziert wurden,  (Statistiken, Deckeditor, etc.), werden in diesem Vergleich nicht berücksichtigt.
 
+\clearpage
+
 % Abschnitt: Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsabgleich:funktional}
 
 \begin{center}
+	\begin{table}[h]
     \begin{tabular}{ | l | l | p{11.5cm} |}
     %TODO Breite automatisch die Seite füllen lassen? (\textwidth ist zu lang)
         \hline
@@ -26,6 +29,7 @@ Die Funktionen, die implementiert wurden, jedoch nicht im Voraus als Anforderung
         \td{FA10}{Ja}{-}
         \td{FA11}{Teilw.}{Wir entschieden uns nach einiger Recherche dazu, eine JSON-Datei zum Persistieren der Daten zu benutzen. Auf Anwenderebene ändert dies nichts. Um dem Benutzer mehr Freiheiten zu lassen, entschieden wir uns zudem bewusst gegen eine Beschränkung der Karten- / Attributanzahl. Beim Hochladen eines Decks in den Deckstore werden die Decks hinsichtlich dieser Beschränkungen geprüft.}
     \end{tabular}
+    \end{table}
 \end{center}
 
 % Abschnitt: Nichtfunktionale Anforderungen
