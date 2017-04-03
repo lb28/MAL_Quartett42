@@ -1,13 +1,14 @@
-\chapter{Anforderungsanalyse}	
+\chapter{Anforderungsanalyse}
 \label{cha:anforderungsanalyse}
-In diesem Kapitel werden die ursprünglich definierten funktionalen und nichtfunktionalen Anforderungen tabellarisch dargestellt. Jede der Anforderungen hat einen eindeutigen Identifikator (ID), einen Titel (TITEL), und eine Beschreibung (BES).
+Zu Beginn des Projekts war es unsere Aufgabe, die funktionalen und nichtfunktionalen Anforderungen für die Anwendung zu definieren und festzuhalten. Dies sollte dazu dienen, ein klares (minimales) Ziel bei der Implementierung zu haben sowie den Überblick über die gewünschten Funktionen zu behalten. Die letztendliche App ist bei vielen Teams leicht abweichend, da einige Entwurfsentscheidungen noch während der Implementierung getroffen wurden.
+Im Folgenden werden diese Anforderungen tabellarisch dargestellt. Sie wurden genauso definiert und nicht während oder nach der Implementierungsphase angepasst. Jede der Anforderungen hat einen eindeutigen Identifikator (ID), einen Titel (TITEL), und eine Beschreibung (BES).
 
 % Abschnitt: Funktionale Anforderungen
 \section{Funktionale Anforderungen}
 \label{sec:anforderungsanalyse:funktional}
 
 \reqtable{FA1}{Startmenü}{Nach dem Start der Anwendung sieht der Benutzer ein Startmenü mit den Einträgen „Spiel starten“, „Einstellungen“, „Spielregeln“, „Deckübersicht“ („Rangliste“), („Infos“)}
-\reqtable{FA2}{Einstellungen}{Es gibt eine Möglichkeit, die Spieleinstellungen zu ändern. Diese umfassen Schwierigkeitsgrad, Soundeffekte (an/aus) und Spielmodus (rundenbasiert/zeitbasiert/Kartenbasiert)}
+\reqtable{FA2}{Einstellungen}{Es gibt eine Möglichkeit, die Spieleinstellungen zu ändern. Diese umfassen Schwierigkeitsgrad, Soundeffekte (an/aus) und Spielmodus (Rundenbasiert / Zeitbasiert / Kartenbasiert)}
 \reqtable{FA3}{Spielregeln}{Es gibt eine Möglichkeit, die Spielregeln anzuzeigen.}
 \reqtable{FA4}{Infoseite}{Es gibt eine Möglichkeit, eine Infoseite (mit Copyright- und weiteren Informationen) anzuzeigen}
 \reqtable{FA5}{Deckübersicht}{Der Benutzer hat die Möglichkeit eine Liste mit allen verfügbaren Decks anzuzeigen. Beim Auswählen eines Decks kann der Benutzer durch die Karten des Decks scrollen. Dabei sieht er bei jeder Karte das Bild und die Attribute. Außerdem kann der Benutzer auf der Deckübersichts-Seite neue Decks hinzufügen. Diese Decks dienen als „Erweiterung“ und der Benutzer kann sie sich herunterladen.}
@@ -17,7 +18,7 @@ In diesem Kapitel werden die ursprünglich definierten funktionalen und nichtfun
 \reqtable{FA9}{Spielzeit anzeigen}{Beim zeitbasierten Modus wird neben dem Spielstand auch die verbleibende Rundenzeit und die verbleibende Gesamt-Spielzeit angezeigt.}
 \reqtable{FA10}{Spielende}{Das Spiel ist vorbei, wenn
 \begin{itemize}
-\item {[alle Modi]} ein Spieler alle Karten hat (Dieser Spieler hat gewonnen)
+\item {[Alle Modi]} ein Spieler alle Karten hat (Dieser Spieler hat gewonnen)
 \item {[Zeitbasiert]} die Zeit abgelaufen ist (Der Spieler mit den meisten Karten hat gewonnen)
 \item {[Rundenbasiert]} die vorher ausgewählte Anzahl an Runden gespielt worden sind (Spieler mit den meisten Karten hat gewonnen)
 \end{itemize}
